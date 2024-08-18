@@ -2,17 +2,20 @@ import {
   IsBoolean,
   IsEmail,
   IsInt,
+  IsOptional,
   IsString,
   IsStrongPassword,
-  Length,
 } from 'class-validator';
 
-export class CreateCustomerDto {
+export class customerRegisterDTO {
   @IsString()
   fullName: string;
 
   @IsEmail()
   email: string;
+
+  @IsString()
+  idnr: string;
 
   @IsStrongPassword({
     minLength: 6,
@@ -22,14 +25,4 @@ export class CreateCustomerDto {
     minUppercase: 1,
   })
   password: string;
-
-  @IsString()
-  @Length(11)
-  idnr: string;
-
-  @IsBoolean()
-  status: boolean;
-
-  @IsInt()
-  loyalty_points: number;
 }

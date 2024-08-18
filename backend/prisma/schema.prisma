@@ -39,6 +39,7 @@ model User {
 model Customer {
   id             String   @id @default(uuid())
   fullName       String
+  email          String
   password       String
   idnr           String // CPF alemão
   status         Boolean

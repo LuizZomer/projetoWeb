@@ -5,5 +5,5 @@ export class loginUserDTO {
   username: string;
 
   @IsString()
-  passsword: string;
+  password: string;
 }
