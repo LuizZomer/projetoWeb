@@ -1,0 +1,146 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// enum OrderType {
+//   BIG
+//   MEDIUM
+//   LITTLE
+// }
+
+model User {
+  id         String    @id @default(uuid())
+  fullName   String
+  username   String
+  password   String
+  function   String?
+  idnr       String // CPF alemão
+  role       String
+  status     Boolean
+  workload   String?
+  lastAccess DateTime?
+  createdAt  DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+  contactId  String?
+
+  Contact            Contact?            @relation(fields: [contactId], references: [id])
+  AccountsReceivable AccountReceivable[]
+  AccountPayable     AccountPayable[]
+  Revenue            Revenue[]
+
+  @@map("users")
+}
+
+model Customer {
+  id             String   @id @default(uuid())
+  fullName       String
+  password       String
+  idnr           String // CPF alemão
+  status         Boolean
+  loyalty_points Int
+  createdAt      DateTime @default(now())
+  updateAt       DateTime @updatedAt
+  contactId      String?
+
+  Contact  Contact?   @relation(fields: [contactId], references: [id])
+  Order    Order[]
+  Revenue  Revenue[]
+  OrderLog OrderLog[]
+
+  @@map("customers")
+}
+
+model Contact {
+  id        String     @id @default(uuid())
+  type      String
+  value     String
+  createdAt DateTime   @default(now())
+  updateAt  DateTime   @updatedAt
+  Customer  Customer[]
+  User      User[]
+
+  @@map("contacts")
+}
+
+model AccountReceivable {
+  id         String   @id @default(uuid())
+  dueDate    DateTime
+  descrition String
+  value      Float
+  status     Boolean
+  userId     String
+  createdAt  DateTime @default(now())
+
+  User User @relation(fields: [userId], references: [id])
+
+  @@map("account_receivable")
+}
+
+model AccountPayable {
+  id         String   @id @default(uuid())
+  dueDate    DateTime
+  descrition String
+  value      Float
+  status     Boolean
+  userId     String
+  createdAt  DateTime @default(now())
+
+  User User @relation(fields: [userId], references: [id])
+
+  @@map("account_payable")
+}
+
+model Order {
+  id         String   @id @default(uuid())
+  name       String
+  value      Float
+  customerId String
+  createdAt  DateTime @default(now())
+
+  Customer Customer  @relation(fields: [customerId], references: [id])
+  Revenue  Revenue[]
+
+  @@map("orders")
+}
+
+model Revenue {
+  id          String   @id @default(uuid())
+  date        DateTime
+  description String
+  value       Float
+  orderId     String
+  customerId  String
+  userId      String
+
+  User     User     @relation(fields: [userId], references: [id])
+  Customer Customer @relation(fields: [customerId], references: [id])
+  Order    Order    @relation(fields: [orderId], references: [id])
+
+  @@map("revenues")
+}
+
+model OrderLog {
+  id         String   @id @default(uuid())
+  name       String
+  value      Float
+  createdAt  DateTime @default(now())
+  customerId String
+
+  Customer Customer @relation(fields: [customerId], references: [id])
+
+  @@map("orders_log")
+}
+
+model Menu {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  value       Float
+  type        String
+  size        String
+}
