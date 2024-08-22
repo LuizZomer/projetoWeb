@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,14 +26,16 @@ export class UserController {
 
   @Post()
   create(@Body() user: CreateUserDto) {
-    console.log('a');
-
     return this.userService.create(user);
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(
+    @Query('take', ParseIntPipe) take: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query("search") search: string
+  ) {
+    return this.userService.findAll({take, page, search});
   }
 
   @Get(':id')

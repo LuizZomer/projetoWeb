@@ -1,8 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { IFindAllParam } from 'src/utils/types';
+import { messageGenerator } from 'src/utils/function';
 
 @Injectable()
 export class CustomerService {
@@ -21,11 +23,23 @@ export class CustomerService {
       },
     });
 
-    return { message: 'Conta criado com sucesso!' };
+    return messageGenerator('create');
   }
 
-  async findAll() {
-    return this.prisma.customer.findMany({
+  async findAll({page, take, search}: IFindAllParam) {
+    const customerTableCount = await this.prisma.customer.count({
+      where:{
+        fullName:{
+          contains:  search || undefined
+        }
+      }
+    })
+    
+    const count = Math.ceil(customerTableCount / take)
+
+    if(page >= count) throw new BadRequestException("Pagina não existente")
+
+    const customers =  await this.prisma.customer.findMany({
       select: {
         Contact: false,
         contactId: false,
@@ -41,7 +55,16 @@ export class CustomerService {
         status: true,
         updateAt: false,
       },
+      take,
+      skip: page * take,
+      where:{
+        fullName:{
+          contains: search || undefined
+        }
+      }
     });
+
+    return {customers, customersCount: count}
   }
 
   async findOne(id: string) {
@@ -68,7 +91,7 @@ export class CustomerService {
       where: { id },
     });
 
-    return { message: 'Conta atualizada com sucesso!' };
+    return messageGenerator('update');
   }
 
   async remove(id: string) {
@@ -80,7 +103,7 @@ export class CustomerService {
       },
     });
 
-    return { message: 'Conta apagada com sucesso' };
+    return messageGenerator('delete');
   }
 
   async exist(id: string) {

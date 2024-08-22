@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
@@ -28,10 +30,15 @@ export class CustomerController {
     return this.customerService.create(customer);
   }
 
-  @UseGuards(AuthCustomerGuard)
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.customerService.findAll();
+  findAll(
+    @Query('take', ParseIntPipe) take: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query("search") search: string
+
+  ) {
+    return this.customerService.findAll({page, take, search});
   }
 
   @UseGuards(AuthCustomerGuard)
