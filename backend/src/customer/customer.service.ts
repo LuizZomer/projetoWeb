@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import * as bcrypt from 'bcrypt';
@@ -26,23 +30,22 @@ export class CustomerService {
     return messageGenerator('create');
   }
 
-  async findAll({page, take, search}: IFindAllParam) {
+  async findAll({ page, take, search }: IFindAllParam) {
     const customerTableCount = await this.prisma.customer.count({
-      where:{
-        fullName:{
-          contains:  search || undefined
-        }
-      }
-    })
-    
-    const count = Math.ceil(customerTableCount / take)
+      where: {
+        fullName: {
+          contains: search || undefined,
+        },
+      },
+    });
 
-    if(page >= count) throw new BadRequestException("Pagina não existente")
+    const count = Math.ceil(customerTableCount / take);
 
-    const customers =  await this.prisma.customer.findMany({
+    if (page >= count) throw new BadRequestException('Pagina não existente');
+
+    const customers = await this.prisma.customer.findMany({
       select: {
         Contact: false,
-        contactId: false,
         createdAt: true,
         fullName: true,
         id: true,
@@ -57,20 +60,31 @@ export class CustomerService {
       },
       take,
       skip: page * take,
-      where:{
-        fullName:{
-          contains: search || undefined
-        }
-      }
+      where: {
+        fullName: {
+          contains: search || undefined,
+        },
+      },
     });
 
-    return {customers, customersCount: count}
+    return { customers, customersCount: count };
   }
 
   async findOne(id: string) {
     await this.exist(id);
 
     return this.prisma.customer.findUnique({
+      select: {
+        password: false,
+        Contact: true,
+        createdAt: true,
+        email: true,
+        fullName: true,
+        id: true,
+        idnr: true,
+        loyalty_points: true,
+        status: true,
+      },
       where: {
         id,
       },

@@ -28,7 +28,6 @@ model User {
   updateAt   DateTime  @updatedAt
   contactId  String?
 
-  Contact            Contact?            @relation(fields: [contactId], references: [id])
   AccountsReceivable AccountReceivable[]
   AccountPayable     AccountPayable[]
   Revenue            Revenue[]
@@ -46,9 +45,8 @@ model Customer {
   loyalty_points Int
   createdAt      DateTime @default(now())
   updateAt       DateTime @updatedAt
-  contactId      String?
 
-  Contact  Contact?   @relation(fields: [contactId], references: [id])
+  Contact  Contact[]
   Order    Order[]
   Revenue  Revenue[]
   OrderLog OrderLog[]
@@ -57,13 +55,14 @@ model Customer {
 }
 
 model Contact {
-  id        String     @id @default(uuid())
-  type      String
-  value     String
-  createdAt DateTime   @default(now())
-  updateAt  DateTime   @updatedAt
-  Customer  Customer[]
-  User      User[]
+  id         String   @id @default(uuid())
+  type       String
+  value      String
+  createdAt  DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  customerId String
+
+  Customer Customer @relation(fields: [customerId], references: [id])
 
   @@map("contacts")
 }

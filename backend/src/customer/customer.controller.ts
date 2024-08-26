@@ -35,13 +35,12 @@ export class CustomerController {
   findAll(
     @Query('take', ParseIntPipe) take: number,
     @Query('page', ParseIntPipe) page: number,
-    @Query("search") search: string
-
+    @Query('search') search: string,
   ) {
-    return this.customerService.findAll({page, take, search});
+    return this.customerService.findAll({ page, take, search });
   }
 
-  @UseGuards(AuthCustomerGuard)
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.customerService.findOne(id);

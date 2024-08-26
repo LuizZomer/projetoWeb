@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -26,25 +30,23 @@ export class UserService {
     return messageGenerator('create');
   }
 
-  async findAll({page, take, search}:IFindAllParam) {
+  async findAll({ page, take, search }: IFindAllParam) {
     const userTableCount = await this.prisma.user.count({
-      where:{
-        fullName:{
-          contains:  search || undefined
-        }
-      }
-    })
-    
-    const count = Math.ceil(userTableCount / take)
+      where: {
+        fullName: {
+          contains: search || undefined,
+        },
+      },
+    });
 
-    if(page >= count) throw new BadRequestException("Pagina não existente")
-    
+    const count = Math.ceil(userTableCount / take);
+
+    if (page >= count) throw new BadRequestException('Pagina não existente');
 
     const users = await this.prisma.user.findMany({
       select: {
         AccountPayable: false,
         AccountsReceivable: false,
-        Contact: false,
         fullName: true,
         id: true,
         contactId: false,
@@ -62,14 +64,14 @@ export class UserService {
       },
       take,
       skip: page * take,
-      where:{
-        fullName:{
-          contains: search || undefined
-        }
-      }
+      where: {
+        fullName: {
+          contains: search || undefined,
+        },
+      },
     });
 
-    return {users, usersCount: count}
+    return { users, usersCount: count };
   }
 
   async findOne(id: string) {
