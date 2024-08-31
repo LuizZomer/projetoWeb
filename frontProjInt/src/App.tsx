@@ -1,7 +1,6 @@
 
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
-import './App.css'
-import Landpage from './pages/module/landpage';
+import Landpage from './pages/landpage';
 import { ChakraProvider } from '@chakra-ui/react';
 
 const router = createBrowserRouter([

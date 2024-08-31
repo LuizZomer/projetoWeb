@@ -5,10 +5,10 @@ import Home from '../../assets/Home.png'
 function Header(){
 
     return(
-        <Box >
-            <ButtonGroup display="flex" alignItems="center" justifyContent="space-between" mt={2}>
+        <Box position='fixed' width='100%'  zIndex='10' backgroundColor='white' padding={15}> 
+            <ButtonGroup display="flex" alignItems="center" justifyContent="space-around" mt={2}>
                 <Button flex={0.5}  > 
-                    <Image src={Home} alt="Home" />
+                    <Image src={Home} alt="Home" paddingBottom={2}/>
                 </Button>
                 <Button   flex={1}>HAUSS</Button>
                 <Button   flex={1}>VERBIDEN</Button>
