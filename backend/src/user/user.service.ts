@@ -49,7 +49,6 @@ export class UserService {
         AccountsReceivable: false,
         fullName: true,
         id: true,
-        contactId: false,
         createdAt: true,
         function: true,
         idnr: true,

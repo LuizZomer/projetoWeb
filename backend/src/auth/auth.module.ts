@@ -5,12 +5,14 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { CustomerModule } from 'src/customer/customer.module';
+import { FinanceModule } from 'src/finance/finance.module';
 
 @Module({
   imports: [
     PrismaModule,
     forwardRef(() => UserModule),
     forwardRef(() => CustomerModule),
+    forwardRef(() => FinanceModule),
     JwtModule.register({
       secret: 'sdnfkjdsfkjdhsjkfhsdkjfhsdkjfhkjdsfhkjdsfkjdsfhdskjfh',
     }),

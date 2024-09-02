@@ -26,7 +26,6 @@ model User {
   lastAccess DateTime?
   createdAt  DateTime  @default(now())
   updateAt   DateTime  @updatedAt
-  contactId  String?
 
   AccountsReceivable AccountReceivable[]
   AccountPayable     AccountPayable[]
@@ -113,13 +112,14 @@ model Revenue {
   date        DateTime
   description String
   value       Float
+  status      Boolean
   orderId     String
   customerId  String
-  userId      String
 
-  User     User     @relation(fields: [userId], references: [id])
   Customer Customer @relation(fields: [customerId], references: [id])
   Order    Order    @relation(fields: [orderId], references: [id])
+  User     User?    @relation(fields: [userId], references: [id])
+  userId   String?
 
   @@map("revenues")
 }
