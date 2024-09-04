@@ -45,8 +45,7 @@ export class UserService {
 
     const users = await this.prisma.user.findMany({
       select: {
-        AccountPayable: false,
-        AccountsReceivable: false,
+        Finance: false,
         fullName: true,
         id: true,
         createdAt: true,

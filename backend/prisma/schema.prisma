@@ -27,9 +27,8 @@ model User {
   createdAt  DateTime  @default(now())
   updateAt   DateTime  @updatedAt
 
-  AccountsReceivable AccountReceivable[]
-  AccountPayable     AccountPayable[]
-  Revenue            Revenue[]
+  Revenue Revenue[]
+  Finance Finance[]
 
   @@map("users")
 }
@@ -66,32 +65,19 @@ model Contact {
   @@map("contacts")
 }
 
-model AccountReceivable {
-  id         String   @id @default(uuid())
-  dueDate    DateTime
-  descrition String
-  value      Float
-  status     Boolean
-  userId     String
-  createdAt  DateTime @default(now())
+model Finance {
+  id          String   @id @default(uuid())
+  dueDate     DateTime
+  description String
+  value       Float
+  status      Boolean
+  userId      String
+  type        String
+  createdAt   DateTime @default(now())
 
   User User @relation(fields: [userId], references: [id])
 
-  @@map("account_receivable")
-}
-
-model AccountPayable {
-  id         String   @id @default(uuid())
-  dueDate    DateTime
-  descrition String
-  value      Float
-  status     Boolean
-  userId     String
-  createdAt  DateTime @default(now())
-
-  User User @relation(fields: [userId], references: [id])
-
-  @@map("account_payable")
+  @@map("finance")
 }
 
 model Order {

@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateRevenueAccountDTO {
   @IsString()
@@ -9,10 +9,7 @@ export class CreateRevenueAccountDTO {
 
   @IsNumber()
   value: number;
-
-  @IsBoolean()
-  status: boolean;
-
+  
   @IsString()
   customerId: string;
 

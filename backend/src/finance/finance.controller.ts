@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { CreatePayableAccountDTO } from './dto/create/create-payable-account.dto copy';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { FinanceService } from './finance.service';
 import { AuthGuard } from 'src/guards/authUser.guard';
 import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
+import { CreateFinanceDTO } from './dto/create-payable-account.dto copy';
+import { UpdateFinanceDTO } from './dto/update-payable-account.dto copy 2';
 
 @Roles(Role.ADMIN, Role.FINANCIAL)
 @UseGuards(AuthGuard, RoleGuard)
@@ -12,13 +13,38 @@ import { Role } from 'src/enums/role.enum';
 export class FinanceController {
   constructor(private readonly financesService: FinanceService) {}
 
-  @Post('payable')
-  createPayableAccount(
-    @Req() req: any,
-    @Body() payableAccount: CreatePayableAccountDTO,
-  ) {
-    const user = req.user.id;
-
-    return this.financesService.createPayableAccount(payableAccount, user);
+  @Get()
+  async findAll(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('take', ParseIntPipe) take: number,
+  ){
+    return this.financesService.findAllFinance({page, take})
   }
+
+  @Post()
+  async create(
+    @Req() req: any,
+    @Body() finance: CreateFinanceDTO,
+  ) {
+    const userId = req.user.id;
+
+    return this.financesService.createFinance(finance, userId);
+  }
+
+  @Patch(':financeId')
+  async update(
+    @Param('financeId') financeId: string,
+    @Req() req: any,
+    @Body() finance: UpdateFinanceDTO
+  ){
+    const userId = req.user.id;
+
+    return this.financesService.updateFinance({finance, id: financeId, userId})
+  } 
+
+  @Delete(':financeId')
+  async delete(@Param('financeId') id: string){
+    return this.financesService.delete(id)
+  }
+
 }

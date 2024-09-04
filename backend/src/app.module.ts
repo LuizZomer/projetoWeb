@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { MenuModule } from './menu/menu.module';
 import { ContactModule } from './contact/contact.module';
 import { FinanceModule } from './finance/finance.module';
+import { RevenueModule } from './revenue/revenue.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FinanceModule } from './finance/finance.module';
     MenuModule,
     ContactModule,
     FinanceModule,
+    RevenueModule,
   ],
   controllers: [AppController],
   providers: [AppService],
