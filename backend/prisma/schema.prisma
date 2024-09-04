@@ -81,13 +81,14 @@ model Finance {
 }
 
 model Order {
-  id         String   @id @default(uuid())
-  name       String
-  value      Float
-  customerId String
-  createdAt  DateTime @default(now())
+  id           String   @id @default(uuid())
+  name         String
+  value        Float
+  customerId   String?
+  customerName String?
+  createdAt    DateTime @default(now())
 
-  Customer Customer  @relation(fields: [customerId], references: [id])
+  Customer Customer? @relation(fields: [customerId], references: [id])
   Revenue  Revenue[]
 
   @@map("orders")
