@@ -13,19 +13,25 @@ export class RevenueService {
     orderId, 
     value,
     description, 
+    customerId,
+    customerName
     }: CreateRevenueAccountDTO,
-    customerId: string
   ){
-    await this.prisma.revenue.create({
+      await this.prisma.revenue.create({
       data:{
         date,
         description,
         status: false,
         orderId,
         customerId,
+        customerName,
         value
       }
     })
+  }
+
+  async findAllRevenue(){
+    return this.prisma.revenue.findMany()
   }
 
   async payRevenue({status}: UpdateRevenueAccountDTO, revenueId: string){

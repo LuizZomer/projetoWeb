@@ -2,7 +2,7 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class CreateRevenueAccountDTO {
   @IsString()
-  date: string;
+  date: Date;
 
   @IsString()
   description: string;
@@ -11,7 +11,10 @@ export class CreateRevenueAccountDTO {
   value: number;
   
   @IsString()
-  customerId: string;
+  customerId?: string;
+
+  @IsString()
+  customerName?: string;
 
   @IsString()
   orderId: string;

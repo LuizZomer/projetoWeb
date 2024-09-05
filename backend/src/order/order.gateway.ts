@@ -6,13 +6,15 @@ import { OrderService } from "./order.service";
 
 @WebSocketGateway({namespace: 'order'})
 export class OrderGateway {
-    constructor(private readonly orderService: OrderService){}
+    constructor(
+        private readonly orderService: OrderService,
+    ){}
 
     @WebSocketServer() server: Server
 
     @SubscribeMessage('newOrder')
     @UsePipes(new ValidationPipe({ transform: true })) 
-    async handleNewOrder(client: Socket, @MessageBody() order: CreateOrderDTO){
+    async handleNewOrder(@MessageBody() order: CreateOrderDTO){
         await this.orderService.createOrder(order)
 
         const orderList = await this.orderService.FindAllOrder()

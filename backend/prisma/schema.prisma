@@ -77,7 +77,7 @@ model Finance {
 
   User User @relation(fields: [userId], references: [id])
 
-  @@map("finance")
+  @@map("finances")
 }
 
 model Order {
@@ -89,23 +89,24 @@ model Order {
   createdAt    DateTime @default(now())
 
   Customer Customer? @relation(fields: [customerId], references: [id])
-  Revenue  Revenue[]
+  Revenue  Revenue?
 
   @@map("orders")
 }
 
 model Revenue {
-  id          String   @id @default(uuid())
-  date        DateTime
-  description String
-  value       Float
-  status      Boolean
-  orderId     String
-  customerId  String
+  id           String   @id @default(uuid())
+  date         DateTime
+  description  String
+  value        Float
+  status       Boolean
+  orderId      String?  @unique
+  customerId   String?
+  customerName String?
 
-  Customer Customer @relation(fields: [customerId], references: [id])
-  Order    Order    @relation(fields: [orderId], references: [id])
-  User     User?    @relation(fields: [userId], references: [id])
+  Customer Customer? @relation(fields: [customerId], references: [id])
+  Order    Order?    @relation(fields: [orderId], references: [id])
+  User     User?     @relation(fields: [userId], references: [id])
   userId   String?
 
   @@map("revenues")
