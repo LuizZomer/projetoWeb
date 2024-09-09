@@ -1,5 +1,5 @@
 import { Box, Image, Text} from "@chakra-ui/react"
-import a from "../../assets/Second-section.png";
+import a from "../assets/Second-section.png";
 
 function Biografy(){
 
@@ -7,7 +7,9 @@ function Biografy(){
         <Box display="flex" 
             alignItems="center" 
             justifyContent="space-between" 
-            padding={10}>
+            width='80%'
+            alignSelf='center'
+            >
 
             <Text  as='b' 
                 fontSize='lg' 

@@ -1,10 +1,10 @@
 import { Box, Image } from "@chakra-ui/react";
-import Header from "../components/landpage/header";
-import a from '../assets/Firstsection.png'
-import Biografy from "../components/landpage/biografy";
-import Cardvantagens from "../components/landpage/cardvantagens";
-import Menu from "../components/landpage/menu";
-import Promo from "../components/landpage/promocoes";
+import Header from "./components/header";
+import a from './assets/Firstsection.png'
+import Biografy from "./components/biografy";
+import Cardvantagens from "./components/cardvantagens";
+import Menu from "./components/menu";
+import Promo from "./components/promocoes";
 
 export default function Landpage(){
 

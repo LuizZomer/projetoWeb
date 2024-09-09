@@ -1,10 +1,10 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import Card from "./card";
+import DescVantagens from "./descVantagens";
 
 
 function Cardvantagens(){
     return(
-        <Box>
             <Box display="flex" 
                 flexDirection='column' 
                 alignItems="center" 
@@ -43,34 +43,12 @@ function Cardvantagens(){
                     description="Rabatte und spezielle Pakete für Gruppen- oder Familienessen. Genießen Sie köstliche Momente mit Ihren Liebsten!"
                     />
                 </Box>
+                <DescVantagens/>
             </Box>
 
-            <Box display='flex' justifyContent='space-between' m={100}>
+            
 
-                <Text 
-                w={400}
-                fontFamily='Rakkas'
-                color='#482D19'
-                fontSize='large'
-                fontWeight='semibold'
-                >Wenn Sie der Pizzeria Bei Giovanni beitreten, profitieren Sie von einer Reihe exklusiver Geschenke, die Ihr Erlebnis noch spezieller machen.
-                </Text>
-
-                <Button
-                bgColor='#75492A'
-                textColor='white'
-                w='376px'
-                h='118px'
-                fontSize='xxx-large'
-                fontWeight='bold'
-                fontFamily='Rakkas'
-                >VERBIDEN
-                </Button>
-
-            </Box>
-
-
-        </Box>
+        
     )
 }
 
