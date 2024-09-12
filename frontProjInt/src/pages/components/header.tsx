@@ -1,5 +1,5 @@
 import { Box, Image } from "@chakra-ui/react"
-import { Button, ButtonGroup } from '@chakra-ui/react'
+import { Button} from '@chakra-ui/react'
 import Home from '../assets/Home.png'
 
 function Header(){
@@ -10,13 +10,12 @@ function Header(){
             width='100%'  
             zIndex='10' 
             backgroundColor='white' 
-            padding={15}> 
+            padding='24px'
+            display="flex" 
+            alignItems="center" 
+            justifyContent="space-around" >
+                 
 
-            <ButtonGroup 
-                display="flex" 
-                alignItems="center" 
-                justifyContent="space-around" 
-                mt={2}>
 
 
                 <Button 
@@ -52,7 +51,7 @@ function Header(){
                 </Button>
 
 
-            </ButtonGroup>
+            
         </Box>
     )
 }

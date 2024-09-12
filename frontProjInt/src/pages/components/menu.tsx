@@ -22,18 +22,18 @@ export default function Menu(){
 
             <Image src={a} 
                 alt="Menu" 
-                margin='50px' 
+                marginTop='50px' 
             />
 
             <Button
                 as='b' 
                 textColor="white" 
                 fontFamily='Rakkas' 
-                fontSize={{ base: 'lg', md: 'xl', lg: '2xl' }}
+                fontSize='38px'
                 backgroundColor='#482D19'
-                w={{ base: '80%', sm: '60%', md: '250px' }}
-                h={{ base: '60px', md: '85px' }}
-                mb={{ base: '20px', md: '30px' }}
+                w={{ base: '80%', sm: '60%', md: '375px' }}
+                h={{ base: '83px', md: '118px' }}
+                my={{ base: '100px', md: '150px' }}
                 
                 >SPEISEKARTE
             </Button>
@@ -42,11 +42,11 @@ export default function Menu(){
                 display='flex' 
                 alignItems='center' 
                 justifyContent='center' 
-                height={{ base: 'auto', md: '400px' }}
+                height={{ base: 'auto', md: '493px' }}
             >
                 
                 <Text 
-                    textColor='white'
+                    textColor='#F1ECDC'
                     fontFamily='Rakkas'
                     fontSize={{ base: 'md', md: 'lg', lg: '2xl' }}
                     fontWeight='semibold'

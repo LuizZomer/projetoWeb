@@ -8,41 +8,45 @@ import { Box, Image, Text } from "@chakra-ui/react";
 
 export default function Promo(){
     return(
-        <Box display='flex' flexDir='column' alignItems='center' mb='4%'>
-            <Text
-                color='#482D19'
-                fontFamily='Rakkas'
-                fontWeight='Bold'
-                fontSize={{ base: '2xl', md: '4xl', lg: '5xl' }} 
-                mt='3% '
-                >Aktuelle Aktionen
-            </Text>
+        <Box display='flex' flexDir='column' alignItems='center' >
+            <Box my='68px'>
+                <Text
+                    color='#482D19'
+                    fontFamily='Rakkas'
+                    fontWeight='Bold'
+                    fontSize='5xl'
+                    textAlign='center'
+                    >Aktuelle Aktionen
+                </Text>
 
 
-            <Text
-                color='#482D19'
-                fontFamily='Rakkas'
-                fontWeight='Bold'
-                fontSize={{ base: 'md', md: 'lg', lg: 'xl' }}
-                
-                >Bleiben Sie über unsere neuesten Angebote informiert!
-            </Text>
+                <Text
+                    color='#482D19'
+                    fontFamily='Rakkas'
+                    fontWeight='Bold'
+                    fontSize={{ base: 'md', md: 'lg', lg: 'xl' }}
+                    textAlign='center'   
+                    
+                    >Bleiben Sie über unsere neuesten Angebote informiert!
+                </Text>
+            </Box>
 
             <Image src='' 
                 alt="Foto Promoção" 
                 backgroundColor='#75492A' 
-                width='80%'
-                paddingY='15%'
-                my={{ base: '20px', md: '30px' }}
+                width='800px'
+                height='380px'
+                
+                
             /> 
 
-            <Box display='flex' justifyContent='space-around' width='100%' alignItems='center' flexDir={{ base: 'column', md: 'row' }}>
+            <Box display='flex' justifyContent='space-around' width='100%' alignItems='center' my='5%' flexDir={{ base: 'column', md: 'row' }}>
                 <Text
                     
                     color='#482D19'
                     fontWeight='bold'
                     fontStyle='Rakkas'
-                    fontSize={{ base: 'sm', md: 'md', lg: 'large' }}
+                    fontSize='20'
                     >Inh.: Círo Donadío
                 </Text>
 
@@ -50,7 +54,7 @@ export default function Promo(){
                     color='#482D19'
                     fontWeight='bold'
                     fontStyle='Rakkas'
-                    fontSize={{ base: 'sm', md: 'md', lg: 'large' }}
+                    fontSize='20'
                     >Hörder Str. 323 58454 Wítten
                 </Text> 
 
@@ -58,7 +62,7 @@ export default function Promo(){
                     color='#482D19'
                     fontWeight='bold'
                     fontStyle='Rakkas'
-                    fontSize={{ base: 'lg', md: 'xl', lg: 'xx-large' }}   
+                    fontSize='32'   
                     >Aktuelle Aktionen
                 </Text> 
 

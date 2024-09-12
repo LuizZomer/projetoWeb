@@ -4,17 +4,20 @@ export default function DescVantagens(){
     return(
         <Box 
                 display='flex' 
-                justifyContent='space-between' 
-                m='10%'
-                maxWidth='70%'
+                justifyContent='space-between'
+                marginX='10%'
+                marginY='12%' 
                 >
 
                 <Text 
-                w={400}
+                
                 fontFamily='Rakkas'
                 color='#482D19'
-                fontSize='large'
+                w='464px'
+                h='144px'
                 fontWeight='semibold'
+                fontSize='24'
+                marginRight='300px'
                 
                     >Wenn Sie der Pizzeria Bei Giovanni beitreten, profitieren Sie von einer Reihe exklusiver Geschenke, die Ihr Erlebnis noch spezieller machen.
                 </Text>
@@ -24,9 +27,9 @@ export default function DescVantagens(){
                 textColor='white'
                 w='376px'
                 h='118px'
-                fontSize='xxx-large'
                 fontWeight='bold'
                 fontFamily='Rakkas'
+                fontSize='48'
                     >VERBIDEN
                 </Button>
 
