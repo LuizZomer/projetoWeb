@@ -25,6 +25,8 @@ function Cardvantagens(){
                     width="100%"
                     maxWidth="1200px" 
                     p={4}
+                    flexWrap='wrap'
+                    gap='4px'
                 >
                     <Card title="Exclusive Rabatte" 
                     description="Erhalten Sie exklusive Rabatte, Sonderangebote und Angebote basierend auf den Bestellungen, die Sie normalerweise aufgeben. Ihre Vorlieben werden immer belohnt!"

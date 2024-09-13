@@ -9,6 +9,7 @@ function Biografy(){
             justifyContent="space-between" 
             width='80%'
             alignSelf='center'
+            flexDir={{base:'column', mobile:'row'}}
             >
 
             <Text  as='b' 

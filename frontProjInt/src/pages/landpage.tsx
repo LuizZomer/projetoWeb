@@ -6,6 +6,10 @@ import Cardvantagens from "./components/cardvantagens";
 import Menu from "./components/menu";
 import Promo from "./components/promocoes";
 
+
+
+
+
 export default function Landpage(){
 
     return(

@@ -1,6 +1,5 @@
-import { Box, Image } from "@chakra-ui/react"
+import { Box} from "@chakra-ui/react"
 import { Button} from '@chakra-ui/react'
-import Home from '../assets/Home.png'
 
 function Header(){
 
@@ -11,39 +10,40 @@ function Header(){
             zIndex='10' 
             backgroundColor='white' 
             padding='24px'
-            display="flex" 
+            
+            display="flex"
+            flexDir={{base:'column', mobile:'row'}} 
             alignItems="center" 
             justifyContent="space-around" >
                  
 
 
 
-                <Button 
-                
-                    flex={0.5} 
-                    backgroundColor='white'> 
-                        <Image src={Home} alt="Home" paddingBottom={2}/>
-                </Button>
 
-                <Button  
-                    backgroundColor='white'  
+                <Button 
+                    marginBottom={{base:'10px', mobile:'0'}} 
+                    backgroundColor='white'
                     flex={1}
+                    fontSize='2rem'
                     >HAUSS
                 </Button>
 
-                <Button  
+                <Button 
+                    marginBottom={{base:'10px', mobile:'0'}}  
                     backgroundColor='white'  
                     flex={1}
                     >VERBIDEN
                 </Button>
 
-                <Button  
+                <Button
+                    marginBottom={{base:'10px', mobile:'0'}}  
                     backgroundColor='white'  
                     flex={1}
                     >SPEISKARTE
                 </Button>
 
-                <Button  
+                <Button
+                    marginBottom={{base:'10px', mobile:'0'}}  
                     backgroundColor='white'  
                     flex={1}  
                     color={"#482D19"} 

@@ -62,7 +62,7 @@ export default function Promo(){
                     color='#482D19'
                     fontWeight='bold'
                     fontStyle='Rakkas'
-                    fontSize='32'   
+                    fontSize='20'   
                     >Aktuelle Aktionen
                 </Text> 
 
