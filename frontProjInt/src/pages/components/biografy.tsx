@@ -6,11 +6,11 @@ function Biografy(){
     return(
         <Box display="flex" 
             alignItems="center" 
-            justifyContent="space-between" 
+            justifyContent={{base:'', mobile:'space-between'}} 
             width='80%'
             alignSelf='center'
             flexDir={{base:'column', mobile:'row'}}
-            gap='4px'
+            gap={{base:'4px', mobile:'100'}}
             >
 
             <Text  as='b' 

@@ -22,7 +22,6 @@ export default function DescVantagens(){
                 fontWeight='semibold'
                 fontSize={{base:'20px',mobile:'24px'}}
                 marginRight={{base:'0px',mobile:'300px'}}
-                textAlign='center'
                 marginBottom={{base:'20px',mobile:'0'}}
                 
                 
@@ -33,7 +32,7 @@ export default function DescVantagens(){
                 bgColor='#75492A'
                 textColor='white'
                 w={{base:'150px',mobile:'376px'}}
-                h={{base:'70px',mobile:'118px'}}
+                h={{base:'70px',mobile:'118px'}}    
                 fontWeight='bold'
                 fontFamily='Rakkas'
                 fontSize={{base:'22',mobile:'48'}}
