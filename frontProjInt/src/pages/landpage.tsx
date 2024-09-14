@@ -21,7 +21,9 @@ export default function Landpage(){
                 mb={5} 
                 alignSelf='center' 
                 position='relative' 
-                mt='43px'/>
+                mt={{base:'7em', mobile:'43px'}}
+                width='auto'
+                height='auto'/>
 
             <Biografy/>
             <Cardvantagens/>

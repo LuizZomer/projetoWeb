@@ -3,21 +3,28 @@ import {Box, Text, Button} from '@chakra-ui/react'
 export default function DescVantagens(){
     return(
         <Box 
-                display='flex' 
-                justifyContent='space-between'
+                display='flex'
+                flexDir={{base:'column', mobile:'row'}} 
+                justifyContent={{base:'center',mobile:'space-between'}}
                 marginX='10%'
-                marginY='12%' 
+                marginY={{base:'24%',mobile:'12%'}}
+                alignItems='center'
+                alignContent='center'
+                gap={10} 
                 >
 
                 <Text 
                 
                 fontFamily='Rakkas'
                 color='#482D19'
-                w='464px'
-                h='144px'
+                w={{base:'200px',mobile:'464px'}}
+                h={{base:'200px',mobile:'144px'}}
                 fontWeight='semibold'
-                fontSize='24'
-                marginRight='300px'
+                fontSize={{base:'20px',mobile:'24px'}}
+                marginRight={{base:'0px',mobile:'300px'}}
+                textAlign='center'
+                marginBottom={{base:'20px',mobile:'0'}}
+                
                 
                     >Wenn Sie der Pizzeria Bei Giovanni beitreten, profitieren Sie von einer Reihe exklusiver Geschenke, die Ihr Erlebnis noch spezieller machen.
                 </Text>
@@ -25,11 +32,11 @@ export default function DescVantagens(){
                 <Button
                 bgColor='#75492A'
                 textColor='white'
-                w='376px'
-                h='118px'
+                w={{base:'150px',mobile:'376px'}}
+                h={{base:'70px',mobile:'118px'}}
                 fontWeight='bold'
                 fontFamily='Rakkas'
-                fontSize='48'
+                fontSize={{base:'22',mobile:'48'}}
                     >VERBIDEN
                 </Button>
 

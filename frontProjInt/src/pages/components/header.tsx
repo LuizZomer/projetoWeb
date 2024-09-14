@@ -9,44 +9,49 @@ function Header(){
             width='100%'  
             zIndex='10' 
             backgroundColor='white' 
-            padding='24px'
+            padding={{base:'0px',mobile:'24px'}}
             
             display="flex"
             flexDir={{base:'column', mobile:'row'}} 
             alignItems="center" 
-            justifyContent="space-around" >
+            justifyContent="space-around"
+            gap='0.7rem' >
                  
 
 
 
 
                 <Button 
-                    marginBottom={{base:'10px', mobile:'0'}} 
+
                     backgroundColor='white'
                     flex={1}
-                    fontSize='2rem'
+                    fontSize='0.9rem' 
                     >HAUSS
                 </Button>
 
                 <Button 
-                    marginBottom={{base:'10px', mobile:'0'}}  
+
                     backgroundColor='white'  
                     flex={1}
+                    fontSize='0.9rem' 
                     >VERBIDEN
                 </Button>
 
                 <Button
-                    marginBottom={{base:'10px', mobile:'0'}}  
+  
                     backgroundColor='white'  
                     flex={1}
+                    fontSize='0.9rem' 
                     >SPEISKARTE
                 </Button>
 
                 <Button
-                    marginBottom={{base:'10px', mobile:'0'}}  
+
                     backgroundColor='white'  
-                    flex={1}  
-                    color={"#482D19"} 
+                    flex={1}
+                    fontSize='0.9rem'  
+                    color={"#482D19"}
+                    mb='9px' 
                     >AN
                 </Button>
 

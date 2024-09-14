@@ -14,7 +14,7 @@ export default function Promo(){
                     color='#482D19'
                     fontFamily='Rakkas'
                     fontWeight='Bold'
-                    fontSize='5xl'
+                    fontSize={{base:'3xl',mobile:'5xl'}}
                     textAlign='center'
                     >Aktuelle Aktionen
                 </Text>

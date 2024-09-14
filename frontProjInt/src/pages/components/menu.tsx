@@ -29,11 +29,11 @@ export default function Menu(){
                 as='b' 
                 textColor="white" 
                 fontFamily='Rakkas' 
-                fontSize='38px'
+                fontSize={{base:'28px',mobile:'38px'}}
                 backgroundColor='#482D19'
-                w={{ base: '80%', sm: '60%', md: '375px' }}
-                h={{ base: '83px', md: '118px' }}
-                my={{ base: '100px', md: '150px' }}
+                w={{ base: '80%', mobile: '375px' }}
+                h={{ base: '75px', mobile: '118px' }}
+                my={{ base: '50px', mobile: '150px' }}
                 
                 >SPEISEKARTE
             </Button>
@@ -51,6 +51,7 @@ export default function Menu(){
                     fontSize={{ base: 'md', md: 'lg', lg: '2xl' }}
                     fontWeight='semibold'
                     mx='20%'
+                    my={{base:'10%', mobile:'0'}}
                     textAlign='center'
                         >Na der Pizzaria Bei Giovanni wird die Pasta mit der gleichen Leidenschaft und Authentizität zubereitet wie die Pizzen. Mit frischen Nudeln und traditionellen italienischen Saucen bietet jedes Pastagericht einen reichen, authentischen Geschmack und bringt das echte italienische Flair direkt auf Ihren Tisch in Witten.
                 </Text>
