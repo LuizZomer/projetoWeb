@@ -21,7 +21,7 @@ export default function Landpage(){
                 mb={5} 
                 alignSelf='center' 
                 position='relative' 
-                mt={{base:'7em', mobile:'43px'}}
+                mt={{base:'0', mobile:'43px'}}
                 width='auto'
                 height='auto'/>
 

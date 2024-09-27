@@ -5,17 +5,19 @@ function Header(){
 
     return(
         <Box 
-            position='fixed'
+            position={{base:'static', mobile:'fixed'}} 
             width='100%'  
             zIndex='10' 
             backgroundColor='white' 
-            padding={{base:'0px',mobile:'24px'}}
+            padding={{base:'10px',mobile:'24px'}}
             
             display="flex"
             flexDir={{base:'column', mobile:'row'}} 
             alignItems="center" 
             justifyContent="space-around"
-            gap='0.7rem' >
+            gap='0.7rem'
+            boxShadow="0 4px 6px rgba(0, 0, 0, 0.1)"    
+             >
                  
 
 
@@ -51,7 +53,7 @@ function Header(){
                     flex={1}
                     fontSize='0.9rem'  
                     color={"#482D19"}
-                    mb='9px' 
+                    mb='9px'    
                     >AN
                 </Button>
 
