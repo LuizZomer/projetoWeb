@@ -6,68 +6,65 @@ import { UpdateRevenueAccountDTO } from './dto/update-revenue.dto';
 
 @Injectable()
 export class RevenueService {
-  constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createRevenueAccount({
-    date, 
-    orderId, 
+    date,
+    orderId,
     value,
-    description, 
     customerId,
-    customerName
-    }: CreateRevenueAccountDTO,
-  ){
-      await this.prisma.revenue.create({
-      data:{
+    customerName,
+  }: CreateRevenueAccountDTO) {
+    await this.prisma.revenue.create({
+      data: {
         date,
-        description,
         status: false,
         orderId,
         customerId,
         customerName,
-        value
-      }
-    })
+        value,
+      },
+    });
   }
 
-  async findAllRevenue(){
-    return this.prisma.revenue.findMany()
+  async findAllRevenue() {
+    return this.prisma.revenue.findMany();
   }
 
-  async payRevenue({status}: UpdateRevenueAccountDTO, revenueId: string){
+  async payRevenue({ status }: UpdateRevenueAccountDTO, revenueId: string) {
     await this.prisma.revenue.update({
       data: {
         status,
       },
-      where:{
-        id: revenueId
-      }
-    })
+      where: {
+        id: revenueId,
+      },
+    });
 
-    return messageGenerator('update')
+    return messageGenerator('update');
   }
 
-  async delete(id: string){
-    await this.exist(id)
+  async delete(id: string) {
+    await this.exist(id);
 
     await this.prisma.revenue.delete({
-      where:{
-        id
-      }
-    })
+      where: {
+        id,
+      },
+    });
 
-    return messageGenerator('delete')
+    return messageGenerator('delete');
   }
 
-  async exist(id: string){
+  async exist(id: string) {
     const revenue = await this.prisma.revenue.count({
-      where: {id}
-    }) 
+      where: { id },
+    });
 
-    if(revenue) {
-      return revenue
+    if (revenue) {
+      return revenue;
     }
 
-    throw new NotFoundException('Id de pagamento não encontrado!')
+    throw new NotFoundException('Id de pagamento não encontrado!');
   }
 }

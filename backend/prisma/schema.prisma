@@ -82,14 +82,13 @@ model Finance {
 
 model Order {
   id           String   @id @default(uuid())
-  name         String
-  value        Float
   customerId   String?
   customerName String?
   createdAt    DateTime @default(now())
 
-  Customer Customer? @relation(fields: [customerId], references: [id])
-  Revenue  Revenue?
+  Customer   Customer?   @relation(fields: [customerId], references: [id])
+  Revenue    Revenue?
+  OrderItems OrderItem[]
 
   @@map("orders")
 }
@@ -97,7 +96,6 @@ model Order {
 model Revenue {
   id           String   @id @default(uuid())
   date         DateTime
-  description  String
   value        Float
   status       Boolean
   orderId      String?  @unique
@@ -131,4 +129,18 @@ model Menu {
   value       Float
   type        String
   size        String
+
+  OrderItems OrderItem[]
+}
+
+model OrderItem {
+  id       String @id @default(uuid())
+  orderId  String
+  menuId   String
+  quantity Int
+
+  Order Order @relation(fields: [orderId], references: [id])
+  Menu  Menu  @relation(fields: [menuId], references: [id])
+
+  @@map("order_items")
 }

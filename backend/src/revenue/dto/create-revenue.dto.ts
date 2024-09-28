@@ -4,12 +4,9 @@ export class CreateRevenueAccountDTO {
   @IsString()
   date: Date;
 
-  @IsString()
-  description: string;
-
   @IsNumber()
   value: number;
-  
+
   @IsString()
   customerId?: string;
 
