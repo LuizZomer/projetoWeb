@@ -1,7 +1,14 @@
 import { Box} from "@chakra-ui/react"
 import { Button} from '@chakra-ui/react'
+import { useNavigate } from "react-router-dom"
 
 function Header(){
+
+    const navigate = useNavigate()
+
+    function handleClick(){
+        navigate('/login')
+    }
 
     return(
         <Box 
@@ -53,7 +60,8 @@ function Header(){
                     flex={1}
                     fontSize='0.9rem'  
                     color={"#482D19"}
-                    mb='9px'    
+                    mb='9px'
+                    onClick={handleClick}    
                     >AN
                 </Button>
 

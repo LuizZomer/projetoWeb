@@ -3,6 +3,9 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import Landpage from './pages/landpage';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from './pages/components/breakpoints';
+import LgnUser from './pages/loginUser';
+import { AuthProvider } from './context/AuthContext';
+
 
 const router = createBrowserRouter([
   {
@@ -13,12 +16,23 @@ const router = createBrowserRouter([
     path:'*',
     element:<Navigate to="/" />
   },
+  {
+    path:'/login',
+    element:<LgnUser/>
+  },
  ]);
 
 export default function App() {
+
+  
+
   return (
-  <ChakraProvider theme={theme}>
-    <RouterProvider router={router} />
-  </ChakraProvider>
-  );
+
+          <AuthProvider>
+            <ChakraProvider theme={theme}>
+              <RouterProvider router={router} />
+            </ChakraProvider>
+          </AuthProvider>
+          )
+         
  }
