@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { login as authServiceLogin } from '../context/axios';
 import { useNavigate } from "react-router-dom";
+import * as yup from 'yup';
 
 
 export default function LgnUser(){
@@ -15,18 +16,33 @@ export default function LgnUser(){
     const { login } = useAuth();
     const navigate = useNavigate();
 
+    const validationSchema = yup.object().shape({
+        email: yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
+        password: yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres').required('Senha é obrigatória'),
+    });
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-          const token = await authServiceLogin(email, password);
-          login(token);
-          navigate('/client-area')
+
+            await validationSchema.validate({ email, password });
+            
+            const token = await authServiceLogin(email, password);
+            login(token);
+            navigate('/client-area')
+
         } catch (error) {
-          console.error('Erro ao fazer login', error);
-          alert('Erro ao logar')
+            if (error instanceof yup.ValidationError) {
+                alert(error.message); 
+            } else {
+                console.error('Erro ao fazer login', error);
+                alert('Erro ao logar');
+            }
         }
       };
-    
+
+
+
 
     return(
         <Box display='flex' justifyContent='center' bgColor='#D9B092' w='100%' h='100vh'>
@@ -93,6 +109,7 @@ export default function LgnUser(){
                         textColor='#75492A'
                         marginY={10}
                         onClick={handleSubmit}
+                        
                         >LOGIN
                     </Button>
 

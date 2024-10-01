@@ -5,6 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from './pages/components/breakpoints';
 import LgnUser from './pages/loginUser';
 import { AuthProvider } from './context/AuthContext';
+import ClientArea from './pages/clientArea';
 
 
 const router = createBrowserRouter([
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     path:'/login',
     element:<LgnUser/>
   },
+  {
+    path:'/client-area',
+    element:<ClientArea/>
+  }
  ]);
 
 export default function App() {
