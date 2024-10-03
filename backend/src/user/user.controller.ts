@@ -33,9 +33,10 @@ export class UserController {
   findAll(
     @Query('take', ParseIntPipe) take: number,
     @Query('page', ParseIntPipe) page: number,
-    @Query("search") search: string
+    @Query('search') search: string,
+    @Query('role') role: string,
   ) {
-    return this.userService.findAll({take, page, search});
+    return this.userService.findAll({ take, page, search, role });
   }
 
   @Get(':id')

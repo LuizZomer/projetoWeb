@@ -10,6 +10,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { IFindAllParam } from 'src/utils/types';
 import { messageGenerator } from 'src/utils/function';
 
+interface IFindAllUser extends IFindAllParam {
+  role: string;
+}
+
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
@@ -30,18 +34,19 @@ export class UserService {
     return messageGenerator('create');
   }
 
-  async findAll({ page, take, search }: IFindAllParam) {
+  async findAll({ page, take, search, role }: IFindAllUser) {
     const userTableCount = await this.prisma.user.count({
       where: {
         fullName: {
           contains: search || undefined,
         },
+        role: {
+          equals: role || undefined,
+        },
       },
     });
 
     const count = Math.ceil(userTableCount / take);
-
-    if (page >= count) throw new BadRequestException('Pagina não existente');
 
     const users = await this.prisma.user.findMany({
       select: {
@@ -65,6 +70,9 @@ export class UserService {
       where: {
         fullName: {
           contains: search || undefined,
+        },
+        role: {
+          equals: role || undefined,
         },
       },
     });
