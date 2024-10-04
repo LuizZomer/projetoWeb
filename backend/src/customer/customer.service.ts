@@ -28,7 +28,6 @@ export class CustomerService {
     return this.prisma.customer.findMany({
       select: {
         Contact: false,
-        contactId: false,
         createdAt: true,
         fullName: true,
         id: true,
