@@ -20,9 +20,10 @@ export default function Landpage(){
                 alt="Pizza" 
                 mb={5} 
                 alignSelf='center' 
-                position='relative' 
+                
+                w='100vw' 
                 mt={{base:'0', mobile:'43px'}}
-                width='auto'
+                
                 height='auto'/>
 
             <Biografy/>
