@@ -6,27 +6,37 @@ import d from '../../assets/UsersThree.png'
 import e from '../../assets/Vector2.png'
 import f from '../../assets/Vector3.png'
 import g from '../../assets/LogOut.png'
+import { useNavigate } from "react-router-dom";
 
 export default function SideBar() {
     
-    
+    function home(){
+        naigate('/home')
+    }
+
+    function usuarioTela(){
+        naigate('/benutzer')
+    }
+
+    const naigate = useNavigate()
     return (
         <Box
-            w='280px'
+            position='fixed'
+            w='220px'
             h='100vh'
             display='flex'
             flexDirection='column'
             justifyContent='space-between'
             alignItems='center'
-            bgColor='f1ecdc'
+            bgColor='#f1ecdc'
         >   
             <Box display='flex' flexDir='column' alignItems='center' w='90%'>
                 <Image src={a} w='190px' h='60px' marginTop={5} marginBottom='5vh' />
-                <Button w='80%' h='60%' fontFamily='inter' textColor='#482D19' justifyContent='flex-start' margin='8px'>
+                <Button w='80%' h='60%' fontFamily='inter' textColor='#482D19' justifyContent='flex-start' margin='8px' onClick={home}>
                     <Image src={b} marginRight={4} w='16px' h='16px'/> 
                     <Text fontWeight='medium' fontSize='14px'>Hauss</Text>
                 </Button>
-                <Button w='80%' h='60%' fontFamily='inter' textColor='#482D19' justifyContent='flex-start' margin='8px'>
+                <Button w='80%' h='60%' fontFamily='inter' textColor='#482D19' justifyContent='flex-start' margin='8px'onClick={usuarioTela} >
                     <Image w='16px' h='16px' src={c} marginRight={4}/> 
                     <Text fontWeight='medium' fontSize='14px'>Benutzer</Text>
                 </Button>

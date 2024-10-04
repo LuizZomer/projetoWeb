@@ -110,7 +110,7 @@ export default function LgnUser() {
             w={352.4}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {passwordError && <Text color='red.500' fontSize='sm'>{passwordError}</Text>} {/* Exibe o erro de senha */}
+          {passwordError && <Text color='red.500' fontSize='sm'>{passwordError}</Text>}
 
           <Button
             w={352.4}

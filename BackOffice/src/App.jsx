@@ -5,6 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 import Home from './pages/Home';
+import Func from './pages/usurios';
 
 
 
@@ -12,6 +13,10 @@ import Home from './pages/Home';
 function App() {
 
   const router = createBrowserRouter([
+    {
+      path:'/benutzer',
+      element:<Func/>
+    },
     {
       path:'/',
       element:<LgnUser/>

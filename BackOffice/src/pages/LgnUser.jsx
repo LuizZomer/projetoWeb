@@ -23,6 +23,7 @@ export default function LgnUser(){
 
             
             const token = await authServiceLogin(username, password);
+
             login(token);
             navigate('/home')
 

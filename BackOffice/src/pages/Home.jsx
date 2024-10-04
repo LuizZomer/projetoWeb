@@ -1,6 +1,7 @@
-import { Box ,Text, FormControl, FormLabel, Select, Input} from "@chakra-ui/react";
+import { Box ,Text, FormControl, FormLabel, Select, Input, Button} from "@chakra-ui/react";
 import SideBar from "./components/sidebar";
-
+import Filter from "./components/filter";
+import Clientes from "./components/clientes";
 
 export default function Home(){
 
@@ -9,24 +10,10 @@ export default function Home(){
     return(
         <Box display='flex'>
             <SideBar/>
-            <Box backgroundColor='#897F61' h='100vh' w='100vw' display='flex'  flexDir='column' alignItems='center'>
-                <Text fontFamily='inter' textColor='white' fontSize='38' alignSelf='flex-start' marginLeft='5%' marginY={5}>Benutzer</Text>
-                <Box w='90%' backgroundColor='white'>
-                    <Text>Filter</Text>
-
-                    <Text>Name</Text>
-                    <Input placeholderTextColor="black.400" placeholder="Suchen" />
-
-                    <FormControl>
-                    <FormLabel>Erlaubris</FormLabel>
-                        <Select placeholder='Erlaubris'>
-                            <option>Wählen</option>
-                            <option>?</option>
-                        </Select>
-                    </FormControl>
-
-
-                </Box>
+            <Box backgroundColor='#897F61' h='150%' w='100vw' display='flex'  flexDir='column' alignItems='center'marginLeft='220px' paddingBottom='100px' >
+                <Text fontFamily='inter' textColor='white' fontSize='38' alignSelf='flex-start' marginLeft='5%' marginTop='2vh' marginBottom='1vh'>Kunde</Text>
+                <Filter/>
+                <Clientes/>
             </Box>
         </Box>
     )
