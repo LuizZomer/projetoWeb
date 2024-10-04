@@ -1,8 +1,10 @@
 
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
-import LgnUser from './components/LgnUser';
+import LgnUser from './pages/LgnUser';
 import { ChakraProvider } from '@chakra-ui/react';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+import Home from './pages/Home';
 
 
 
@@ -15,9 +17,10 @@ function App() {
       element:<LgnUser/>
     },
     {
-      path:'*',
-      element:<Navigate to="/" />
+      path:'/home',
+      element:<Home/>
     }
+
    ]);
   
   return (

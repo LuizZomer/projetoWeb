@@ -10,7 +10,7 @@ import * as yup from 'yup';
 import { login as authServiceLogin } from '../context/axios';
 
 export default function LgnUser(){
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -24,11 +24,10 @@ export default function LgnUser(){
         e.preventDefault();
         try {
 
-            await validationSchema.validate({ email, password });
             
-            const token = await authServiceLogin(email, password);
+            const token = await authServiceLogin(username, password);
             login(token);
-            alert('login sucedido')
+            navigate('/home')
 
         } catch (error) {
             if (error instanceof yup.ValidationError) {
@@ -82,7 +81,7 @@ export default function LgnUser(){
                         bgSize='8%'
                         
                         w={352.4}
-                        onChange={(e)=>setEmail(e.target.value)}
+                        onChange={(e)=>setUsername(e.target.value)}
                     />
 
                     <Input
