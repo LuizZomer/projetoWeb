@@ -15,6 +15,7 @@ export default function Menu(){
                 fontWeight='bold'
                 fontSize={{ base: 'xl', md: '2xl', lg: 'xx-large' }}
                 fontFamily='Rakkas'
+
                 mb={{ base: '20px', md: '30px' }}
                 objectFit='cover'   
                 >SPEISEKARTE
@@ -22,7 +23,8 @@ export default function Menu(){
 
             <Image src={a} 
                 alt="Menu" 
-                marginTop='50px' 
+                marginTop='50px'
+                w='100vw' 
             />
 
             <Button
@@ -58,7 +60,7 @@ export default function Menu(){
                 </Text>
 
             </Box>
-            <Image src={b} alt="MacarraoMenu"/>
+            <Image w='100vw' src={b} alt="MacarraoMenu"/>
 
         </Box>
     )
