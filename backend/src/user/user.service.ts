@@ -28,12 +28,8 @@ export class UserService {
   async findAll() {
     return this.prisma.user.findMany({
       select: {
-        AccountPayable: false,
-        AccountsReceivable: false,
-        Contact: false,
         fullName: true,
         id: true,
-        contactId: false,
         createdAt: true,
         function: true,
         idnr: true,
@@ -45,6 +41,7 @@ export class UserService {
         updateAt: false,
         username: true,
         workload: true,
+        Finance: false,
       },
     });
   }
