@@ -37,7 +37,7 @@ export default function Menu(){
                 h={{ base: '75px', mobile: '118px' }}
                 my={{ base: '50px', mobile: '150px' }}
                 cursor='pointer'
-                _hover={{bg:'gray'}}
+                _hover={{bg:'red.500'}}
                 >SPEISEKARTE
             </Button>
 

@@ -11,6 +11,7 @@ function Biografy(){
             alignSelf='center'
             flexDir={{base:'column', mobile:'row'}}
             gap={{base:'4px', mobile:'100'}}
+            margin='15px'
             >
 
             <Text  as='b' 

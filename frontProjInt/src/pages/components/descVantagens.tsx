@@ -20,9 +20,9 @@ export default function DescVantagens(){
                 w={{base:'300px',mobile:'464px'}}
                 h={{base:'200px',mobile:'144px'}}
                 fontWeight='semibold'
-                fontSize={{base:'20px',mobile:'2vw'}}
+                fontSize={{base:'20px',mobile:'150%'}}
                 marginRight={{base:'0px',mobile:'8vw'}}
-                marginBottom={{base:'20px',mobile:'0'}} 
+                marginBottom={{base:'20px',mobile:'0'}}
                 
                 
                     >Wenn Sie der Pizzeria Bei Giovanni beitreten, profitieren Sie von einer Reihe exklusiver Geschenke, die Ihr Erlebnis noch spezieller machen.
@@ -36,7 +36,7 @@ export default function DescVantagens(){
                 fontWeight='bold'
                 fontFamily='Rakkas'
                 fontSize={{base:'22',mobile:'48'}}
-                _hover={{bg:'gray'}}
+                _hover={{bg:'red.500'}}
                     >VERBIDEN
                 </Button>
 
