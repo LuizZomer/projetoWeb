@@ -1,15 +1,15 @@
 import styled, { css } from "styled-components";
 
-export const InputStyled = styled.input`
+export const InputStyled = styled.input<{ $themeColor: string }>`
   border: none;
   outline: none;
   width: 100%;
   height: 30px;
   background-color: transparent;
-  color: #fff;
+  color: ${({ $themeColor }) => $themeColor};
 
   &::placeholder {
-    color: white;
+    color: ${({ $themeColor }) => $themeColor};
   }
 `;
 
@@ -31,25 +31,29 @@ export const IconContainer = styled.div<{
     `}
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{ $themeColor: string }>`
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 4px;
-  color: #fff;
+  color: ${({ $themeColor }) => $themeColor};
 `;
 
 export const Label = styled.p`
   font-size: 20px;
 `;
 
-export const InputContainer = styled.div<{ $error: boolean; $gap?: string }>`
+export const InputContainer = styled.div<{
+  $error: boolean;
+  $gap?: string;
+  $themeColor: string;
+}>`
   display: flex;
   align-items: center;
   gap: ${({ $gap }) => $gap ?? "5px"};
   height: 52px;
-  border: 1px solid #fff;
+  border: 1px solid ${({ $themeColor }) => $themeColor};
   width: 100%;
   border-radius: 4px;
 

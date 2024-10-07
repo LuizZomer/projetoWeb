@@ -16,6 +16,7 @@ export const SidebarContainer = styled.aside`
   align-items: center;
   gap: 10px;
   padding: 0 10px;
+  box-shadow: 1px 10px 10px rgba(1, 1, 1, 0.4);
 `;
 
 export const LogoContainer = styled.div`

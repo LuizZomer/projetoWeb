@@ -5,15 +5,17 @@ export const Root = ({
   label,
   error,
   gap,
+  themeColor = "#fff",
 }: {
   children: React.ReactNode;
   label?: string;
   error?: string;
   gap?: string;
+  themeColor?: string;
 }) => (
-  <Container>
+  <Container $themeColor={themeColor}>
     {label && <Label>{label}</Label>}
-    <InputContainer $error={!!error} $gap={gap}>
+    <InputContainer $themeColor={themeColor} $error={!!error} $gap={gap}>
       {children}
     </InputContainer>
     {error && (

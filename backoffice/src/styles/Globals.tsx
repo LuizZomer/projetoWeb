@@ -14,6 +14,10 @@ export const GlobalStyle = createGlobalStyle`
 
 export const FilterContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  align-items: end;
   padding: 10px;
+  background-color: #f1ecdc;
+  border-radius: 8px;
+  gap: 20px;
 `;

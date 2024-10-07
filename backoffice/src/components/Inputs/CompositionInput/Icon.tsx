@@ -8,6 +8,7 @@ interface IIconComponentProps {
   onClick?: () => void;
   position: "before" | "after";
   isButton?: boolean;
+  color?: string;
 }
 
 export const Icon = ({
@@ -15,12 +16,13 @@ export const Icon = ({
   onClick,
   position,
   isButton = false,
+  color = "#fff",
 }: IIconComponentProps) => (
   <IconContainer
     $isButton={isButton}
     $position={position}
     onClick={() => (onClick ? onClick() : "")}
   >
-    <IconComponent size={26} color="white" />
+    <IconComponent size={26} color={color} />
   </IconContainer>
 );
