@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { loginCustomerDTO } from './dto/login-customer';
 import { loginUserDTO } from './dto/login-user.dto copy';
@@ -11,6 +11,20 @@ export class AuthController {
   @Post('userLogin')
   async userLogin(@Body() { password, username }: loginUserDTO) {
     return this.authService.userLogin({ password, username });
+  }
+
+  @Get('userCheck')
+  async userAuthCheck(@Headers('authorization') tokenWithBearer: string) {
+    const token = tokenWithBearer.split(' ')[1] ?? '';
+
+    return this.authService.isValidUserToken(token);
+  }
+
+  @Get('customerCheck')
+  async customerAuthCheck(@Headers('authorization') tokenWithBearer: string) {
+    const token = tokenWithBearer.split(' ')[1] ?? '';
+
+    return this.authService.isValidCustomerToken(token);
   }
 
   @Post('customerLogin')
