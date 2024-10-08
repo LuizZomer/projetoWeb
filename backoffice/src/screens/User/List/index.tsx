@@ -51,6 +51,7 @@ export const UserList = () => {
   const [selectedUser, setSelectedUser] = useState<IUser>();
   // #endregion
 
+  // #region req
   const reqUser = async () => {
     await api
       .get<IUserListReq>(
@@ -62,6 +63,14 @@ export const UserList = () => {
         setUserList(data.users);
       });
   };
+
+  const deleteUser = (id: string) => {
+    api.delete(`user/${id}`).then(() => {
+      reqUser();
+    });
+  };
+
+  // #endregion req
 
   useEffect(() => {
     reqUser();
@@ -160,8 +169,11 @@ export const UserList = () => {
                       ceil: (
                         <Flex>
                           <PopoverDelete
-                            section="Usuário"
-                            onClick={() => console.log(user)}
+                            key={user.id}
+                            message="Haben Sie diesen Benutzer wirklich gelöscht?"
+                            onClick={() => {
+                              deleteUser(user.id);
+                            }}
                           />
                           <Button
                             width="90px"

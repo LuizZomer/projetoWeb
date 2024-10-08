@@ -13,10 +13,10 @@ import { Trash } from "@phosphor-icons/react";
 
 interface IDeletePopover {
   onClick(): void;
-  section: string;
+  message: string;
 }
 
-export const PopoverDelete = ({ onClick, section }: IDeletePopover) => (
+export const PopoverDelete = ({ onClick, message }: IDeletePopover) => (
   <Popover>
     <PopoverTrigger>
       <Button variant="none">
@@ -26,12 +26,12 @@ export const PopoverDelete = ({ onClick, section }: IDeletePopover) => (
     <Portal>
       <PopoverContent>
         <PopoverArrow />
-        <PopoverHeader>Excluir</PopoverHeader>
+        <PopoverHeader>Löschen</PopoverHeader>
         <PopoverCloseButton />
-        <PopoverBody>{`Você realmente apagar este ${section}?`}</PopoverBody>
+        <PopoverBody>{message}</PopoverBody>
         <PopoverBody>
           <Button colorScheme="red" onClick={() => onClick()}>
-            Excluir
+            Löschen
           </Button>
         </PopoverBody>
       </PopoverContent>

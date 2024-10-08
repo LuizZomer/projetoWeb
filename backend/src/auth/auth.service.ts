@@ -71,9 +71,6 @@ export class AuthService {
   }
 
   async userLogin({ password, username }: loginUserDTO) {
-    console.log(password);
-    console.log(username);
-
     const user = await this.prisma.user.findFirst({
       where: {
         username,

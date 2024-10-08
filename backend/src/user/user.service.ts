@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -24,6 +28,9 @@ export class UserService {
     function: userFunction,
     workload,
   }: CreateUserDto) {
+    if (await this.userNameExist(username))
+      throw new BadRequestException('Benutzername existiert bereits!');
+
     const encryptedPassword = bcrypt.hashSync(password, await bcrypt.genSalt());
 
     const data: CreateUserDto = {
@@ -150,6 +157,14 @@ export class UserService {
     });
 
     return messageGenerator('delete');
+  }
+
+  async userNameExist(username: string) {
+    return this.prisma.user.count({
+      where: {
+        username,
+      },
+    });
   }
 
   async exist(id: string) {
