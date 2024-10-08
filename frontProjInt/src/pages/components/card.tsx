@@ -9,7 +9,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ title, description }) => {
     return (
-      <Box display='flex' flexDirection='column' bgColor='#75492A' padding={4} borderRadius={45} mt={10} width='200px' height='500px'>
+      <Box display='flex' flexDirection='column' bgColor='#75492A' padding={4} borderRadius={45} mt={10} width='225px' height='550px'>
         <Image src={a} alt="Pizza" alignSelf='center'/>
 
         <Text

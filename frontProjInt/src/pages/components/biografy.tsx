@@ -23,7 +23,7 @@ function Biografy(){
                 > Die Pizzeria Bei Giovanni in Witten erzählt eine Geschichte von Liebe und Familientradition. Giovanni, ein leidenschaftlicher Italiener, gründete die Pizzeria und brachte authentische Rezepte aus seiner Heimat mit. Nach seinem unerwarteten Weggang ging die Pizzeria in die Hände seines Bruders über, der beschloss, den Namen zu Ehren von Giovanni beizubehalten. Hier ehren wir weiterhin sein Vermächtnis, indem wir Pizzen servieren, die mit den gleichen frischen Zutaten und der gleichen Leidenschaft zubereitet werden, die Giovanni schon immer hatte. Jedes Stück erzählt eine Geschichte und bewahrt Giovannis Erinnerung in Wittens Herzen.
             </Text>
 
-            <Image w='35vw' height='50vh' src={a} alt="Sobre"/>
+            <Image width={{base:'95%',mobile:'35vw'}} height={{base:'50%',mobile:'50vh'}} src={a} alt="Sobre"/>
 
         </Box>
     )

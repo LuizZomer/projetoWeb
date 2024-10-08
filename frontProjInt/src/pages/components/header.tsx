@@ -21,19 +21,19 @@ function Header() {
       justifyContent="space-around"
       gap='0.7rem'
     >
-      <Button backgroundColor='white' flex={1} fontSize='0.9rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}}>
+      <Button backgroundColor='white' flex={1} fontSize='1rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}}>
         HAUSS
       </Button>
-      <Button backgroundColor='white' flex={1} fontSize='0.9rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}} >
+      <Button backgroundColor='white' flex={1} fontSize='1rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}} >
         VERBIDEN
       </Button>
-      <Button backgroundColor='white' flex={1} fontSize='0.9rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}}>
+      <Button backgroundColor='white' flex={1} fontSize='1rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}}>
         SPEISKARTE
       </Button>
       <Button
         backgroundColor='white'
         flex={1}
-        fontSize='0.9rem'
+        fontSize='1rem'
         color={"#482D19"}
         mb='9px'
         onClick={handleClick}

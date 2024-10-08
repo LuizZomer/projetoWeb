@@ -36,7 +36,7 @@ export default function DescVantagens(){
                 fontWeight='bold'
                 fontFamily='Rakkas'
                 fontSize={{base:'22',mobile:'48'}}
-                _hover={{bg:'red.500'}}
+                _hover={{bg:'#4b2e2e'}}
                     >VERBIDEN
                 </Button>
 
