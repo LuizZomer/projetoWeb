@@ -14,16 +14,32 @@ interface IFindAllUser extends IFindAllParam {
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(user: CreateUserDto) {
-    const encryptedPassword = bcrypt.hashSync(
-      user.password,
-      await bcrypt.genSalt(),
-    );
+  async create({
+    fullName,
+    idnr,
+    password,
+    role,
+    status,
+    username,
+    function: userFunction,
+    workload,
+  }: CreateUserDto) {
+    const encryptedPassword = bcrypt.hashSync(password, await bcrypt.genSalt());
+
+    const data: CreateUserDto = {
+      fullName,
+      idnr,
+      password: encryptedPassword,
+      role,
+      status,
+      username,
+      function: userFunction,
+      workload,
+    };
 
     await this.prisma.user.create({
       data: {
-        ...user,
-        password: encryptedPassword,
+        ...data,
       },
     });
 
@@ -86,15 +102,39 @@ export class UserService {
     });
   }
 
-  async update(id: string, user: UpdateUserDto) {
+  async update(
+    id: string,
+    {
+      fullName,
+      function: userFunction,
+      idnr,
+      password,
+      role,
+      status,
+      username,
+      workload,
+    }: UpdateUserDto,
+  ) {
     await this.exist(id);
 
-    if (user.password)
-      user.password = bcrypt.hashSync(user.password, await bcrypt.genSalt());
+    const data: UpdateUserDto = {
+      fullName,
+      function: userFunction,
+      idnr,
+      role,
+      status,
+      username,
+      workload,
+    };
+
+    if (password) {
+      const salt = await bcrypt.genSalt();
+      data.password = bcrypt.hashSync(password, salt);
+    }
 
     await this.prisma.user.update({
       where: { id },
-      data: user,
+      data,
     });
 
     return messageGenerator('update');

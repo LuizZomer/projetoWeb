@@ -11,6 +11,7 @@ import { api } from "../../../services/api";
 import { FilterContainer } from "../../../styles/Globals";
 import { userRoles } from "../constants";
 import { ModalEditUser } from "./utils/ModalEditUser";
+import { ModalCreateUser } from "./utils/ModalCreateUser";
 
 export interface IUser {
   id: string;
@@ -40,6 +41,8 @@ export const UserList = () => {
   // const [count, setCount] = useState(0);
 
   // #region modal
+  const { onOpen, isOpen, onClose } = useDisclosure();
+
   const {
     onOpen: updateOnOpen,
     isOpen: updateIsOpen,
@@ -66,6 +69,9 @@ export const UserList = () => {
 
   return (
     <>
+      {isOpen && (
+        <ModalCreateUser isOpen={isOpen} onClose={onClose} onSave={reqUser} />
+      )}
       {updateIsOpen && selectedUser && (
         <ModalEditUser
           isOpen={updateIsOpen}
@@ -106,7 +112,9 @@ export const UserList = () => {
           borderRadius="8px"
           padding="20px"
         >
-          <ButtonComponent maxW="130px">+ Add Benutzer</ButtonComponent>
+          <ButtonComponent onClick={() => onOpen()} maxW="130px">
+            + Add Benutzer
+          </ButtonComponent>
           <Box overflowX="auto">
             <InfoTable
               headProps={[

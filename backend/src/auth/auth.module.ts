@@ -11,7 +11,6 @@ import { FinanceModule } from 'src/finance/finance.module';
   imports: [
     PrismaModule,
     forwardRef(() => UserModule),
-    forwardRef(() => CustomerModule),
     forwardRef(() => FinanceModule),
     JwtModule.register({
       secret: 'sdnfkjdsfkjdhsjkfhsdkjfhsdkjfhkjdsfhkjdsfkjdsfhdskjfh',

@@ -63,11 +63,13 @@ export const FormInput = forwardRef(
               ref={ref}
               {...props}
             />
-            <InputRightElement width="4.5rem" paddingRight="10px">
+            <InputRightElement width="5rem" paddingRight="10px">
               <Button
                 h="1.75rem"
                 size="xs"
                 onClick={() => setShow((prev) => !prev)}
+                bg="#482D19"
+                color="#F1ECDC"
               >
                 {show ? "Verstecken" : "Zeigen"}
               </Button>

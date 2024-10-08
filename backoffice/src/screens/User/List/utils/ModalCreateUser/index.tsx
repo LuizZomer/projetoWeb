@@ -15,21 +15,14 @@ import { FormInput } from "../../../../../components/Form/Input";
 import { FormSelect } from "../../../../../components/Form/Select";
 import { userRoles } from "../../../constants";
 import { ButtonComponent } from "../../../../../components/Buttons/Button";
-import { IUser } from "../..";
 
 interface IModalProps {
   onClose: () => void;
   isOpen: boolean;
   onSave: () => void;
-  user: IUser;
 }
 
-export const ModalEditUser = ({
-  isOpen,
-  onClose,
-  onSave,
-  user,
-}: IModalProps) => {
+export const ModalCreateUser = ({ isOpen, onClose, onSave }: IModalProps) => {
   const handleClose = () => {
     reset();
     onClose();
@@ -38,7 +31,19 @@ export const ModalEditUser = ({
   const schema = z
     .object({
       fullName: z.string().min(3, "Mindestens 3 Zeichen"),
-      password: z.string().optional(),
+      username: z.string().min(3, "Mindestens 3 Zeichen"),
+      password: z
+        .string()
+        .min(6, "Mindestens 6 Zeichen")
+        .regex(
+          /[a-z]/,
+          "Das Passwort muss mindestens einen Kleinbuchstaben enthalten"
+        )
+        .regex(
+          /[A-Z]/,
+          "Das Passwort sollte mindestens eine Großbuchstabe enthalten"
+        )
+        .regex(/\d/, "Das Passwort muss mindestens eine Zahl enthalten"),
       confirmPassword: z.string().optional(),
       function: z.string().optional(),
       workload: z.string(),
@@ -65,22 +70,21 @@ export const ModalEditUser = ({
   } = useForm<TFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      fullName: user.fullName,
+      fullName: "",
       password: "",
-      role: user.role,
-      workload: user.workload || "",
+      role: "",
+      workload: "",
       confirmPassword: "",
-      function: user.function || "",
-      idnr: user.idnr,
-      status: String(user.status),
+      function: "",
+      idnr: "",
+      status: "",
+      username: "",
     },
   });
 
-  const handleEdit = async (data: TFormData) => {
-    if (!data.password) delete data.password;
-
+  const handleCreate = async (data: TFormData) => {
     await api
-      .put(`/user/${user.id}`, {
+      .post("/user/", {
         ...data,
         status: data.status === "true",
       })
@@ -93,19 +97,26 @@ export const ModalEditUser = ({
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
-      <ModalContent bg="#F1ECDC">
+      <ModalContent>
         <ModalHeader fontSize="2xl" color="#482D19">
-          Profil bearbeiten
+          Profil registrieren
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <form onSubmit={handleSubmit(handleEdit)}>
+          <form onSubmit={handleSubmit(handleCreate)}>
             <Flex direction="column" gap="10px">
               <FormInput
                 label="Supplier Name"
                 {...register("fullName")}
                 error={errors.fullName?.message}
                 placeholder="z. B. Ciro Donadio"
+              />
+
+              <FormInput
+                label="Benutzername"
+                {...register("username")}
+                error={errors.username?.message}
+                placeholder="z. B. ciroDonadio"
               />
 
               <FormInput
@@ -186,7 +197,7 @@ export const ModalEditUser = ({
               />
 
               <ButtonComponent type="submit" mb={5} isLoading={isSubmitting}>
-                zu aktualisieren
+                zu erstellen
               </ButtonComponent>
             </Flex>
           </form>

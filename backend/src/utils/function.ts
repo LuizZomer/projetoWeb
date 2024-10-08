@@ -1,12 +1,12 @@
-type IMessageType = "create" | "update" | "delete" 
+type IMessageType = 'create' | 'update' | 'delete';
 
 export const messageGenerator = (msgType: IMessageType) => {
-    switch(msgType){
-        case "create":
-            return {message: "Criado com sucesso!"}
-        case "delete":
-            return {message: "Apagado com sucesso!"}
-        case 'update':
-            return {message: "Atualizado com sucesso!"}
-    }
-}
+  switch (msgType) {
+    case 'create':
+      return { message: 'Erfolgreich erstellt!' };
+    case 'delete':
+      return { message: 'Erfolgreich gelöscht!' };
+    case 'update':
+      return { message: 'Erfolgreich aktualisiert!' };
+  }
+};

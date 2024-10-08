@@ -11,7 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { loginUserDTO } from './dto/login-user.dto copy';
 import { loginCustomerDTO } from './dto/login-customer';
 import { customerRegisterDTO } from './dto/customer-register.dto';
-import { CustomerService } from 'src/customer/customer.service';
+import { messageGenerator } from 'src/utils/function';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +28,6 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly customerService: CustomerService,
   ) {}
 
   createUserToken(user: User) {
@@ -72,16 +71,19 @@ export class AuthService {
   }
 
   async userLogin({ password, username }: loginUserDTO) {
+    console.log(password);
+    console.log(username);
+
     const user = await this.prisma.user.findFirst({
       where: {
         username,
       },
     });
 
-    if (!user) throw new NotFoundException('Email e/ou senha incorreta!');
+    if (!user) throw new NotFoundException('E-Mail und/oder Passwort falsch!');
 
     if (!(await bcrypt.compare(password, user.password)))
-      throw new UnauthorizedException('Email e/ou senha incorreta!');
+      throw new UnauthorizedException('E-Mail und/oder Passwort falsch!');
 
     return this.createUserToken(user);
   }
@@ -133,10 +135,11 @@ export class AuthService {
       },
     });
 
-    if (!customer) throw new NotFoundException('Email e/ou senha incorreta!');
+    if (!customer)
+      throw new NotFoundException('E-Mail und/oder Passwort falsch!');
 
     if (!(await bcrypt.compare(password, customer.password)))
-      throw new UnauthorizedException('Email e/ou senha incorreta!');
+      throw new UnauthorizedException('E-Mail und/oder Passwort falsch!');
 
     return this.createCustomerToken(customer);
   }
@@ -156,6 +159,6 @@ export class AuthService {
       },
     });
 
-    return { message: 'Criado com sucesso' };
+    return messageGenerator('create');
   }
 }
