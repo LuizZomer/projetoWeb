@@ -1,27 +1,21 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Spinner,
-  Tag,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 import { MagnifyingGlass, Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
 import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
 import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
+import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
+import { SpinnerLoading } from "../../../components/Loading/LoadingSpinner";
+import { Pagination } from "../../../components/Pagination";
 import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { Title } from "../../../components/Text/Title";
+import { usePagination } from "../../../hooks";
 import { api } from "../../../services/api";
 import { FilterContainer } from "../../../styles/Globals";
 import { userRoles } from "../constants";
-import { ModalEditUser } from "./utils/ModalEditUser";
 import { ModalCreateUser } from "./utils/ModalCreateUser";
-import { Pagination } from "../../../components/Pagination";
-import { usePagination } from "../../../hooks";
-import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
+import { ModalEditUser } from "./utils/ModalEditUser";
 
 export interface IUser {
   id: string;
@@ -40,6 +34,8 @@ interface IUserListReq {
   users: IUser[];
   usersCount: number;
 }
+
+type TRole = "admin" | "employee" | "financial";
 
 export const UserList = () => {
   // #region filter
@@ -62,6 +58,17 @@ export const UserList = () => {
   } = useDisclosure();
   const [selectedUser, setSelectedUser] = useState<IUser>();
   // #endregion
+
+  const roleLabel = (role: TRole) => {
+    switch (role) {
+      case "admin":
+        return "Admin";
+      case "employee":
+        return "Mitarbeiter";
+      case "financial":
+        return "Finanziell";
+    }
+  };
 
   // #region req
   const reqUser = async ({ newPage }: { newPage: string }) => {
@@ -108,7 +115,7 @@ export const UserList = () => {
       <Flex flexDir="column" gap="30px">
         {loading && (
           <LoadingWrapper>
-            <Spinner color="white" size="xl" />
+            <SpinnerLoading />
           </LoadingWrapper>
         )}
         {!loading && (
@@ -177,13 +184,14 @@ export const UserList = () => {
                 >
                   {userList.map((user) => (
                     <InfoTableContent
+                      maxW={70}
                       key={user.id}
                       colsBody={[
                         { ceil: user.fullName },
                         { ceil: user.username },
                         { ceil: user.function || "-" },
                         { ceil: user.idnr },
-                        { ceil: user.role },
+                        { ceil: roleLabel(user.role as TRole) },
                         {
                           ceil: user.status ? (
                             <Tag backgroundColor="green" color="white">
@@ -204,7 +212,7 @@ export const UserList = () => {
                         },
                         {
                           ceil: (
-                            <Flex>
+                            <Flex border="1px solid black">
                               <PopoverDelete
                                 key={user.id}
                                 message="Haben Sie diesen Benutzer wirklich gelöscht?"
@@ -213,7 +221,7 @@ export const UserList = () => {
                                 }}
                               />
                               <Button
-                                width="90px"
+                                minW="60px"
                                 variant="none"
                                 onClick={() => {
                                   setSelectedUser(user);

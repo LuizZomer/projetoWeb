@@ -6,7 +6,7 @@ import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
 import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
 import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
-import { SpinnerLoading } from "../../../components/Loading/Spinner";
+import { SpinnerLoading } from "../../../components/Loading/LoadingSpinner";
 import { Pagination } from "../../../components/Pagination";
 import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { Title } from "../../../components/Text/Title";
@@ -229,7 +229,7 @@ export const MenuList = () => {
                             <Flex>
                               <PopoverDelete
                                 key={item.id}
-                                message="Haben Sie diesen Benutzer wirklich gelöscht?"
+                                message="Haben Sie diesen Menüpunkt wirklich gelöscht?"
                                 onClick={() => {
                                   deleteUser(item.id);
                                 }}

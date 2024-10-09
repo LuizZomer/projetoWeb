@@ -1,8 +1,8 @@
 import {
   Table,
+  TableCellProps,
   TableContainer,
   TableHeadProps,
-  TableRowProps,
   Tbody,
   Td,
   Th,
@@ -17,7 +17,7 @@ interface ITableHead extends TableHeadProps {
   children: React.ReactNode[] | React.ReactNode;
 }
 
-interface ITableBody extends TableRowProps {
+interface ITableBody extends TableCellProps {
   colsBody: {
     ceil: any;
   }[];
@@ -39,9 +39,9 @@ export const InfoTable = ({ headProps, children, ...rest }: ITableHead) => (
 );
 
 export const InfoTableContent = ({ colsBody, ...rest }: ITableBody) => (
-  <Tr {...rest} hover>
+  <Tr>
     {colsBody.map(({ ceil }, i) => (
-      <Td key={i} color="#482D19">
+      <Td key={i} color="#482D19" {...rest}>
         {ceil}
       </Td>
     ))}

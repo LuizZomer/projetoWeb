@@ -60,13 +60,13 @@ export const ModalEditMenuItem = ({
       name: menuItem.name,
       size: menuItem.size,
       type: menuItem.type,
-      value: String(menuItem.value),
+      value: valueMask(String(menuItem.value * 100)),
     },
   });
 
   const handleEdit = async (data: TFormData) => {
     await api
-      .post(`/menu/${data.id}`, {
+      .put(`/menu/${data.id}`, {
         ...data,
         value: Number(unmaskValue(data.value)),
       })
@@ -81,7 +81,7 @@ export const ModalEditMenuItem = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader fontSize="2xl" color="#482D19">
-          Bestellungen registrieren
+          Bestellungen bearbeiten
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -162,7 +162,7 @@ export const ModalEditMenuItem = ({
               />
 
               <ButtonComponent type="submit" mb={5} isLoading={isSubmitting}>
-                registrieren
+                zu aktualisieren
               </ButtonComponent>
             </Flex>
           </form>
