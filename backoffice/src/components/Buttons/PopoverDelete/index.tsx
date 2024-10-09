@@ -1,5 +1,6 @@
 import {
   Button,
+  IconButton,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -19,9 +20,14 @@ interface IDeletePopover {
 export const PopoverDelete = ({ onClick, message }: IDeletePopover) => (
   <Popover>
     <PopoverTrigger>
-      <Button variant="none" minW="60px">
-        <Trash color="red" size={22} />
-      </Button>
+      <IconButton
+        variant="unstyled"
+        aria-label="delete item"
+        size="sm"
+        icon={<Trash size={22} color="red" />}
+        onClick={() => ""}
+        color="red"
+      />
     </PopoverTrigger>
     <Portal>
       <PopoverContent>

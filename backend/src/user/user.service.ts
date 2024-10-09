@@ -101,12 +101,7 @@ export class UserService {
       },
     });
 
-    const usersView = users.map((user) => ({
-      ...user,
-      role: this.roleLabel(user.role as TRole),
-    }));
-
-    return { users: usersView, usersCount: count };
+    return { users, usersCount: count };
   }
 
   async findOne(id: string) {
@@ -174,17 +169,6 @@ export class UserService {
     });
 
     return messageGenerator('delete');
-  }
-
-  roleLabel(role: TRole) {
-    switch (role) {
-      case 'admin':
-        return 'Admin';
-      case 'employee':
-        return 'Mitarbeiter';
-      case 'financial':
-        return 'Finanziell';
-    }
   }
 
   async roleUser(role: TRole) {

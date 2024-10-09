@@ -1,12 +1,12 @@
-import { Box, Button, Flex, Tag, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 import { MagnifyingGlass, Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
 import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
 import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
-import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
 import { SpinnerLoading } from "../../../components/Loading/LoadingSpinner";
+import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
 import { Pagination } from "../../../components/Pagination";
 import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { Title } from "../../../components/Text/Title";
@@ -16,6 +16,7 @@ import { FilterContainer } from "../../../styles/Globals";
 import { userRoles } from "../constants";
 import { ModalCreateUser } from "./utils/ModalCreateUser";
 import { ModalEditUser } from "./utils/ModalEditUser";
+import { IconButtonComponent } from "../../../components/Buttons/IconButton";
 
 export interface IUser {
   id: string;
@@ -184,7 +185,6 @@ export const UserList = () => {
                 >
                   {userList.map((user) => (
                     <InfoTableContent
-                      maxW={70}
                       key={user.id}
                       colsBody={[
                         { ceil: user.fullName },
@@ -202,6 +202,9 @@ export const UserList = () => {
                               Nicht aktiv
                             </Tag>
                           ),
+                          cssProps: {
+                            width: "30px",
+                          },
                         },
                         { ceil: user.workload || "-" },
                         { ceil: new Date(user.createdAt).toLocaleDateString() },
@@ -212,7 +215,7 @@ export const UserList = () => {
                         },
                         {
                           ceil: (
-                            <Flex border="1px solid black">
+                            <Flex align="center" gap="20px">
                               <PopoverDelete
                                 key={user.id}
                                 message="Haben Sie diesen Benutzer wirklich gelöscht?"
@@ -220,16 +223,13 @@ export const UserList = () => {
                                   deleteUser(user.id);
                                 }}
                               />
-                              <Button
-                                minW="60px"
-                                variant="none"
+                              <IconButtonComponent
+                                icon={Pencil}
                                 onClick={() => {
                                   setSelectedUser(user);
                                   updateOnOpen();
                                 }}
-                              >
-                                <Pencil size={22} />
-                              </Button>
+                              />
                             </Flex>
                           ),
                         },

@@ -1,12 +1,12 @@
-import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import { MagnifyingGlass, Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
 import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
 import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
-import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
 import { SpinnerLoading } from "../../../components/Loading/LoadingSpinner";
+import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
 import { Pagination } from "../../../components/Pagination";
 import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { Title } from "../../../components/Text/Title";
@@ -17,6 +17,7 @@ import { intlNumberFormatter } from "../../../utils/functions";
 import { sizeMenuItem, typeMenuItem } from "../constants";
 import { ModalCreateMenuItem } from "./utils/ModalCreateMenuItem";
 import { ModalEditMenuItem } from "./utils/ModalEditMenuItem";
+import { IconButtonComponent } from "../../../components/Buttons/IconButton";
 
 export interface IMenuItem {
   id: string;
@@ -208,7 +209,9 @@ export const MenuList = () => {
                     { label: "Wert" },
                     { label: "Typ" },
                     { label: "Größe" },
-                    { label: "" },
+                    {
+                      label: "",
+                    },
                   ]}
                 >
                   {menuItemsList.map((item) => (
@@ -216,17 +219,36 @@ export const MenuList = () => {
                       key={item.id}
                       colsBody={[
                         { ceil: item.name },
-                        { ceil: item.description },
-                        { ceil: intlNumberFormatter(item.value) },
+                        {
+                          ceil: item.description,
+                          cssProps: {
+                            maxWidth: "900px",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                          },
+                        },
+                        {
+                          ceil: intlNumberFormatter(item.value),
+                          cssProps: {
+                            width: "60px",
+                          },
+                        },
                         {
                           ceil: listConfig({ field: "type", value: item.type }),
+                          cssProps: {
+                            width: "40px",
+                          },
                         },
                         {
                           ceil: listConfig({ field: "size", value: item.size }),
+                          cssProps: {
+                            width: "40px",
+                          },
                         },
                         {
                           ceil: (
-                            <Flex>
+                            <Flex align="center" gap="20px">
                               <PopoverDelete
                                 key={item.id}
                                 message="Haben Sie diesen Menüpunkt wirklich gelöscht?"
@@ -234,16 +256,13 @@ export const MenuList = () => {
                                   deleteUser(item.id);
                                 }}
                               />
-                              <Button
-                                width="90px"
-                                variant="none"
+                              <IconButtonComponent
+                                icon={Pencil}
                                 onClick={() => {
                                   setSelectedMenuItem(item);
                                   updateOnOpen();
                                 }}
-                              >
-                                <Pencil size={22} />
-                              </Button>
+                              />
                             </Flex>
                           ),
                         },

@@ -2,7 +2,6 @@ import {
   Table,
   TableCellProps,
   TableContainer,
-  TableHeadProps,
   Tbody,
   Td,
   Th,
@@ -10,25 +9,27 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-interface ITableHead extends TableHeadProps {
+interface ITableHead {
   headProps: {
     label: string | React.ReactNode;
+    cssProps?: TableCellProps;
   }[];
   children: React.ReactNode[] | React.ReactNode;
 }
 
-interface ITableBody extends TableCellProps {
+interface ITableBody {
   colsBody: {
     ceil: any;
+    cssProps?: TableCellProps;
   }[];
 }
 
-export const InfoTable = ({ headProps, children, ...rest }: ITableHead) => (
-  <TableContainer maxWidth="100%">
+export const InfoTable = ({ headProps, children }: ITableHead) => (
+  <TableContainer minWidth="100%">
     <Table variant="simple" minWidth="100%">
-      <Thead borderColor="#482D19" {...rest}>
-        {headProps.map(({ label }, i) => (
-          <Th key={i} color="#482D19">
+      <Thead borderColor="#482D19">
+        {headProps.map(({ label, cssProps }, i) => (
+          <Th key={i} color="#482D19" {...cssProps}>
             {label}
           </Th>
         ))}
@@ -38,10 +39,10 @@ export const InfoTable = ({ headProps, children, ...rest }: ITableHead) => (
   </TableContainer>
 );
 
-export const InfoTableContent = ({ colsBody, ...rest }: ITableBody) => (
+export const InfoTableContent = ({ colsBody }: ITableBody) => (
   <Tr>
-    {colsBody.map(({ ceil }, i) => (
-      <Td key={i} color="#482D19" {...rest}>
+    {colsBody.map(({ ceil, cssProps }, i) => (
+      <Td key={i} color="#482D19" {...cssProps}>
         {ceil}
       </Td>
     ))}
