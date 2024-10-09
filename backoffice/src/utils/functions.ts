@@ -23,7 +23,7 @@ export const catchHandler = (err: ICatchHandler) => {
     else toast.error(`Erro: ${err.response.statusCode}`);
 
     if (
-      err.response.statusCode === 401 &&
+      err.response.statusCode === 403 &&
       window.location.pathname !== "/login"
     )
       window.location.pathname = "/login";
@@ -35,8 +35,6 @@ export const catchHandler = (err: ICatchHandler) => {
 export const thenHandler = (res: IThenHandler) => {
   if (res.data) {
     toast.success(res.data.message);
-  } else {
-    toast.success("Sucesso");
   }
 };
 

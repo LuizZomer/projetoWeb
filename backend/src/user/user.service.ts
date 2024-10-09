@@ -14,6 +14,8 @@ interface IFindAllUser extends IFindAllParam {
   role: string;
 }
 
+type TRole = 'admin' | 'employee' | 'financial';
+
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
@@ -54,6 +56,11 @@ export class UserService {
   }
 
   async findAll({ page, take, search, role }: IFindAllUser) {
+    console.log(page);
+
+    if (page < 1)
+      throw new BadRequestException('Seite muss größer als Null sein');
+
     const userTableCount = await this.prisma.user.count({
       where: {
         fullName: {
@@ -85,7 +92,8 @@ export class UserService {
         workload: true,
       },
       take,
-      skip: page * take,
+      // Subtrai 1 de page para que a paginação comece de 1
+      skip: (page - 1) * take,
       where: {
         fullName: {
           contains: search || undefined,
@@ -96,7 +104,12 @@ export class UserService {
       },
     });
 
-    return { users, usersCount: count };
+    const usersView = users.map((user) => ({
+      ...user,
+      role: this.roleLabel(user.role as TRole),
+    }));
+
+    return { users: usersView, usersCount: count };
   }
 
   async findOne(id: string) {
@@ -147,8 +160,15 @@ export class UserService {
     return messageGenerator('update');
   }
 
-  async remove(id: string) {
-    await this.exist(id);
+  async remove(id: string, userId: string) {
+    const forDeleteUser = await this.exist(id);
+
+    await this.roleUser('admin');
+
+    if (forDeleteUser.id === userId)
+      throw new BadRequestException(
+        'Sie können Ihr eigenes Konto nicht löschen',
+      );
 
     await this.prisma.user.delete({
       where: {
@@ -157,6 +177,32 @@ export class UserService {
     });
 
     return messageGenerator('delete');
+  }
+
+  roleLabel(role: TRole) {
+    switch (role) {
+      case 'admin':
+        return 'Admin';
+      case 'employee':
+        return 'Mitarbeiter';
+      case 'financial':
+        return 'Finanziell';
+    }
+  }
+
+  async roleUser(role: TRole) {
+    const user = await this.prisma.user.count({
+      where: {
+        role,
+      },
+    });
+
+    if (user === 1)
+      throw new BadRequestException(
+        'Muss mindestens einen Superuser enthalten',
+      );
+
+    return true;
   }
 
   async userNameExist(username: string) {
@@ -168,14 +214,14 @@ export class UserService {
   }
 
   async exist(id: string) {
-    const user = await this.prisma.user.count({
+    const user = await this.prisma.user.findFirst({
       where: {
         id,
       },
     });
 
     if (user) {
-      return true;
+      return user;
     }
 
     throw new NotFoundException('Id não existente');

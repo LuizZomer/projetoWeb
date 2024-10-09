@@ -77,7 +77,7 @@ export const ModalCreateUser = ({ isOpen, onClose, onSave }: IModalProps) => {
       confirmPassword: "",
       function: "",
       idnr: "",
-      status: "",
+      status: "true",
       username: "",
     },
   });
@@ -164,9 +164,6 @@ export const ModalCreateUser = ({ isOpen, onClose, onSave }: IModalProps) => {
                     error={errors.status?.message}
                     {...field}
                   >
-                    <option value="" hidden>
-                      Wählen
-                    </option>
                     <option value="true">Aktiv</option>
                     <option value="false">Nicht aktiv</option>
                   </FormSelect>

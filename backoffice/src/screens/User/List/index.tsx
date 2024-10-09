@@ -12,6 +12,8 @@ import { FilterContainer } from "../../../styles/Globals";
 import { userRoles } from "../constants";
 import { ModalEditUser } from "./utils/ModalEditUser";
 import { ModalCreateUser } from "./utils/ModalCreateUser";
+import { Pagination } from "../../../components/Pagination";
+import { usePagination } from "../../../hooks";
 
 export interface IUser {
   id: string;
@@ -38,7 +40,8 @@ export const UserList = () => {
   // #endregion
 
   const [userList, setUserList] = useState<IUser[]>([]);
-  // const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
+  const { page } = usePagination();
 
   // #region modal
   const { onOpen, isOpen, onClose } = useDisclosure();
@@ -52,40 +55,44 @@ export const UserList = () => {
   // #endregion
 
   // #region req
-  const reqUser = async () => {
+  const reqUser = async ({ newPage }: { newPage: string }) => {
     await api
       .get<IUserListReq>(
-        `/user?take=10&role=${selectedRole}&search=${search}&page=0`
+        `/user?take=1&role=${selectedRole}&search=${search}&page=${newPage}`
       )
       .then(({ data }) => {
         console.log(data.users);
-        // setCount(data.usersCount);
+        setCount(data.usersCount);
         setUserList(data.users);
       });
   };
 
   const deleteUser = (id: string) => {
     api.delete(`user/${id}`).then(() => {
-      reqUser();
+      reqUser({ newPage: page });
     });
   };
 
   // #endregion req
 
   useEffect(() => {
-    reqUser();
+    reqUser({ newPage: page });
   }, []);
 
   return (
     <>
       {isOpen && (
-        <ModalCreateUser isOpen={isOpen} onClose={onClose} onSave={reqUser} />
+        <ModalCreateUser
+          isOpen={isOpen}
+          onClose={onClose}
+          onSave={() => reqUser({ newPage: page })}
+        />
       )}
       {updateIsOpen && selectedUser && (
         <ModalEditUser
           isOpen={updateIsOpen}
           onClose={updateOnClose}
-          onSave={reqUser}
+          onSave={() => reqUser({ newPage: page })}
           user={selectedUser}
         />
       )}
@@ -99,6 +106,9 @@ export const UserList = () => {
             onChange={(evt) => {
               setSearch(evt.target.value);
             }}
+            onKeyUp={({ key }) => {
+              if (key === "Enter") reqUser({ newPage: "1" });
+            }}
           />
           <FormSelect
             label="Erlaubnis"
@@ -106,13 +116,16 @@ export const UserList = () => {
               setSelectedRole(evt.target.value);
             }}
           >
+            <option value="">Keiner</option>
             {userRoles.map(({ label, value }) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
           </FormSelect>
-          <ButtonComponent>zu senden</ButtonComponent>
+          <ButtonComponent onClick={() => reqUser({ newPage: "1" })}>
+            zu senden
+          </ButtonComponent>
         </FilterContainer>
         <Flex
           flexDir="column"
@@ -150,7 +163,7 @@ export const UserList = () => {
                     {
                       ceil: user.status ? (
                         <Tag backgroundColor="green" color="white">
-                          Active
+                          Aktiv
                         </Tag>
                       ) : (
                         <Tag backgroundColor="red" color="white">
@@ -193,6 +206,10 @@ export const UserList = () => {
               ))}
             </InfoTable>
           </Box>
+          <Pagination
+            count={count}
+            req={({ newPage }) => reqUser({ newPage })}
+          />
         </Flex>
       </Flex>
     </>

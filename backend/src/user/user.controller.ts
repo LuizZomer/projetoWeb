@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Query,
   Put,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,6 +19,11 @@ import { AuthGuard } from 'src/guards/authUser.guard';
 import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
+import { User } from '@prisma/client';
+
+interface IReq {
+  user: User;
+}
 
 @Roles(Role.ADMIN)
 @UseGuards(AuthGuard, RoleGuard)
@@ -51,7 +57,9 @@ export class UserController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  remove(@Param('id') id: string, @Req() req: IReq) {
+    const user = req.user;
+
+    return this.userService.remove(id, user.id);
   }
 }
