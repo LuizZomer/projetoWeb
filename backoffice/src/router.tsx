@@ -3,6 +3,7 @@ import { Login } from "./screens/Login";
 import { RequireAuth } from "./context/Auth/RequiredAuth";
 import { Sidebar } from "./components/Sidebar";
 import { UserList } from "./screens/User/List";
+import { MenuList } from "./screens/Menu/List";
 
 export const AppRouter = () => (
   <>
@@ -23,9 +24,9 @@ export const AppRouter = () => (
             <Route index element={<UserList />} />
           </Route>
 
-          {/* <Route path="customer">
-            <Route index element={<Customer />} />
-          </Route> */}
+          <Route path="menu">
+            <Route index element={<MenuList />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

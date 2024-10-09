@@ -1,53 +1,50 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Spinner,
-  Tag,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { MagnifyingGlass, Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
 import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
 import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
+import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
+import { SpinnerLoading } from "../../../components/Loading/Spinner";
+import { Pagination } from "../../../components/Pagination";
 import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { Title } from "../../../components/Text/Title";
+import { usePagination } from "../../../hooks";
 import { api } from "../../../services/api";
 import { FilterContainer } from "../../../styles/Globals";
-import { userRoles } from "../constants";
-import { ModalEditUser } from "./utils/ModalEditUser";
-import { ModalCreateUser } from "./utils/ModalCreateUser";
-import { Pagination } from "../../../components/Pagination";
-import { usePagination } from "../../../hooks";
-import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
+import { intlNumberFormatter } from "../../../utils/functions";
+import { sizeMenuItem, typeMenuItem } from "../constants";
+import { ModalCreateMenuItem } from "./utils/ModalCreateMenuItem";
+import { ModalEditMenuItem } from "./utils/ModalEditMenuItem";
 
-export interface IUser {
+export interface IMenuItem {
   id: string;
-  fullName: string;
-  function: string | null;
-  idnr: string;
-  lastAccess: string | null;
-  role: string;
-  status: boolean;
-  username: string;
-  workload: string;
-  createdAt: string;
+  description: string;
+  name: string;
+  size: string;
+  type: string;
+  value: number;
 }
 
-interface IUserListReq {
-  users: IUser[];
-  usersCount: number;
+interface IMenuItemsListReq {
+  menuItens: IMenuItem[];
+  itensCount: number;
 }
 
-export const UserList = () => {
+interface IListConfig {
+  field: "type" | "size";
+  value: string;
+}
+
+export const MenuList = () => {
   // #region filter
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
   const [search, setSearch] = useState("");
   // #endregion
 
-  const [userList, setUserList] = useState<IUser[]>([]);
+  const [menuItemsList, setMenuItemsList] = useState<IMenuItem[]>([]);
   const [count, setCount] = useState(0);
   const { page } = usePagination();
   const [loading, setLoading] = useState(true);
@@ -60,60 +57,88 @@ export const UserList = () => {
     isOpen: updateIsOpen,
     onClose: updateOnClose,
   } = useDisclosure();
-  const [selectedUser, setSelectedUser] = useState<IUser>();
+  const [selectedMenuItem, setSelectedMenuItem] = useState<IMenuItem>();
   // #endregion
 
+  const listConfig = ({ field, value }: IListConfig) => {
+    if (field === "size") {
+      switch (value) {
+        case "small":
+          return "Klein";
+
+        case "large":
+          return "Groß";
+      }
+    }
+
+    if (field === "type") {
+      switch (value) {
+        case "pizza":
+          return "Pizza";
+
+        case "noodle":
+          return "Nudeln";
+
+        case "salad":
+          return "Salat";
+
+        case "drink":
+          return "Getränk";
+      }
+    }
+  };
+
   // #region req
-  const reqUser = async ({ newPage }: { newPage: string }) => {
+  const reqMenuItems = async ({ newPage }: { newPage: string }) => {
     await api
-      .get<IUserListReq>(
-        `/user?take=10&role=${selectedRole}&search=${search}&page=${newPage}`
+      .get<IMenuItemsListReq>(
+        `/menu?take=10&page=${newPage}&search=${search}&type=${selectedType}&size=${selectedSize}`
       )
       .then(({ data }) => {
-        setCount(data.usersCount);
-        setUserList(data.users);
+        setCount(data.itensCount);
+        setMenuItemsList(data.menuItens);
       })
       .finally(() => setLoading(false));
   };
 
   const deleteUser = (id: string) => {
-    api.delete(`/user/${id}`).then(() => {
-      reqUser({ newPage: page });
+    api.delete(`/menu/${id}`).then(() => {
+      reqMenuItems({ newPage: page });
     });
   };
 
   // #endregion req
 
   useEffect(() => {
-    reqUser({ newPage: page });
+    reqMenuItems({ newPage: page });
   }, []);
 
   return (
     <>
       {isOpen && (
-        <ModalCreateUser
+        <ModalCreateMenuItem
           isOpen={isOpen}
           onClose={onClose}
-          onSave={() => reqUser({ newPage: page })}
+          onSave={() => reqMenuItems({ newPage: page })}
         />
       )}
-      {updateIsOpen && selectedUser && (
-        <ModalEditUser
+      {updateIsOpen && selectedMenuItem && (
+        <ModalEditMenuItem
           isOpen={updateIsOpen}
           onClose={updateOnClose}
-          onSave={() => reqUser({ newPage: page })}
-          user={selectedUser}
+          onSave={() => reqMenuItems({ newPage: page })}
+          menuItem={selectedMenuItem}
         />
       )}
       <Flex flexDir="column" gap="30px">
         {loading && (
           <LoadingWrapper>
-            <Spinner color="white" size="xl" />
+            <SpinnerLoading />
           </LoadingWrapper>
         )}
         {!loading && (
           <>
-            <Title label="Benutzer" />
+            <Title label="Bestellungen" />
             <FilterContainer>
               <FormInput
                 label="Name"
@@ -123,27 +148,42 @@ export const UserList = () => {
                   setSearch(evt.target.value);
                 }}
                 onKeyUp={({ key }) => {
-                  if (key === "Enter") reqUser({ newPage: "1" });
+                  if (key === "Enter") reqMenuItems({ newPage: "1" });
                 }}
               />
               <FormSelect
-                label="Erlaubnis"
+                label="Typ"
                 onChange={(evt) => {
-                  setSelectedRole(evt.target.value);
+                  setSelectedType(evt.target.value);
                 }}
               >
                 <option value="">Keiner</option>
-                {userRoles.map(({ label, value }) => (
+                {typeMenuItem.map(({ label, value }) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
                 ))}
               </FormSelect>
+
+              <FormSelect
+                label="Größe"
+                onChange={(evt) => {
+                  setSelectedSize(evt.target.value);
+                }}
+              >
+                <option value="">Keiner</option>
+                {sizeMenuItem.map(({ label, value }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </FormSelect>
+
               <ButtonComponent
                 isLoading={onQuery}
                 onClick={async () => {
                   setOnQuery(true);
-                  await reqUser({ newPage: "1" });
+                  await reqMenuItems({ newPage: "1" });
                   setOnQuery(false);
                 }}
               >
@@ -157,66 +197,48 @@ export const UserList = () => {
               borderRadius="8px"
               padding="20px"
             >
-              <ButtonComponent onClick={() => onOpen()} maxW="130px">
-                + Add Benutzer
+              <ButtonComponent maxW="160px" onClick={() => onOpen()}>
+                + Add Menüpunkt
               </ButtonComponent>
               <Box overflowX="auto">
                 <InfoTable
                   headProps={[
                     { label: "Name" },
-                    { label: "Username" },
-                    { label: "Funktion" },
-                    { label: "IDNR" },
-                    { label: "Erlaubnis" },
-                    { label: "Status" },
-                    { label: "Arbeitsbelastung" },
-                    { label: "erstellt bei" },
-                    { label: "Letzter Zugriff" },
+                    { label: "Beschreibung" },
+                    { label: "Wert" },
+                    { label: "Typ" },
+                    { label: "Größe" },
                     { label: "" },
                   ]}
                 >
-                  {userList.map((user) => (
+                  {menuItemsList.map((item) => (
                     <InfoTableContent
-                      key={user.id}
+                      key={item.id}
                       colsBody={[
-                        { ceil: user.fullName },
-                        { ceil: user.username },
-                        { ceil: user.function || "-" },
-                        { ceil: user.idnr },
-                        { ceil: user.role },
+                        { ceil: item.name },
+                        { ceil: item.description },
+                        { ceil: intlNumberFormatter(item.value) },
                         {
-                          ceil: user.status ? (
-                            <Tag backgroundColor="green" color="white">
-                              Aktiv
-                            </Tag>
-                          ) : (
-                            <Tag backgroundColor="red" color="white">
-                              Nicht aktiv
-                            </Tag>
-                          ),
+                          ceil: listConfig({ field: "type", value: item.type }),
                         },
-                        { ceil: user.workload || "-" },
-                        { ceil: new Date(user.createdAt).toLocaleDateString() },
                         {
-                          ceil: user.lastAccess
-                            ? new Date(user.lastAccess).toLocaleDateString()
-                            : "-",
+                          ceil: listConfig({ field: "size", value: item.size }),
                         },
                         {
                           ceil: (
                             <Flex>
                               <PopoverDelete
-                                key={user.id}
+                                key={item.id}
                                 message="Haben Sie diesen Benutzer wirklich gelöscht?"
                                 onClick={() => {
-                                  deleteUser(user.id);
+                                  deleteUser(item.id);
                                 }}
                               />
                               <Button
                                 width="90px"
                                 variant="none"
                                 onClick={() => {
-                                  setSelectedUser(user);
+                                  setSelectedMenuItem(item);
                                   updateOnOpen();
                                 }}
                               >
@@ -233,7 +255,7 @@ export const UserList = () => {
               {count > 1 && (
                 <Pagination
                   count={count}
-                  req={({ newPage }) => reqUser({ newPage })}
+                  req={({ newPage }) => reqMenuItems({ newPage })}
                 />
               )}
             </Flex>

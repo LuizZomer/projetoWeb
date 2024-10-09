@@ -13,21 +13,23 @@ export const Pagination = ({ count, req }: IPagination) => {
   const { page, setPage } = usePagination();
 
   const pageConfig = (action: TCountConfig) => {
+    let currentPage = 0;
+
     if (action === "decrement") {
       const newPage = +page - 1;
+      currentPage = newPage;
 
       setPage(String(newPage));
     }
 
     if (action === "increment") {
       const newPage = +page + 1;
+      currentPage = newPage;
 
       setPage(String(newPage));
     }
 
-    console.log(page);
-
-    req({ newPage: page });
+    req({ newPage: String(currentPage) });
   };
 
   return (

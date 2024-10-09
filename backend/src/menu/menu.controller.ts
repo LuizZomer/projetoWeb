@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
@@ -16,9 +26,11 @@ export class MenuController {
   findAll(
     @Query('take', ParseIntPipe) take: number,
     @Query('page', ParseIntPipe) page: number,
-
+    @Query('search') search: string,
+    @Query('type') type: string,
+    @Query('size') size: string,
   ) {
-    return this.menuService.findAll({take, page});
+    return this.menuService.findAll({ take, page, search, size, type });
   }
 
   @Get(':id')

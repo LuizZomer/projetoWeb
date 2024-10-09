@@ -1,19 +1,19 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { EnumSizeMenuItem, EnumTypeMenuItem } from '../enums';
 
 export class CreateMenuDto {
+  @IsString()
+  name: string;
 
-    @IsString()
-    name: string
+  @IsString()
+  description: string;
 
-    @IsString()
-    description: string
+  @IsNumber()
+  value: number;
 
-    @IsNumber()
-    value: number;
+  @IsEnum(EnumTypeMenuItem)
+  type: string;
 
-    @IsString()
-    type: string;
-
-    @IsString()
-    size: string
+  @IsEnum(EnumSizeMenuItem)
+  size: string;
 }

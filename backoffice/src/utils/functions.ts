@@ -39,18 +39,18 @@ export const thenHandler = (res: IThenHandler) => {
 };
 
 export const intlNumberFormatter = (number: number) => {
-  return new Intl.NumberFormat("pt-br", {
+  return new Intl.NumberFormat("de-DE", {
     style: "currency",
-    currency: "BRL",
+    currency: "EUR",
   }).format(number);
 };
 
 export const valueMask = (value: string) => {
   const rawValue = value.replace(/\D/g, "");
 
-  return (Number(rawValue) / 100).toLocaleString("pt-br", {
-    style: "currency",
-    currency: "BRL",
+  return (Number(rawValue) / 100).toLocaleString("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 };
 

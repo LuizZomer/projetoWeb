@@ -1,50 +1,92 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { IFindAllParam } from 'src/utils/types';
 import { messageGenerator } from 'src/utils/function';
 
+interface IMenuParam extends IFindAllParam {
+  search: string;
+  size: string;
+  type: string;
+}
+
 @Injectable()
 export class MenuService {
-  constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(item: CreateMenuDto) {
     await this.prisma.menu.create({
-      data:item
-    })
+      data: item,
+    });
 
-    return messageGenerator('create')
+    return messageGenerator('create');
   }
 
-  async findAll({page, take}:IFindAllParam) {
-    const menu = await this.prisma.menu.count()
-    const count = Math.ceil(menu / take)
+  async findAll({ page, take, search, size, type }: IMenuParam) {
+    if (page < 1)
+      throw new BadRequestException('Seite muss größer als Null sein');
 
-    if(page > count) throw new BadRequestException("Página não existente")
+    const menuCount = await this.prisma.menu.count({
+      where: {
+        name: {
+          contains: search || undefined,
+        },
+        size: {
+          equals: size || undefined,
+        },
+        type: {
+          equals: type || undefined,
+        },
+      },
+    });
+
+    const count = Math.ceil(menuCount / take);
 
     const menuItens = await this.prisma.menu.findMany({
-      skip: page * take,
+      select: {
+        id: true,
+        description: true,
+        name: true,
+        OrderItems: false,
+        size: true,
+        type: true,
+        value: true,
+      },
+      skip: (page - 1) * take,
       take,
-    })
+      where: {
+        name: {
+          contains: search || undefined,
+        },
+        size: {
+          equals: size || undefined,
+        },
+        type: {
+          equals: type || undefined,
+        },
+      },
+    });
 
-    return {menuItens, itensCount: count};
+    return { menuItens, itensCount: count };
   }
 
   async findOne(id: string) {
-    await this.exist(id)
+    await this.exist(id);
 
     return this.prisma.menu.findUnique({
       where: {
         id,
       },
     });
-
   }
 
   async update(id: string, item: UpdateMenuDto) {
     await this.exist(id);
-
 
     await this.prisma.menu.update({
       where: { id },
@@ -79,5 +121,4 @@ export class MenuService {
 
     throw new NotFoundException('Id não existente');
   }
-
 }

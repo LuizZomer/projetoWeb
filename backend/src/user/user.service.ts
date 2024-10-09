@@ -56,8 +56,6 @@ export class UserService {
   }
 
   async findAll({ page, take, search, role }: IFindAllUser) {
-    console.log(page);
-
     if (page < 1)
       throw new BadRequestException('Seite muss größer als Null sein');
 
@@ -92,7 +90,6 @@ export class UserService {
         workload: true,
       },
       take,
-      // Subtrai 1 de page para que a paginação comece de 1
       skip: (page - 1) * take,
       where: {
         fullName: {

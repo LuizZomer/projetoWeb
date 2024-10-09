@@ -3,7 +3,7 @@ import logo from "/logo.svg";
 import * as S from "./styles";
 import { House, User } from "@phosphor-icons/react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { SignOut } from "phosphor-react";
+import { ForkKnife, SignOut } from "phosphor-react";
 import { useAuthContext } from "../../context/Auth/useAuthContext";
 
 interface ISidebarOption {
@@ -23,6 +23,11 @@ export const Sidebar = () => {
       icon: <User size={30} color="#482D19" />,
       title: "Benutzer",
       url: "/user",
+    },
+    {
+      icon: <ForkKnife size={30} color="#482D19" />,
+      title: "Bestellungen",
+      url: "/menu",
     },
   ];
 
