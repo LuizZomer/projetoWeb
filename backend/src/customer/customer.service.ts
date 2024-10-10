@@ -10,19 +10,36 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { IFindAllParam } from 'src/utils/types';
 import { messageGenerator } from 'src/utils/function';
 
+interface ICustomerParam extends IFindAllParam {
+  status: string;
+}
+
 @Injectable()
 export class CustomerService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(customer: CreateCustomerDto) {
-    const encryptedPassword = bcrypt.hashSync(
-      customer.password,
+  async create({
+    email,
+    fullName,
+    idnr,
+    password,
+    status,
+    loyalty_points,
+  }: CreateCustomerDto) {
+    await this.existEmail(email);
+
+    const encryptedPassword = await bcrypt.hash(
+      password,
       await bcrypt.genSalt(),
     );
 
     await this.prisma.customer.create({
       data: {
-        ...customer,
+        email,
+        fullName,
+        idnr,
+        loyalty_points: loyalty_points || 0,
+        status,
         password: encryptedPassword,
       },
     });
@@ -30,23 +47,28 @@ export class CustomerService {
     return messageGenerator('create');
   }
 
-  async findAll({ page, take, search }: IFindAllParam) {
+  async findAll({ page, take, search, status }: ICustomerParam) {
+    if (page < 1)
+      throw new BadRequestException('Seite muss größer als Null sein');
+
     const customerTableCount = await this.prisma.customer.count({
       where: {
         fullName: {
           contains: search || undefined,
+        },
+        status: {
+          equals: status ? status === 'true' : undefined,
         },
       },
     });
 
     const count = Math.ceil(customerTableCount / take);
 
-    if (page >= count) throw new BadRequestException('Pagina não existente');
-
     const customers = await this.prisma.customer.findMany({
       select: {
         Contact: false,
         createdAt: true,
+        email: true,
         fullName: true,
         id: true,
         idnr: true,
@@ -59,10 +81,13 @@ export class CustomerService {
         updateAt: false,
       },
       take,
-      skip: page * take,
+      skip: (page - 1) * take,
       where: {
         fullName: {
           contains: search || undefined,
+        },
+        status: {
+          equals: status ? status === 'true' : undefined,
         },
       },
     });
@@ -91,14 +116,30 @@ export class CustomerService {
     });
   }
 
-  async update(id: string, customer: UpdateCustomerDto) {
+  async update(
+    id: string,
+    {
+      email,
+      fullName,
+      idnr,
+      loyalty_points,
+      password,
+      status,
+    }: UpdateCustomerDto,
+  ) {
     await this.exist(id);
+    await this.existEmail(email);
 
-    if (customer.password)
-      customer.password = bcrypt.hashSync(
-        customer.password,
-        await bcrypt.genSalt(),
-      );
+    const customer: UpdateCustomerDto = {
+      email,
+      fullName,
+      idnr,
+      loyalty_points,
+      status,
+    };
+
+    if (password)
+      customer.password = await bcrypt.hash(password, await bcrypt.genSalt());
 
     await this.prisma.customer.update({
       data: customer,
@@ -118,6 +159,18 @@ export class CustomerService {
     });
 
     return messageGenerator('delete');
+  }
+
+  async existEmail(email: string) {
+    const customer = await this.prisma.customer.count({
+      where: {
+        email,
+      },
+    });
+
+    if (customer) throw new BadRequestException('Vorhandene E-Mail');
+
+    return true;
   }
 
   async exist(id: string) {

@@ -1,9 +1,9 @@
 import { Divider, Image, Text } from "@chakra-ui/react";
 import logo from "/logo.svg";
 import * as S from "./styles";
-import { House, User } from "@phosphor-icons/react";
+import { User } from "@phosphor-icons/react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { ForkKnife, SignOut } from "phosphor-react";
+import { ForkKnife, SignOut, UsersFour } from "phosphor-react";
 import { useAuthContext } from "../../context/Auth/useAuthContext";
 
 interface ISidebarOption {
@@ -18,11 +18,15 @@ export const Sidebar = () => {
   const navigate = useNavigate();
 
   const sidebarOptions: ISidebarOption[] = [
-    { icon: <House size={28} color="#482D19" />, title: "Home", url: "/home" },
     {
       icon: <User size={30} color="#482D19" />,
       title: "Benutzer",
       url: "/user",
+    },
+    {
+      icon: <UsersFour size={30} color="#482D19" />,
+      title: "Kunde",
+      url: "/customer",
     },
     {
       icon: <ForkKnife size={30} color="#482D19" />,

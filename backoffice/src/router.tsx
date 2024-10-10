@@ -4,6 +4,7 @@ import { RequireAuth } from "./context/Auth/RequiredAuth";
 import { Sidebar } from "./components/Sidebar";
 import { UserList } from "./screens/User/List";
 import { MenuList } from "./screens/Menu/List";
+import { CustomerList } from "./screens/Customer/List";
 
 export const AppRouter = () => (
   <>
@@ -26,6 +27,10 @@ export const AppRouter = () => (
 
           <Route path="menu">
             <Route index element={<MenuList />} />
+          </Route>
+
+          <Route path="customer">
+            <Route index element={<CustomerList />} />
           </Route>
         </Route>
       </Routes>

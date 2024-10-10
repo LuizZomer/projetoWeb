@@ -13,22 +13,18 @@ import { z } from "zod";
 import { api } from "../../../../../services/api";
 import { FormInput } from "../../../../../components/Form/Input";
 import { FormSelect } from "../../../../../components/Form/Select";
-import { userRoles } from "../../../constants";
 import { ButtonComponent } from "../../../../../components/Buttons/Button";
-import { IUser } from "../..";
 
 interface IModalProps {
   onClose: () => void;
   isOpen: boolean;
   onSave: () => void;
-  user: IUser;
 }
 
-export const ModalEditUser = ({
+export const ModalCreateCustomer = ({
   isOpen,
   onClose,
   onSave,
-  user,
 }: IModalProps) => {
   const handleClose = () => {
     reset();
@@ -38,6 +34,7 @@ export const ModalEditUser = ({
   const schema = z
     .object({
       fullName: z.string().min(3, "Mindestens 3 Zeichen"),
+      email: z.string().email("Es muss eine E-Mail sein").min(3, "Pflichtfeld"),
       password: z
         .string()
         .min(6, "Mindestens 6 Zeichen")
@@ -49,14 +46,10 @@ export const ModalEditUser = ({
           /[A-Z]/,
           "Das Passwort sollte mindestens eine Großbuchstabe enthalten"
         )
-        .regex(/\d/, "Das Passwort muss mindestens eine Zahl enthalten")
-        .optional()
-        .or(z.literal("")),
+        .regex(/\d/, "Das Passwort muss mindestens eine Zahl enthalten"),
       confirmPassword: z.string().optional(),
-      function: z.string().optional(),
-      workload: z.string(),
-      role: z.string().min(1, "Pflichtfeld"),
       status: z.string().min(1, "Pflichtfeld"),
+      loyaltyPoints: z.string().optional(),
       idnr: z
         .string()
         .min(11, "Mindestens 11 Zeichen")
@@ -78,24 +71,21 @@ export const ModalEditUser = ({
   } = useForm<TFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      fullName: user.fullName,
+      fullName: "",
       password: "",
-      role: user.role,
-      workload: user.workload || "",
       confirmPassword: "",
-      function: user.function || "",
-      idnr: user.idnr,
-      status: String(user.status),
+      idnr: "",
+      status: "true",
+      email: "",
     },
   });
 
-  const handleEdit = async (data: TFormData) => {
-    if (!data.password) delete data.password;
-
+  const handleCreate = async (data: TFormData) => {
     await api
-      .put(`/user/${user.id}`, {
+      .post("/customer", {
         ...data,
         status: data.status === "true",
+        loyalty_points: data.loyaltyPoints || null,
       })
       .then(() => {
         handleClose();
@@ -106,13 +96,13 @@ export const ModalEditUser = ({
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
-      <ModalContent bg="#F1ECDC">
+      <ModalContent>
         <ModalHeader fontSize="2xl" color="#482D19">
-          Profil bearbeiten
+          Kunde registrieren
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <form onSubmit={handleSubmit(handleEdit)}>
+          <form onSubmit={handleSubmit(handleCreate)}>
             <Flex direction="column" gap="10px">
               <FormInput
                 label="Supplier Name"
@@ -122,39 +112,18 @@ export const ModalEditUser = ({
               />
 
               <FormInput
+                label="E-Mail"
+                {...register("email")}
+                error={errors.email?.message}
+                placeholder="z. B. ciroDonadio@beispiel.com"
+              />
+
+              <FormInput
                 label="IDNR"
                 {...register("idnr")}
                 error={errors.idnr?.message}
                 placeholder="z. B. 12345678901"
                 type="number"
-              />
-
-              <FormInput
-                label="Arbeitsbelastung"
-                {...register("workload")}
-                error={errors.workload?.message}
-                placeholder="z. B. 8Std"
-              />
-
-              <Controller
-                name="role"
-                control={control}
-                render={({ field }) => (
-                  <FormSelect
-                    label="Erlaubnis"
-                    error={errors.role?.message}
-                    {...field}
-                  >
-                    <option value="" hidden>
-                      Wählen
-                    </option>
-                    {userRoles.map(({ label, value }) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </FormSelect>
-                )}
               />
 
               <Controller
@@ -166,9 +135,6 @@ export const ModalEditUser = ({
                     error={errors.status?.message}
                     {...field}
                   >
-                    <option value="" hidden>
-                      Wählen
-                    </option>
                     <option value="true">Aktiv</option>
                     <option value="false">Nicht aktiv</option>
                   </FormSelect>
@@ -176,10 +142,11 @@ export const ModalEditUser = ({
               />
 
               <FormInput
-                label="Funktion"
-                {...register("function")}
-                error={errors.function?.message}
-                placeholder="z. B. Pizzabäcker"
+                label="Treuepunkte"
+                {...register("loyaltyPoints")}
+                error={errors.loyaltyPoints?.message}
+                placeholder="z. B. 0"
+                type="number"
               />
 
               <FormInput
@@ -199,7 +166,7 @@ export const ModalEditUser = ({
               />
 
               <ButtonComponent type="submit" mb={5} isLoading={isSubmitting}>
-                zu aktualisieren
+                zu erstellen
               </ButtonComponent>
             </Flex>
           </form>

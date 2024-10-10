@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsEmail,
   IsInt,
+  IsOptional,
   IsString,
   IsStrongPassword,
   Length,
@@ -31,5 +32,6 @@ export class CreateCustomerDto {
   status: boolean;
 
   @IsInt()
-  loyalty_points: number;
+  @IsOptional()
+  loyalty_points?: number;
 }

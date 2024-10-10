@@ -84,7 +84,7 @@ export const ModalCreateUser = ({ isOpen, onClose, onSave }: IModalProps) => {
 
   const handleCreate = async (data: TFormData) => {
     await api
-      .post("/user/", {
+      .post("/user", {
         ...data,
         status: data.status === "true",
       })

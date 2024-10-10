@@ -1,30 +1,29 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
+  Param,
   ParseIntPipe,
+  Post,
+  Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
 import { AuthCustomerGuard } from 'src/guards/authCustomer.guard';
 import { AuthGuard } from 'src/guards/authUser.guard';
 import { RoleGuard } from 'src/guards/role.guard';
-import { Roles } from 'src/decorators/role.decorator';
-import { Role } from 'src/enums/role.enum';
+import { CustomerService } from './customer.service';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @Controller('customer')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
-  @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuard)
   @Post()
   create(@Body() customer: CreateCustomerDto) {
     return this.customerService.create(customer);
@@ -36,8 +35,9 @@ export class CustomerController {
     @Query('take', ParseIntPipe) take: number,
     @Query('page', ParseIntPipe) page: number,
     @Query('search') search: string,
+    @Query('status') status: string,
   ) {
-    return this.customerService.findAll({ page, take, search });
+    return this.customerService.findAll({ page, take, search, status });
   }
 
   @UseGuards(AuthGuard)
@@ -47,12 +47,12 @@ export class CustomerController {
   }
 
   @UseGuards(AuthCustomerGuard)
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() customer: UpdateCustomerDto) {
     return this.customerService.update(id, customer);
   }
 
-  @UseGuards(AuthCustomerGuard)
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.customerService.remove(id);
