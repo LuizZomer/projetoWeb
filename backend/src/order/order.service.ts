@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrderDTO } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RevenueService } from 'src/revenue/revenue.service';
-import { create } from 'domain';
+import { IOrderList } from './order.gateway';
 
 @Injectable()
 export class OrderService {
@@ -43,7 +43,7 @@ export class OrderService {
     });
   }
 
-  async FindAllOrder() {
+  async FindAllOrder({ revenue, sequence }: IOrderList) {
     return this.prisma.order.findMany({
       include: {
         Revenue: {
@@ -60,7 +60,12 @@ export class OrderService {
         },
       },
       orderBy: {
-        createdAt: 'asc',
+        createdAt: sequence || undefined,
+      },
+      where: {
+        Revenue: {
+          status: revenue ? revenue === 'true' : undefined,
+        },
       },
     });
   }

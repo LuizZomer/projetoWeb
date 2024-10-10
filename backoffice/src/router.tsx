@@ -5,6 +5,7 @@ import { Sidebar } from "./components/Sidebar";
 import { UserList } from "./screens/User/List";
 import { MenuList } from "./screens/Menu/List";
 import { CustomerList } from "./screens/Customer/List";
+import { OrderList } from "./screens/Order/List";
 
 export const AppRouter = () => (
   <>
@@ -31,6 +32,10 @@ export const AppRouter = () => (
 
           <Route path="customer">
             <Route index element={<CustomerList />} />
+          </Route>
+
+          <Route path="order">
+            <Route index element={<OrderList />} />
           </Route>
         </Route>
       </Routes>

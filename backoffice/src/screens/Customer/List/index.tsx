@@ -62,8 +62,6 @@ export const CustomerList = () => {
         `/customer?take=10&role=${selectedStatus}&search=${search}&page=${newPage}`
       )
       .then(({ data }) => {
-        console.log(data);
-
         setCount(data.customersCount);
         setCustomerList(data.customers);
       })
