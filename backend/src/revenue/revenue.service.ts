@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { messageGenerator } from 'src/utils/function';
 import { CreateRevenueAccountDTO } from './dto/create-revenue.dto';
-import { UpdateRevenueAccountDTO } from './dto/update-revenue.dto';
 
 @Injectable()
 export class RevenueService {
@@ -31,10 +30,15 @@ export class RevenueService {
     return this.prisma.revenue.findMany();
   }
 
-  async payRevenue({ status }: UpdateRevenueAccountDTO, revenueId: string) {
+  async payRevenue(revenueId: string) {
+    const currentRevenueStatus = await this.prisma.revenue.findUnique({
+      where: { id: revenueId },
+      select: { status: true },
+    });
+
     await this.prisma.revenue.update({
       data: {
-        status,
+        status: !currentRevenueStatus.status,
       },
       where: {
         id: revenueId,

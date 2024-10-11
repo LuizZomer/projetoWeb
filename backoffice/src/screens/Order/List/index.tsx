@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { useSocketConnectContext } from "../../../context/SocketConnect/useSocketConnectContext";
 import { Title } from "../../../components/Text/Title";
 import { ExpandableTable } from "../../../components/ExpandableTable";
@@ -7,13 +7,31 @@ import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { FormSelect } from "../../../components/Form/Select";
 import { FilterContainer } from "../../../styles/Globals";
 import { Check, X } from "phosphor-react";
+import { api } from "../../../services/api";
+import { useEffect } from "react";
 
 type TSequence = "asc" | "desc";
 
 type TPaid = "true" | "false";
 
 export const OrderList = () => {
-  const { orderList, setOrderParam } = useSocketConnectContext();
+  const { orderList, setOrderParam, reqOrderList, orderParam } =
+    useSocketConnectContext();
+
+  const payRevenue = async (revenueId: string) => {
+    await api.patch(`/revenue/${revenueId}`).then(() => {
+      reqOrderList();
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      setOrderParam({
+        revenue: "false",
+        sequence: "desc",
+      });
+    };
+  }, []);
 
   return (
     <Flex direction="column" gap="30px">
@@ -28,9 +46,10 @@ export const OrderList = () => {
               sequence: target.value as TSequence,
             }));
           }}
+          defaultValue={orderParam.sequence}
         >
-          <option value="desc">desc</option>
-          <option value="asc">asc</option>
+          <option value="desc">abg.</option>
+          <option value="asc">aufg.</option>
         </FormSelect>
 
         <FormSelect
@@ -41,9 +60,10 @@ export const OrderList = () => {
               revenue: target.value as TPaid,
             }));
           }}
+          defaultValue={orderParam.revenue}
         >
-          <option value="false">Não Pago</option>
-          <option value="true">pago</option>
+          <option value="false">Nicht Bezahlt</option>
+          <option value="true">Bezahlt</option>
         </FormSelect>
       </FilterContainer>
 
@@ -58,26 +78,30 @@ export const OrderList = () => {
                 { label: intlNumberFormatter(Revenue.value) },
                 {
                   label: (
-                    <ButtonGroup
+                    <div
                       onClick={(evt) => {
                         evt.stopPropagation();
+                        payRevenue(Revenue.id);
                       }}
                     >
-                      <Button
-                        variant="outline"
-                        bgColor="green"
-                        _hover={{ bgColor: "lightGreen" }}
-                      >
-                        <Check color="white" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        bgColor="red"
-                        _hover={{ bgColor: "darkRed" }}
-                      >
-                        <X color="white" />
-                      </Button>
-                    </ButtonGroup>
+                      {Revenue.status ? (
+                        <Button
+                          variant="outline"
+                          bgColor="red"
+                          _hover={{ bgColor: "darkRed" }}
+                        >
+                          <X color="white" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          bgColor="green"
+                          _hover={{ bgColor: "lightGreen" }}
+                        >
+                          <Check color="white" />
+                        </Button>
+                      )}
+                    </div>
                   ),
                 },
               ]}

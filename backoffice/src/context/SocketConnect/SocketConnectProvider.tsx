@@ -14,6 +14,7 @@ export const SocketConnectProvider = ({
     revenue: "false",
     sequence: "desc",
   });
+
   const socketRef = useRef<Socket | null>(null);
 
   const reqOrderList = async () => {
@@ -41,7 +42,9 @@ export const SocketConnectProvider = ({
   }, [orderParam]);
 
   return (
-    <SocketConnectContext.Provider value={{ orderList, setOrderParam }}>
+    <SocketConnectContext.Provider
+      value={{ orderList, setOrderParam, reqOrderList, orderParam }}
+    >
       {children}
     </SocketConnectContext.Provider>
   );

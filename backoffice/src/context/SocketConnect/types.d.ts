@@ -31,5 +31,7 @@ export interface IOrdemParam {
 
 export interface ISocketConnect {
   orderList: IOrderList[];
+  orderParam: IOrdemParam;
   setOrderParam: React.Dispatch<React.SetStateAction<IOrdemParam>>;
+  reqOrderList: () => void;
 }

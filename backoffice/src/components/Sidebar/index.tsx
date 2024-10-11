@@ -1,10 +1,11 @@
-import { Divider, Image, Text } from "@chakra-ui/react";
+import { Divider, Image, Tag, Text } from "@chakra-ui/react";
 import logo from "/logo.svg";
 import * as S from "./styles";
 import { User } from "@phosphor-icons/react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Bag, ForkKnife, SignOut, UsersFour } from "phosphor-react";
 import { useAuthContext } from "../../context/Auth/useAuthContext";
+import { useSocketConnectContext } from "../../context/SocketConnect/useSocketConnectContext";
 
 interface ISidebarOption {
   icon: React.ReactNode;
@@ -15,6 +16,7 @@ interface ISidebarOption {
 
 export const Sidebar = () => {
   const { signOut } = useAuthContext();
+  const { orderList } = useSocketConnectContext();
   const navigate = useNavigate();
 
   const sidebarOptions: ISidebarOption[] = [
@@ -64,6 +66,11 @@ export const Sidebar = () => {
                 <Text color="#482D19" fontWeight={500} fontSize={18}>
                   {title}
                 </Text>
+                {title === "Befehl" && (
+                  <Tag backgroundColor="#482D19" color="#fff">
+                    {orderList.length}
+                  </Tag>
+                )}
               </S.OneOptionContainer>
             ))}
           </S.ContentOptionsContainer>
