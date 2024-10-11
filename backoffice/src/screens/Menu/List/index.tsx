@@ -13,7 +13,7 @@ import { Title } from "../../../components/Text/Title";
 import { usePagination } from "../../../hooks";
 import { api } from "../../../services/api";
 import { FilterContainer } from "../../../styles/Globals";
-import { intlNumberFormatter } from "../../../utils/functions";
+import { intlNumberFormatter, listConfig } from "../../../utils/functions";
 import { sizeMenuItem, typeMenuItem } from "../constants";
 import { ModalCreateMenuItem } from "./utils/ModalCreateMenuItem";
 import { ModalEditMenuItem } from "./utils/ModalEditMenuItem";
@@ -31,11 +31,6 @@ export interface IMenuItem {
 interface IMenuItemsListReq {
   menuItens: IMenuItem[];
   itensCount: number;
-}
-
-interface IListConfig {
-  field: "type" | "size";
-  value: string;
 }
 
 export const MenuList = () => {
@@ -60,34 +55,6 @@ export const MenuList = () => {
   } = useDisclosure();
   const [selectedMenuItem, setSelectedMenuItem] = useState<IMenuItem>();
   // #endregion
-
-  const listConfig = ({ field, value }: IListConfig) => {
-    if (field === "size") {
-      switch (value) {
-        case "small":
-          return "Klein";
-
-        case "large":
-          return "Groß";
-      }
-    }
-
-    if (field === "type") {
-      switch (value) {
-        case "pizza":
-          return "Pizza";
-
-        case "noodle":
-          return "Nudeln";
-
-        case "salad":
-          return "Salat";
-
-        case "drink":
-          return "Getränk";
-      }
-    }
-  };
 
   // #region req
   const reqMenuItems = async ({ newPage }: { newPage: string }) => {

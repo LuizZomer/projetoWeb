@@ -15,6 +15,11 @@ interface ICatchHandler {
   };
 }
 
+interface IListConfig {
+  field: "type" | "size";
+  value: string;
+}
+
 export const catchHandler = (err: ICatchHandler) => {
   if (err.response?.data) {
     if (Array.isArray(err.response.data.message))
@@ -74,3 +79,31 @@ export const unmaskValue = (value: string): number => {
 
 export const DateFormater = (date: string) =>
   new Date(date).toLocaleDateString();
+
+export const listConfig = ({ field, value }: IListConfig) => {
+  if (field === "size") {
+    switch (value) {
+      case "small":
+        return "Klein";
+
+      case "large":
+        return "Groß";
+    }
+  }
+
+  if (field === "type") {
+    switch (value) {
+      case "pizza":
+        return "Pizza";
+
+      case "noodle":
+        return "Nudeln";
+
+      case "salad":
+        return "Salat";
+
+      case "drink":
+        return "Getränk";
+    }
+  }
+};

@@ -26,7 +26,7 @@ interface ITableBody {
 
 export const InfoTable = ({ headProps, children }: ITableHead) => (
   <TableContainer minWidth="100%">
-    <Table variant="simple" minWidth="100%">
+    <Table variant="simple" minWidth="100%" borderRadius="5px">
       <Thead borderColor="#482D19">
         {headProps.map(({ label, cssProps }, i) => (
           <Th key={i} color="#482D19" {...cssProps}>

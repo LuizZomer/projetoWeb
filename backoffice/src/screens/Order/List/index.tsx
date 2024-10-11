@@ -1,11 +1,12 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useSocketConnectContext } from "../../../context/SocketConnect/useSocketConnectContext";
 import { Title } from "../../../components/Text/Title";
 import { ExpandableTable } from "../../../components/ExpandableTable";
-import { intlNumberFormatter } from "../../../utils/functions";
+import { intlNumberFormatter, listConfig } from "../../../utils/functions";
 import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { FormSelect } from "../../../components/Form/Select";
 import { FilterContainer } from "../../../styles/Globals";
+import { Check, X } from "phosphor-react";
 
 type TSequence = "asc" | "desc";
 
@@ -13,8 +14,6 @@ type TPaid = "true" | "false";
 
 export const OrderList = () => {
   const { orderList, setOrderParam } = useSocketConnectContext();
-
-  console.log(orderList);
 
   return (
     <Flex direction="column" gap="30px">
@@ -48,7 +47,7 @@ export const OrderList = () => {
         </FormSelect>
       </FilterContainer>
 
-      <Flex direction="column" gap="10px">
+      <Flex direction="column" gap="10px" mb="10px">
         {orderList.map(
           ({ OrderItems, Revenue, createdAt, customerName, id }) => (
             <ExpandableTable
@@ -57,17 +56,41 @@ export const OrderList = () => {
                 { label: customerName },
                 { label: new Date(createdAt).toLocaleString() },
                 { label: intlNumberFormatter(Revenue.value) },
+                {
+                  label: (
+                    <ButtonGroup
+                      onClick={(evt) => {
+                        evt.stopPropagation();
+                      }}
+                    >
+                      <Button
+                        variant="outline"
+                        bgColor="green"
+                        _hover={{ bgColor: "lightGreen" }}
+                      >
+                        <Check color="white" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        bgColor="red"
+                        _hover={{ bgColor: "darkRed" }}
+                      >
+                        <X color="white" />
+                      </Button>
+                    </ButtonGroup>
+                  ),
+                },
               ]}
             >
               <Box>
                 <InfoTable
                   headProps={[
-                    { label: "Nome" },
-                    { label: "descrição" },
-                    { label: "Tamanho" },
-                    { label: "Tipo" },
-                    { label: "valor" },
-                    { label: "Quantidade" },
+                    { label: "Name" },
+                    { label: "Beschreibung" },
+                    { label: "Größe" },
+                    { label: "Typ" },
+                    { label: "Wert" },
+                    { label: "Menge" },
                   ]}
                 >
                   {OrderItems.map(({ id, quantity, Menu }) => (
@@ -76,9 +99,13 @@ export const OrderList = () => {
                       colsBody={[
                         { ceil: Menu.name },
                         { ceil: Menu.description },
-                        { ceil: Menu.size },
-                        { ceil: Menu.type },
-                        { ceil: Menu.value },
+                        {
+                          ceil: listConfig({ field: "size", value: Menu.size }),
+                        },
+                        {
+                          ceil: listConfig({ field: "type", value: Menu.type }),
+                        },
+                        { ceil: intlNumberFormatter(Menu.value) },
                         { ceil: quantity },
                       ]}
                     />

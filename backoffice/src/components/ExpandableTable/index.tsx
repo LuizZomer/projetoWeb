@@ -11,8 +11,15 @@ interface IExpandableTable {
 export const ExpandableTable = ({ children, headProps }: IExpandableTable) => {
   const [show, setShow] = useState(false);
   return (
-    <Box bgColor="#f1ecdc" borderRadius="5px">
-      <Flex padding="10px" gap="30px" onClick={() => setShow((prev) => !prev)}>
+    <Box bgColor="#f1ecdc" borderRadius="5px" userSelect="none">
+      <Flex
+        align="center"
+        padding="10px 0 10px 20px"
+        gap="30px"
+        fontSize="20px"
+        _hover={{ cursor: "pointer" }}
+        onClick={() => setShow((prev) => !prev)}
+      >
         {headProps.map(({ label }) => (
           <div>{label}</div>
         ))}

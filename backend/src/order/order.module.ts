@@ -3,8 +3,10 @@ import { OrderService } from './order.service';
 import { OrderGateway } from './order.gateway';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RevenueService } from 'src/revenue/revenue.service';
+import { OrderController } from './order.controller';
 
 @Module({
   providers: [OrderService, OrderGateway, PrismaService, RevenueService],
+  controllers: [OrderController],
 })
 export class OrderModule {}
