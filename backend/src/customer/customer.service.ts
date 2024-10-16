@@ -128,7 +128,7 @@ export class CustomerService {
     }: UpdateCustomerDto,
   ) {
     await this.exist(id);
-    await this.existEmail(email);
+    // await this.existEmail(email);
 
     const customer: UpdateCustomerDto = {
       email,

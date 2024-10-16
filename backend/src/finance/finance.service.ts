@@ -1,24 +1,55 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { messageGenerator } from 'src/utils/function';
 import { IFindAllParam } from 'src/utils/types';
 import { CreateFinanceDTO } from './dto/create-payable-account.dto copy';
 import { UpdateFinanceDTO } from './dto/update-payable-account.dto copy 2';
 
+interface IUpdateStatus {
+  status: boolean;
+  revenueId: string;
+}
+
 @Injectable()
 export class FinanceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllFinance({page, take}: IFindAllParam){
-    return this.prisma.finance.findMany({
-      skip: page * take,
-      take: take,
-    })
+  async findAllFinance({ page, take }: IFindAllParam) {
+    if (page < 1)
+      throw new BadRequestException('Seite muss größer als Null sein');
+
+    const financeTableCount = await this.prisma.finance.count();
+
+    const count = Math.ceil(financeTableCount / take);
+
+    const finances = await this.prisma.finance.findMany({
+      select: {
+        createdAt: true,
+        description: true,
+        dueDate: true,
+        id: true,
+        Revenue: false,
+        revenueId: false,
+        status: true,
+        type: true,
+        value: true,
+        userId: false,
+        User: true,
+      },
+      take,
+      skip: (page - 1) * take,
+    });
+
+    return { finances, financesCount: count };
   }
 
   async createFinance(
-    {description, dueDate, status, value, type}: CreateFinanceDTO, 
-    userId: string
+    { description, dueDate, status, value, type }: CreateFinanceDTO,
+    userId?: string,
   ) {
     await this.prisma.finance.create({
       data: {
@@ -26,53 +57,68 @@ export class FinanceService {
         dueDate: new Date(dueDate),
         status,
         value,
-        userId: userId,
-        type
-      }
-    })
+        userId,
+        type,
+      },
+    });
 
-    return messageGenerator('create')
+    return messageGenerator('create');
   }
 
-  async updateFinance({id, finance, userId} : 
-    {id: string, finance: UpdateFinanceDTO, userId: string}
-  ) {
-    await this.existFinance(id)
+  async updateFinance({
+    id,
+    finance,
+    userId,
+  }: {
+    id: string;
+    finance: UpdateFinanceDTO;
+    userId: string;
+  }) {
+    await this.existFinance(id);
 
     await this.prisma.finance.update({
       data: {
         ...finance,
-        userId
+        userId,
       },
       where: {
-        id
-      }
-    }) 
+        id,
+      },
+    });
 
-    return messageGenerator('update')
+    return messageGenerator('update');
   }
 
-  async delete(id: string){
-    await this.existFinance(id)
+  async delete(id: string) {
+    await this.existFinance(id);
 
     await this.prisma.finance.delete({
-      where: {id}
-    })
+      where: { id },
+    });
 
-    return messageGenerator('delete')
+    return messageGenerator('delete');
   }
 
-  async existFinance(id: string){
-    const receivable = await this.prisma.finance.count({
-      where: {id}
-    }) 
+  async updateStatusWithRevenue({ revenueId, status }: IUpdateStatus) {
+    await this.prisma.finance.update({
+      data: {
+        status,
+      },
+      where: {
+        revenueId,
+      },
+    });
+  }
 
-    if(receivable) {
-      return receivable
+  async existFinance(id: string) {
+    const receivable = await this.prisma.finance.count({
+      where: { id },
+    });
+
+    if (receivable) {
+      return receivable;
     }
 
-    throw new NotFoundException('Id de conta não encontrado!')
+    throw new NotFoundException('Id de conta não encontrado!');
   }
-
-
 }

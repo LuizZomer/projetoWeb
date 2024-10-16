@@ -2,10 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { messageGenerator } from 'src/utils/function';
 import { CreateRevenueAccountDTO } from './dto/create-revenue.dto';
+import { FinanceType } from 'src/enums/financeTypes.enum';
+import { FinanceService } from 'src/finance/finance.service';
 
 @Injectable()
 export class RevenueService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly financeServices: FinanceService,
+  ) {}
 
   async createRevenueAccount({
     date,
@@ -14,7 +19,7 @@ export class RevenueService {
     customerId,
     customerName,
   }: CreateRevenueAccountDTO) {
-    await this.prisma.revenue.create({
+    const revenue = await this.prisma.revenue.create({
       data: {
         date,
         status: false,
@@ -23,6 +28,15 @@ export class RevenueService {
         customerName,
         value,
       },
+    });
+
+    await this.financeServices.createFinance({
+      dueDate: date.toString(),
+      status: false,
+      type: FinanceType.RECEIVABLE,
+      value,
+      description: `Anfrage für ${customerName}`,
+      revenueId: revenue.id,
     });
   }
 
@@ -43,6 +57,11 @@ export class RevenueService {
       where: {
         id: revenueId,
       },
+    });
+
+    await this.financeServices.updateStatusWithRevenue({
+      revenueId,
+      status: !currentRevenueStatus.status,
     });
 
     return messageGenerator('update');

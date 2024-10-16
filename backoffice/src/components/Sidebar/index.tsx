@@ -3,7 +3,7 @@ import logo from "/logo.svg";
 import * as S from "./styles";
 import { User } from "@phosphor-icons/react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Bag, ForkKnife, SignOut, UsersFour } from "phosphor-react";
+import { Bag, Coin, ForkKnife, SignOut, UsersFour } from "phosphor-react";
 import { useAuthContext } from "../../context/Auth/useAuthContext";
 import { useSocketConnectContext } from "../../context/SocketConnect/useSocketConnectContext";
 
@@ -39,6 +39,11 @@ export const Sidebar = () => {
       icon: <Bag size={30} color="#482D19" />,
       title: "Befehl",
       url: "/order",
+    },
+    {
+      icon: <Coin size={32} color="#482D19" />,
+      title: "Finanziell",
+      url: "/finance",
     },
   ];
 

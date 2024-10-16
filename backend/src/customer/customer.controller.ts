@@ -46,7 +46,7 @@ export class CustomerController {
     return this.customerService.findOne(id);
   }
 
-  @UseGuards(AuthCustomerGuard)
+  @UseGuards(AuthGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() customer: UpdateCustomerDto) {
     return this.customerService.update(id, customer);

@@ -9,5 +9,6 @@ import { UserModule } from 'src/user/user.module';
   imports: [forwardRef(() => AuthModule), forwardRef(() => UserModule)],
   controllers: [FinanceController],
   providers: [FinanceService, PrismaService],
+  exports: [FinanceService],
 })
 export class FinanceModule {}

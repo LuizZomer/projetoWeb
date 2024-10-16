@@ -1,4 +1,10 @@
-import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { FinanceType } from 'src/enums/financeTypes.enum';
 
 export class CreateFinanceDTO {
@@ -15,5 +21,8 @@ export class CreateFinanceDTO {
   status: boolean;
 
   @IsEnum(FinanceType)
-  type: string
+  type: string;
+
+  @IsOptional()
+  revenueId: string;
 }

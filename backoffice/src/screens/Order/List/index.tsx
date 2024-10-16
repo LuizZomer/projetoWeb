@@ -69,12 +69,21 @@ export const OrderList = () => {
 
       <Flex direction="column" gap="10px" mb="10px">
         {orderList.map(
-          ({ OrderItems, Revenue, createdAt, customerName, id }) => (
+          ({ OrderItems, Revenue, createdAt, customerName, id }, i) => (
             <ExpandableTable
               key={id}
               headProps={[
+                { label: i },
                 { label: customerName },
-                { label: new Date(createdAt).toLocaleString() },
+                {
+                  label: new Date(createdAt).toLocaleString(
+                    navigator.language,
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }
+                  ),
+                },
                 { label: intlNumberFormatter(Revenue.value) },
                 {
                   label: (

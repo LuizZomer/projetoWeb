@@ -71,11 +71,13 @@ model Finance {
   description String
   value       Float
   status      Boolean
-  userId      String
+  userId      String?
+  revenueId   String?  @unique
   type        String
   createdAt   DateTime @default(now())
 
-  User User @relation(fields: [userId], references: [id])
+  User    User?    @relation(fields: [userId], references: [id])
+  Revenue Revenue? @relation(fields: [revenueId], references: [id])
 
   @@map("finances")
 }
@@ -106,6 +108,7 @@ model Revenue {
   Order    Order?    @relation(fields: [orderId], references: [id])
   User     User?     @relation(fields: [userId], references: [id])
   userId   String?
+  Finance  Finance[]
 
   @@map("revenues")
 }

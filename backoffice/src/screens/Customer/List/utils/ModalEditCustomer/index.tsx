@@ -84,6 +84,7 @@ export const ModalEditCustomer = ({
       idnr: customer.idnr,
       status: String(customer.status),
       email: customer.email,
+      loyaltyPoints: String(customer.loyalty_points),
     },
   });
 
@@ -94,7 +95,7 @@ export const ModalEditCustomer = ({
       .put(`/customer/${data.id}`, {
         ...data,
         status: data.status === "true",
-        loyalty_points: data.loyaltyPoints || null,
+        loyalty_points: Number(data.loyaltyPoints) || null,
       })
       .then(() => {
         handleClose();

@@ -6,6 +6,7 @@ import { UserList } from "./screens/User/List";
 import { MenuList } from "./screens/Menu/List";
 import { CustomerList } from "./screens/Customer/List";
 import { OrderList } from "./screens/Order/List";
+import { FinanceList } from "./screens/Finance/List";
 
 export const AppRouter = () => (
   <>
@@ -36,6 +37,10 @@ export const AppRouter = () => (
 
           <Route path="order">
             <Route index element={<OrderList />} />
+          </Route>
+
+          <Route path="finance">
+            <Route index element={<FinanceList />} />
           </Route>
         </Route>
       </Routes>

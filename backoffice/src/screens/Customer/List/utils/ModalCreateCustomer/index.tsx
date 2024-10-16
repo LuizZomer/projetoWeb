@@ -85,7 +85,7 @@ export const ModalCreateCustomer = ({
       .post("/customer", {
         ...data,
         status: data.status === "true",
-        loyalty_points: data.loyaltyPoints || null,
+        loyalty_points: data.loyaltyPoints ? Number(data.loyaltyPoints) : null,
       })
       .then(() => {
         handleClose();

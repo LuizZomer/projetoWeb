@@ -155,7 +155,7 @@ export class UserService {
   async remove(id: string, userId: string) {
     const forDeleteUser = await this.exist(id);
 
-    await this.roleUser('admin');
+    if (forDeleteUser.role === 'admin') await this.roleUser('admin');
 
     if (forDeleteUser.id === userId)
       throw new BadRequestException(
