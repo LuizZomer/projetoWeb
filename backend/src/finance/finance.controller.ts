@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseBoolPipe,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { FinanceService } from './finance.service';
 import { AuthGuard } from 'src/guards/authUser.guard';
 import { RoleGuard } from 'src/guards/role.guard';
@@ -17,15 +30,14 @@ export class FinanceController {
   async findAll(
     @Query('page', ParseIntPipe) page: number,
     @Query('take', ParseIntPipe) take: number,
-  ){
-    return this.financesService.findAllFinance({page, take})
+    @Query('status') status: string,
+    @Query('type') type: string,
+  ) {
+    return this.financesService.findAllFinance({ page, take, status, type });
   }
 
   @Post()
-  async create(
-    @Req() req: any,
-    @Body() finance: CreateFinanceDTO,
-  ) {
+  async create(@Req() req: any, @Body() finance: CreateFinanceDTO) {
     const userId = req.user.id;
 
     return this.financesService.createFinance(finance, userId);
@@ -35,16 +47,19 @@ export class FinanceController {
   async update(
     @Param('financeId') financeId: string,
     @Req() req: any,
-    @Body() finance: UpdateFinanceDTO
-  ){
+    @Body() finance: UpdateFinanceDTO,
+  ) {
     const userId = req.user.id;
 
-    return this.financesService.updateFinance({finance, id: financeId, userId})
-  } 
-
-  @Delete(':financeId')
-  async delete(@Param('financeId') id: string){
-    return this.financesService.delete(id)
+    return this.financesService.updateFinance({
+      finance,
+      id: financeId,
+      userId,
+    });
   }
 
+  @Delete(':financeId')
+  async delete(@Param('financeId') id: string) {
+    return this.financesService.delete(id);
+  }
 }

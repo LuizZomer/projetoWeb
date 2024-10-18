@@ -14,15 +14,28 @@ interface IUpdateStatus {
   revenueId: string;
 }
 
+interface IFindFinanceParam extends IFindAllParam {
+  status: string;
+  type: string;
+}
+
 @Injectable()
 export class FinanceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllFinance({ page, take }: IFindAllParam) {
+  async findAllFinance({ page, take, status, type }: IFindFinanceParam) {
     if (page < 1)
       throw new BadRequestException('Seite muss größer als Null sein');
 
-    const financeTableCount = await this.prisma.finance.count();
+    const financeTableCount = await this.prisma.finance.count({
+      take,
+      skip: (page - 1) * take,
+      where: {
+        status:
+          status === 'true' ? true : status === 'false' ? false : undefined,
+        type,
+      },
+    });
 
     const count = Math.ceil(financeTableCount / take);
 
@@ -38,17 +51,26 @@ export class FinanceService {
         type: true,
         value: true,
         userId: false,
-        User: true,
+        User: {
+          select: {
+            fullName: true,
+          },
+        },
       },
       take,
       skip: (page - 1) * take,
+      where: {
+        status:
+          status === 'true' ? true : status === 'false' ? false : undefined,
+        type: type || undefined,
+      },
     });
 
     return { finances, financesCount: count };
   }
 
   async createFinance(
-    { description, dueDate, status, value, type }: CreateFinanceDTO,
+    { description, dueDate, status, value, type, revenueId }: CreateFinanceDTO,
     userId?: string,
   ) {
     await this.prisma.finance.create({
@@ -59,6 +81,7 @@ export class FinanceService {
         value,
         userId,
         type,
+        revenueId,
       },
     });
 

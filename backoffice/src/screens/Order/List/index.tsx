@@ -73,7 +73,7 @@ export const OrderList = () => {
             <ExpandableTable
               key={id}
               headProps={[
-                { label: i },
+                { label: `${i + 1}.` },
                 { label: customerName },
                 {
                   label: new Date(createdAt).toLocaleString(

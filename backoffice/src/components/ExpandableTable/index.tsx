@@ -20,11 +20,11 @@ export const ExpandableTable = ({ children, headProps }: IExpandableTable) => {
         _hover={{ cursor: "pointer" }}
         onClick={() => setShow((prev) => !prev)}
       >
-        {headProps.map(({ label }) => (
-          <div>{label}</div>
+        {headProps.map(({ label }, i) => (
+          <div key={i}>{label}</div>
         ))}
       </Flex>
-      {show && <div>{children}</div>}
+      {show && <Box p="0 10px 10px">{children}</Box>}
     </Box>
   );
 };

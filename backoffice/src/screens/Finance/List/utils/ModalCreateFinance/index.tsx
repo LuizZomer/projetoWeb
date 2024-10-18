@@ -10,25 +10,22 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { api } from "../../../../../services/api";
+import { ButtonComponent } from "../../../../../components/Buttons/Button";
 import { FormInput } from "../../../../../components/Form/Input";
 import { FormSelect } from "../../../../../components/Form/Select";
-import { ButtonComponent } from "../../../../../components/Buttons/Button";
-import { sizeMenuItem, typeMenuItem } from "../../../constants";
+import { api } from "../../../../../services/api";
 import { unmaskValue, valueMask } from "../../../../../utils/functions";
-import { IMenuItem } from "../..";
 
 interface IModalProps {
   onClose: () => void;
   isOpen: boolean;
   onSave: () => void;
-  menuItem: IMenuItem;
 }
-export const ModalEditMenuItem = ({
+
+export const ModalCreateFinance = ({
   isOpen,
   onClose,
   onSave,
-  menuItem,
 }: IModalProps) => {
   const handleClose = () => {
     reset();
@@ -36,12 +33,11 @@ export const ModalEditMenuItem = ({
   };
 
   const schema = z.object({
-    id: z.string(),
-    name: z.string().min(1, "Pflichtfeld"),
+    dueDate: z.string().min(1, "Pflichtfeld"),
     description: z.string().min(1, "Pflichtfeld"),
     value: z.string().min(1, "Pflichtfeld"),
+    status: z.string().min(1, "Pflichtfeld"),
     type: z.string().min(1, "Pflichtfeld"),
-    size: z.string().min(1, "Pflichtfeld"),
   });
 
   type TFormData = z.infer<typeof schema>;
@@ -55,20 +51,21 @@ export const ModalEditMenuItem = ({
   } = useForm<TFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      id: menuItem.id,
-      description: menuItem.description,
-      name: menuItem.name,
-      size: menuItem.size,
-      type: menuItem.type,
-      value: valueMask(String(menuItem.value * 100)),
+      dueDate: "",
+      description: "",
+      value: "",
+      type: "payable",
+      status: "true",
     },
   });
 
-  const handleEdit = async (data: TFormData) => {
+  const handleCreate = async (data: TFormData) => {
     await api
-      .put(`/menu/${data.id}`, {
+      .post("/finance", {
         ...data,
         value: Number(unmaskValue(data.value)),
+        status: data.status === "true",
+        dueDate: new Date(data.dueDate),
       })
       .then(() => {
         handleClose();
@@ -81,24 +78,25 @@ export const ModalEditMenuItem = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader fontSize="2xl" color="#482D19">
-          Bestellungen bearbeiten
+          Profil registrieren
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <form onSubmit={handleSubmit(handleEdit)}>
+          <form onSubmit={handleSubmit(handleCreate)}>
             <Flex direction="column" gap="10px">
               <FormInput
-                label="Name"
-                {...register("name")}
-                error={errors.name?.message}
-                placeholder="Produktname"
+                label="Supplier Name"
+                {...register("dueDate")}
+                error={errors.dueDate?.message}
+                placeholder="z. B. Ciro Donadio"
+                type="date"
               />
 
               <FormInput
-                label="Beschreibung"
+                label="Benutzername"
                 {...register("description")}
                 error={errors.description?.message}
-                placeholder="Produktbeschreibung"
+                placeholder="z. B. ciroDonadio"
               />
 
               <Controller
@@ -110,8 +108,8 @@ export const ModalEditMenuItem = ({
                     {...field}
                     error={errors.value?.message}
                     placeholder="Produktwert"
-                    onChange={(evt) => {
-                      const maskedValue = valueMask(evt.target.value);
+                    onChange={({ target }) => {
+                      const maskedValue = valueMask(target.value);
 
                       field.onChange(maskedValue);
                     }}
@@ -128,41 +126,29 @@ export const ModalEditMenuItem = ({
                     error={errors.type?.message}
                     {...field}
                   >
-                    <option value="" hidden>
-                      Wählen
-                    </option>
-                    {typeMenuItem.map(({ label, value }) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
+                    <option value="payable">Zahlbar</option>
+                    <option value="receivable">Forderung</option>
                   </FormSelect>
                 )}
               />
 
               <Controller
-                name="size"
+                name="status"
                 control={control}
                 render={({ field }) => (
                   <FormSelect
-                    label="Größe"
-                    error={errors.size?.message}
+                    label="Status"
+                    error={errors.status?.message}
                     {...field}
                   >
-                    <option value="" hidden>
-                      Wählen
-                    </option>
-                    {sizeMenuItem.map(({ label, value }) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
+                    <option value="true">Bezahlt</option>
+                    <option value="false">Nicht Bezahlt</option>
                   </FormSelect>
                 )}
               />
 
               <ButtonComponent type="submit" mb={5} isLoading={isSubmitting}>
-                Zu aktualisieren
+                zu erstellen
               </ButtonComponent>
             </Flex>
           </form>
