@@ -28,16 +28,14 @@ export class FinanceService {
       throw new BadRequestException('Seite muss größer als Null sein');
 
     const financeTableCount = await this.prisma.finance.count({
-      take,
-      skip: (page - 1) * take,
       where: {
         status:
           status === 'true' ? true : status === 'false' ? false : undefined,
-        type,
+        type: type || undefined
       },
     });
 
-    const count = Math.ceil(financeTableCount / take);
+    const count = Math.ceil(financeTableCount / take);    
 
     const finances = await this.prisma.finance.findMany({
       select: {
@@ -131,6 +129,34 @@ export class FinanceService {
         revenueId,
       },
     });
+  }
+
+  async calcIncome() {
+    const allFinances = await this.prisma.finance.findMany()
+    let positive = 0
+    let negative = 0
+
+    allFinances.forEach((finance) => {
+      if(finance.type === 'payable' && finance.status) negative += finance.value
+
+      if(finance.type === 'receivable' && finance.status) positive += finance.value
+    })
+
+    return {income: positive - negative};
+  }
+
+  async calcIncomeExpected() {
+    const allFinances = await this.prisma.finance.findMany()
+    let positive = 0
+    let negative = 0
+
+    allFinances.forEach((finance) => {
+      if(finance.type === 'payable') negative += finance.value
+
+      if(finance.type === 'receivable') positive += finance.value
+    })
+
+    return {expectedIncome: positive - negative};
   }
 
   async existFinance(id: string) {

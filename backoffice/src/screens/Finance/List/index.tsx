@@ -145,7 +145,7 @@ export const FinanceList = () => {
         padding="20px"
       >
         <ButtonComponent onClick={() => onOpen()} maxW="130px">
-          + Add Benutzer
+          + Add Finanziell
         </ButtonComponent>
 
         <InfoTable

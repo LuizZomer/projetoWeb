@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseBoolPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -32,8 +31,13 @@ export class FinanceController {
     @Query('take', ParseIntPipe) take: number,
     @Query('status') status: string,
     @Query('type') type: string,
-  ) {
+  ) {    
     return this.financesService.findAllFinance({ page, take, status, type });
+  }
+
+  @Get('data')
+  async FinanceData(){
+    return this.financesService.calcIncomeExpected()
   }
 
   @Post()
