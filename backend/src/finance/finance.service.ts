@@ -8,6 +8,7 @@ import { messageGenerator } from 'src/utils/function';
 import { IFindAllParam } from 'src/utils/types';
 import { CreateFinanceDTO } from './dto/create-payable-account.dto copy';
 import { UpdateFinanceDTO } from './dto/update-payable-account.dto copy 2';
+import { Finance } from '@prisma/client';
 
 interface IUpdateStatus {
   status: boolean;
@@ -17,25 +18,52 @@ interface IUpdateStatus {
 interface IFindFinanceParam extends IFindAllParam {
   status: string;
   type: string;
+  initialDate: string;
+  finalDate: string;
 }
 
 @Injectable()
 export class FinanceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllFinance({ page, take, status, type }: IFindFinanceParam) {
+  async findAllFinance({
+    page,
+    take,
+    status,
+    type,
+    finalDate,
+    initialDate,
+  }: IFindFinanceParam) {
     if (page < 1)
       throw new BadRequestException('Seite muss größer als Null sein');
+
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    let finalDateEndOfDay = finalDate ? new Date(finalDate) : todayEnd;
+
+    if (finalDate) {
+      finalDateEndOfDay.setDate(finalDateEndOfDay.getDate() + 1);
+    }
 
     const financeTableCount = await this.prisma.finance.count({
       where: {
         status:
           status === 'true' ? true : status === 'false' ? false : undefined,
-        type: type || undefined
+        type: type || undefined,
+        createdAt: {
+          gte: initialDate ? new Date(initialDate) : todayStart,
+          lte: finalDateEndOfDay,
+        },
       },
     });
 
-    const count = Math.ceil(financeTableCount / take);    
+    const count = Math.ceil(financeTableCount / take);
+
+    count;
 
     const finances = await this.prisma.finance.findMany({
       select: {
@@ -61,6 +89,10 @@ export class FinanceService {
         status:
           status === 'true' ? true : status === 'false' ? false : undefined,
         type: type || undefined,
+        createdAt: {
+          gte: initialDate ? new Date(initialDate) : todayStart,
+          lte: finalDateEndOfDay,
+        },
       },
     });
 
@@ -131,32 +163,66 @@ export class FinanceService {
     });
   }
 
-  async calcIncome() {
-    const allFinances = await this.prisma.finance.findMany()
-    let positive = 0
-    let negative = 0
+  async generalIncomeCalc({
+    finalDate,
+    initialDate,
+  }: {
+    initialDate: string;
+    finalDate: string;
+  }) {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
 
-    allFinances.forEach((finance) => {
-      if(finance.type === 'payable' && finance.status) negative += finance.value
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
 
-      if(finance.type === 'receivable' && finance.status) positive += finance.value
-    })
+    let finalDateEndOfDay = finalDate ? new Date(finalDate) : todayEnd;
 
-    return {income: positive - negative};
+    if (finalDate) {
+      finalDateEndOfDay.setDate(finalDateEndOfDay.getDate() + 1);
+    }
+
+    const allFinances = await this.prisma.finance.findMany({
+      where: {
+        createdAt: {
+          gte: initialDate ? new Date(initialDate) : todayStart,
+          lte: finalDateEndOfDay,
+        },
+      },
+    });
+
+    const income = this.calcIncome(allFinances);
+    const expectedIncome = this.calcIncomeExpected(allFinances);
+
+    return { income, expectedIncome };
   }
 
-  async calcIncomeExpected() {
-    const allFinances = await this.prisma.finance.findMany()
-    let positive = 0
-    let negative = 0
+  calcIncome(finances: Finance[]) {
+    let positive = 0;
+    let negative = 0;
 
-    allFinances.forEach((finance) => {
-      if(finance.type === 'payable') negative += finance.value
+    finances.forEach((finance) => {
+      if (finance.type === 'payable' && finance.status)
+        negative += finance.value;
 
-      if(finance.type === 'receivable') positive += finance.value
-    })
+      if (finance.type === 'receivable' && finance.status)
+        positive += finance.value;
+    });
 
-    return {expectedIncome: positive - negative};
+    return positive - negative;
+  }
+
+  calcIncomeExpected(finances: Finance[]) {
+    let positive = 0;
+    let negative = 0;
+
+    finances.forEach((finance) => {
+      if (finance.type === 'payable') negative += finance.value;
+
+      if (finance.type === 'receivable') positive += finance.value;
+    });
+
+    return positive - negative;
   }
 
   async existFinance(id: string) {

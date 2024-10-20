@@ -31,13 +31,25 @@ export class FinanceController {
     @Query('take', ParseIntPipe) take: number,
     @Query('status') status: string,
     @Query('type') type: string,
-  ) {    
-    return this.financesService.findAllFinance({ page, take, status, type });
+    @Query('finalDate') finalDate: string,
+    @Query('initialDate') initialDate: string,
+  ) {
+    return this.financesService.findAllFinance({
+      page,
+      take,
+      status,
+      type,
+      finalDate,
+      initialDate,
+    });
   }
 
-  @Get('data')
-  async FinanceData(){
-    return this.financesService.calcIncomeExpected()
+  @Get('income')
+  async FinanceData(
+    @Query('finalDate') finalDate: string,
+    @Query('initialDate') initialDate: string,
+  ) {
+    return this.financesService.generalIncomeCalc({ finalDate, initialDate });
   }
 
   @Post()
