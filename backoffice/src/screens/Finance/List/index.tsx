@@ -14,7 +14,10 @@ import { Title } from "../../../components/Text/Title";
 import { usePagination } from "../../../hooks";
 import { api } from "../../../services/api";
 import { FilterContainer } from "../../../styles/Globals";
-import { intlNumberFormatter } from "../../../utils/functions";
+import {
+  convertToInputDate,
+  intlNumberFormatter,
+} from "../../../utils/functions";
 import { ModalCreateFinance } from "./utils/ModalCreateFinance";
 import { ModalEditFinance } from "./utils/ModalUpdateFinance";
 
@@ -55,7 +58,10 @@ export const FinanceList = () => {
   // #region filter
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedType, setSelectedType] = useState("");
-  const [selectedInitialDate, setSelectedInitialDate] = useState("");
+  const [selectedInitialDate, setSelectedInitialDate] = useState(() => {
+    const currentDate = new Date();
+    return convertToInputDate(currentDate);
+  });
   const [selectedFinalDate, setSelectedFinalDate] = useState("");
   // #endregion
 
@@ -71,6 +77,11 @@ export const FinanceList = () => {
   const typeFormat = (type: string) => {
     if (type === "receivable") return "Forderung";
     else return "Zahlbar";
+  };
+
+  const inputDateAdjust = () => {
+    const currentDate = new Date();
+    return convertToInputDate(currentDate);
   };
 
   const deleteFinance = async (id: string) => {
@@ -138,6 +149,7 @@ export const FinanceList = () => {
             setSelectedInitialDate(target.value);
           }}
           type="date"
+          defaultValue={selectedInitialDate || inputDateAdjust()}
         />
 
         <FormInput
@@ -146,6 +158,7 @@ export const FinanceList = () => {
             setSelectedFinalDate(target.value);
           }}
           type="date"
+          defaultValue={selectedFinalDate || inputDateAdjust()}
         />
 
         <FormSelect
@@ -183,7 +196,7 @@ export const FinanceList = () => {
         </ButtonComponent>
       </FilterContainer>
 
-      {income?.income && income.expectedIncome && (
+      {!loading && !!income && (
         <Flex
           gap="10px"
           backgroundColor="#F1ECDC"
@@ -220,7 +233,7 @@ export const FinanceList = () => {
         </Flex>
       )}
 
-      {!loading && !!financesList.length && (
+      {!loading && (
         <Flex
           flexDir="column"
           gap="10px"

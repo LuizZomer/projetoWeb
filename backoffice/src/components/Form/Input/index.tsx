@@ -11,8 +11,8 @@ import {
 import { forwardRef, useState } from "react";
 import { IInputProps } from "./types";
 
-export const FormInput = forwardRef(
-  ({ label, error, icon: Icon, type = "text", ...props }: IInputProps, ref) => {
+export const FormInput = forwardRef<HTMLInputElement, IInputProps>(
+  ({ label, error, icon: Icon, type = "text", ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     if (type !== "password") {

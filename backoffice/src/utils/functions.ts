@@ -77,7 +77,7 @@ export const unmaskValue = (value: string): number => {
   return parseFloat(rawValue) || 0;
 };
 
-export const convertToInputDate = (date: string | null | undefined) => {
+export const convertToInputDate = (date: Date | string | null | undefined) => {
   if (!date) return "";
 
   const newDate = new Date(date);

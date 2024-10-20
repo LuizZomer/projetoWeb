@@ -63,8 +63,6 @@ export class FinanceService {
 
     const count = Math.ceil(financeTableCount / take);
 
-    count;
-
     const finances = await this.prisma.finance.findMany({
       select: {
         createdAt: true,
