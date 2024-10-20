@@ -1,18 +1,21 @@
-import { Flex, Tag, useDisclosure } from "@chakra-ui/react";
+import { Box, Divider, Flex, Tag, Text, useDisclosure } from "@chakra-ui/react";
+import { Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
+import { IconButtonComponent } from "../../../components/Buttons/IconButton";
+import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
+import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
+import { SpinnerLoading } from "../../../components/Loading/LoadingSpinner";
+import { LoadingWrapper } from "../../../components/Loading/LoadingWrapper";
 import { Pagination } from "../../../components/Pagination";
 import { InfoTable, InfoTableContent } from "../../../components/Table";
 import { Title } from "../../../components/Text/Title";
 import { usePagination } from "../../../hooks";
 import { api } from "../../../services/api";
 import { FilterContainer } from "../../../styles/Globals";
-import { ModalCreateFinance } from "./utils/ModalCreateFinance";
 import { intlNumberFormatter } from "../../../utils/functions";
-import { IconButtonComponent } from "../../../components/Buttons/IconButton";
-import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
-import { Pencil } from "phosphor-react";
+import { ModalCreateFinance } from "./utils/ModalCreateFinance";
 import { ModalEditFinance } from "./utils/ModalUpdateFinance";
 
 interface IFinance {
@@ -34,17 +37,26 @@ interface IFinancesParam {
   financesCount: number;
 }
 
+interface IIncome {
+  income: number;
+  expectedIncome: number;
+}
+
 export type ICreateFinance = Omit<IFinance, "User" | "createdAt" | "userId">;
 
 export const FinanceList = () => {
   const { page, setPage } = usePagination();
   const [financesList, setFinancesList] = useState<IFinance[]>([]);
+  const [income, setIncome] = useState<IIncome>();
   const [count, setCount] = useState(0);
   const [onQuery, setOnQuery] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // #region filter
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedType, setSelectedType] = useState("");
+  const [selectedInitialDate, setSelectedInitialDate] = useState("");
+  const [selectedFinalDate, setSelectedFinalDate] = useState("");
   // #endregion
 
   const { onOpen, isOpen, onClose } = useDisclosure();
@@ -67,15 +79,27 @@ export const FinanceList = () => {
     });
   };
 
+  const reqIncome = async () => {
+    await api
+      .get(
+        `/finance/income?initialDate=${selectedInitialDate}&finalDate=${selectedFinalDate}`
+      )
+      .then(({ data }) => {
+        setIncome(data);
+      })
+      .finally(() => setLoading(false));
+  };
+
   const reqFinance = async ({ newPage }: { newPage: string }) => {
     await api
       .get<IFinancesParam>(
-        `/finance?page=${newPage}&take=10&status=${selectedStatus}&type=${selectedType}`
+        `/finance?page=${newPage}&take=10&status=${selectedStatus}&type=${selectedType}&initialDate=${selectedInitialDate}&finalDate=${selectedFinalDate}`
       )
       .then(({ data }) => {
         setFinancesList(data.finances);
         setCount(data.financesCount);
-      });
+      })
+      .finally(() => reqIncome());
   };
 
   useEffect(() => {
@@ -101,7 +125,29 @@ export const FinanceList = () => {
       )}
       <Title label="Finanziell" />
 
+      {loading && (
+        <LoadingWrapper>
+          <SpinnerLoading />
+        </LoadingWrapper>
+      )}
+
       <FilterContainer>
+        <FormInput
+          label="Ersttermin"
+          onChange={({ target }) => {
+            setSelectedInitialDate(target.value);
+          }}
+          type="date"
+        />
+
+        <FormInput
+          label="Endtermin"
+          onChange={({ target }) => {
+            setSelectedFinalDate(target.value);
+          }}
+          type="date"
+        />
+
         <FormSelect
           label="Status"
           onChange={({ target }) => {
@@ -137,81 +183,120 @@ export const FinanceList = () => {
         </ButtonComponent>
       </FilterContainer>
 
-      <Flex
-        flexDir="column"
-        gap="10px"
-        backgroundColor="#F1ECDC"
-        borderRadius="8px"
-        padding="20px"
-      >
-        <ButtonComponent onClick={() => onOpen()} maxW="130px">
-          + Add Finanziell
-        </ButtonComponent>
-
-        <InfoTable
-          headProps={[
-            { label: "Beschreibung" },
-            { label: "Fälligkeitsdatum" },
-            { label: "Wert" },
-            { label: "Typ" },
-            { label: "Status" },
-            { label: "erstellt bei" },
-            { label: "Verantwortlicher" },
-            { label: "" },
-          ]}
+      {income?.income && income.expectedIncome && (
+        <Flex
+          gap="10px"
+          backgroundColor="#F1ECDC"
+          borderRadius="8px"
+          padding="20px"
         >
-          {financesList.map((finance) => (
-            <InfoTableContent
-              key={finance.id}
-              colsBody={[
-                { ceil: finance.description },
-                { ceil: new Date(finance.dueDate).toLocaleString() },
-                { ceil: intlNumberFormatter(finance.value) },
-                { ceil: typeFormat(finance.type) },
-                {
-                  ceil: finance.status ? (
-                    <Tag backgroundColor="green" color="white">
-                      bezahlt
-                    </Tag>
-                  ) : (
-                    <Tag backgroundColor="red" color="white">
-                      Nicht bezahlt
-                    </Tag>
-                  ),
-                },
-                { ceil: new Date(finance.createdAt).toLocaleDateString() },
-                { ceil: finance.User ? finance.User.fullName : "System" },
-                {
-                  ceil: finance.User ? (
-                    <Flex align="center" gap="20px">
-                      <PopoverDelete
-                        key={finance.id}
-                        message="Haben Sie diesen Menüpunkt wirklich gelöscht?"
-                        onClick={() => {
-                          deleteFinance(finance.id);
-                        }}
-                      />
-                      <IconButtonComponent
-                        icon={Pencil}
-                        onClick={() => {
-                          setSelectedFinance(finance);
-                          updateOnOpen();
-                        }}
-                      />
-                    </Flex>
-                  ) : null,
-                },
-              ]}
+          <Box border="1px solid #482D19" borderRadius="10px" padding="10px">
+            <Text fontSize="20px" color="#482D19">
+              Einkommen:
+            </Text>
+            <Flex width="full" justify="flex-end">
+              <Text
+                fontSize="20px"
+                color={income?.income > 0 ? "green" : "red"}
+              >
+                {income.income}
+              </Text>
+            </Flex>
+          </Box>
+          <Divider orientation="vertical" />
+          <Box border="1px solid #482D19" borderRadius="10px" padding="10px">
+            <Text fontSize="20px" color="#482D19">
+              Erwartetes Einkommen:
+            </Text>
+            <Flex width="full" justify="flex-end">
+              <Text
+                fontSize="20px"
+                color={income.expectedIncome > 0 ? "green" : "red"}
+              >
+                {income.expectedIncome}
+              </Text>
+            </Flex>
+          </Box>
+        </Flex>
+      )}
+
+      {!loading && !!financesList.length && (
+        <Flex
+          flexDir="column"
+          gap="10px"
+          backgroundColor="#F1ECDC"
+          borderRadius="8px"
+          padding="20px"
+        >
+          <ButtonComponent onClick={() => onOpen()} maxW="130px">
+            + Add Finanziell
+          </ButtonComponent>
+
+          <InfoTable
+            headProps={[
+              { label: "Beschreibung" },
+              { label: "Fälligkeitsdatum" },
+              { label: "Wert" },
+              { label: "Typ" },
+              { label: "Status" },
+              { label: "erstellt bei" },
+              { label: "Verantwortlicher" },
+              { label: "" },
+            ]}
+          >
+            {financesList.map((finance) => (
+              <InfoTableContent
+                key={finance.id}
+                colsBody={[
+                  { ceil: finance.description },
+                  { ceil: new Date(finance.dueDate).toLocaleString() },
+                  { ceil: intlNumberFormatter(finance.value) },
+                  { ceil: typeFormat(finance.type) },
+                  {
+                    ceil: finance.status ? (
+                      <Tag backgroundColor="green" color="white">
+                        bezahlt
+                      </Tag>
+                    ) : (
+                      <Tag backgroundColor="red" color="white">
+                        Nicht bezahlt
+                      </Tag>
+                    ),
+                  },
+                  { ceil: new Date(finance.createdAt).toLocaleDateString() },
+                  { ceil: finance.User ? finance.User.fullName : "System" },
+                  {
+                    ceil: finance.User ? (
+                      <Flex align="center" gap="20px">
+                        <PopoverDelete
+                          key={finance.id}
+                          message="Haben Sie diesen Menüpunkt wirklich gelöscht?"
+                          onClick={() => {
+                            deleteFinance(finance.id);
+                          }}
+                        />
+                        <IconButtonComponent
+                          icon={Pencil}
+                          onClick={() => {
+                            setSelectedFinance(finance);
+                            updateOnOpen();
+                          }}
+                        />
+                      </Flex>
+                    ) : null,
+                  },
+                ]}
+              />
+            ))}
+          </InfoTable>
+          {count > 1 && (
+            <Pagination
+              count={count}
+              req={({ newPage }) => reqFinance({ newPage })}
             />
-          ))}
-        </InfoTable>
-        {count > 1 && (
-          <Pagination
-            count={count}
-            req={({ newPage }) => reqFinance({ newPage })}
-          />
-        )}
-      </Flex>
+          )}
+        </Flex>
+      )}
     </Flex>
   );
 };

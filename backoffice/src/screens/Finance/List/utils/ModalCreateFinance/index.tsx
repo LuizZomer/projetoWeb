@@ -85,7 +85,7 @@ export const ModalCreateFinance = ({
           <form onSubmit={handleSubmit(handleCreate)}>
             <Flex direction="column" gap="10px">
               <FormInput
-                label="Supplier Name"
+                label="Fälligkeitsdatum"
                 {...register("dueDate")}
                 error={errors.dueDate?.message}
                 placeholder="z. B. Ciro Donadio"
@@ -93,7 +93,7 @@ export const ModalCreateFinance = ({
               />
 
               <FormInput
-                label="Benutzername"
+                label="Beschreibung"
                 {...register("description")}
                 error={errors.description?.message}
                 placeholder="z. B. ciroDonadio"
