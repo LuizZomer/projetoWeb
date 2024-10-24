@@ -7,9 +7,11 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { OrderListProvider } from "./context/OrderList/OrderListProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "./context/Auth/AuthProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <AuthProvider>
     <OrderListProvider>
       <ChakraProvider>
         <ThemeProvider theme={themes}>
@@ -28,5 +30,6 @@ createRoot(document.getElementById("root")!).render(
         </ThemeProvider>
       </ChakraProvider>
     </OrderListProvider>
+    </AuthProvider>
   </StrictMode>
 );
