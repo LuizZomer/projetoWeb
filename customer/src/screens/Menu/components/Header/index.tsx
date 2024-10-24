@@ -1,9 +1,24 @@
-import { Box, Flex, IconButton, Image, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  IconButton,
+  Image,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { themes } from "../../../../styles/theme";
 import pizzaIcon from "/pizzaIcon.svg";
 import { ShoppingCartSimple } from "@phosphor-icons/react";
+import { useRef } from "react";
+import { OrderListDrawer } from "../OrderListDrawer";
+import { useOrderListContext } from "../../../../context/OrderList/useOrderListContext";
 
 export const Header = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { orderList } = useOrderListContext();
+  const btnRef = useRef(null);
+
   return (
     <Flex
       bg={themes.color.primary}
@@ -18,13 +33,25 @@ export const Header = () => {
           Pizzeria Bei Giovanni
         </Text>
       </Flex>
-      <Box>
+      <Box position="relative">
         <IconButton
           icon={<ShoppingCartSimple size={30} color="#fff" />}
           variant="unstyled"
           aria-label=""
+          onClick={onOpen}
         />
+        <Badge
+          position="absolute"
+          top="0px"
+          right="0"
+          borderRadius="6px"
+          bgColor="red"
+          color="#fff"
+        >
+          {orderList.length}
+        </Badge>
       </Box>
+      <OrderListDrawer isOpen={isOpen} onClose={onClose} btnRef={btnRef} />
     </Flex>
   );
 };

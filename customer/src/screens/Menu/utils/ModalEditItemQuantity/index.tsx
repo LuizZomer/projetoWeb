@@ -14,21 +14,21 @@ import { useState } from "react";
 import { ButtonComponent } from "../../../../components/Buttons/Button";
 import { toast } from "react-toastify";
 import { useOrderListContext } from "../../../../context/OrderList/useOrderListContext";
-import { IMenu } from "../../../../utils/types";
+import { IOrderList } from "../../../../context/OrderList/types";
 
 interface IModalProps {
   onClose: () => void;
   isOpen: boolean;
-  menu: IMenu;
+  menu: IOrderList;
 }
 
-export const ModalConfirmMenuItem = ({
+export const ModalEditItemQuantity = ({
   isOpen,
   onClose,
   menu,
 }: IModalProps) => {
   const { setOrderList } = useOrderListContext();
-  const [quantity, setQuantity] = useState("1");
+  const [quantity, setQuantity] = useState(String(menu.quantity));
 
   const handleClose = () => {
     onClose();
@@ -42,7 +42,15 @@ export const ModalConfirmMenuItem = ({
       return;
     }
 
-    setOrderList((prev) => [...prev, { ...menu, quantity: Number(quantity) }]);
+    setOrderList((prev) => {
+      const index = prev.findIndex((order) => order.id === menu.id);
+
+      const updatedOrderList = [...prev];
+
+      updatedOrderList[index].quantity = Number(quantity);
+
+      return updatedOrderList;
+    });
 
     toast.success("Artikel zum Warenkorb hinzugefügt!");
 
@@ -54,7 +62,7 @@ export const ModalConfirmMenuItem = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader fontSize="2xl" color="#482D19">
-          Artikel bestätigen
+          Artikelmenge bearbeiten
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>

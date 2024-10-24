@@ -4,13 +4,29 @@ import { AppRoutes } from "./routes";
 import { ThemeProvider } from "styled-components";
 import { themes } from "./styles/theme";
 import { ChakraProvider } from "@chakra-ui/react";
+import { OrderListProvider } from "./context/OrderList/OrderListProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ChakraProvider>
-      <ThemeProvider theme={themes}>
-        <AppRoutes />
-      </ThemeProvider>
-    </ChakraProvider>
+    <OrderListProvider>
+      <ChakraProvider>
+        <ThemeProvider theme={themes}>
+          <ToastContainer
+            position="bottom-left"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+          <AppRoutes />
+        </ThemeProvider>
+      </ChakraProvider>
+    </OrderListProvider>
   </StrictMode>
 );

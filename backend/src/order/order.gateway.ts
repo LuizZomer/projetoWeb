@@ -1,6 +1,7 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -9,6 +10,7 @@ import { Server } from 'socket.io';
 import { CreateOrderDTO } from './dto/create-order.dto';
 import { UsePipes, ValidationPipe } from '@nestjs/common';
 import { OrderService } from './order.service';
+import { Socket } from 'dgram';
 
 export interface IOrderList {
   sequence?: 'asc' | 'desc';
@@ -28,9 +30,16 @@ export class OrderGateway {
 
   @SubscribeMessage('newOrder')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async handleNewOrder(@MessageBody() order: CreateOrderDTO) {
-    await this.orderService.createOrder(order);
-
-    this.server.emit('newOrderList');
+  async handleNewOrder(
+    @MessageBody() order: CreateOrderDTO,
+    @ConnectedSocket() client: Socket,
+  ) {
+    try {
+      await this.orderService.createOrder(order);
+      this.server.emit('newOrderList');
+      client.emit('newOrderResponse', { success: true });
+    } catch {
+      client.emit('newOrderResponse', { success: false });
+    }
   }
 }

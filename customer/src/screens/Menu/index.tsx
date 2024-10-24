@@ -1,26 +1,20 @@
-import { Flex, Image, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Image, Text, useDisclosure } from "@chakra-ui/react";
 import { Header } from "./components/Header";
 import { themes } from "../../styles/theme";
 import { menuItemIcon } from "./icons";
-import { useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { Card } from "./components/Card";
 import { useSearchParams } from "react-router-dom";
 import { ModalConfirmMenuItem } from "./utils/ModalConfirmItem";
+import { IMenu } from "../../utils/types";
+import { Input } from "../../components/Inputs";
+import { MagnifyingGlass } from "phosphor-react";
 
 interface IMenuOptions {
   icon: string;
   title: string;
   id: string;
-}
-
-export interface IMenu {
-  description: string;
-  id: string;
-  name: string;
-  size: string;
-  type: string;
-  value: number;
 }
 
 interface IMenuReqParam {
@@ -32,16 +26,27 @@ export const Menu = () => {
   const [menuList, setMenuList] = useState<IMenu[]>([]);
   const [query, setQuery] = useSearchParams();
   const [selectedMenu, setSelectedMenu] = useState<IMenu | undefined>();
+  const queryDefered = useDeferredValue(query.get("search"));
 
   const { onOpen, isOpen, onClose } = useDisclosure();
 
   const type = query.get("type") || "";
+  const search = query.get("search") || "";
+
+  const [searchState, setSearchState] = useState(search);
+
+  const setSearch = (search: string) => {
+    setQuery((prev) => {
+      prev.set("search", search);
+      return prev;
+    });
+  };
 
   const setType = (type: string) => {
-    setQuery((prev) => ({
-      ...prev,
-      type,
-    }));
+    setQuery((prev) => {
+      prev.set("type", type);
+      return prev;
+    });
   };
 
   const menuItemOptions: IMenuOptions[] = [
@@ -67,18 +72,25 @@ export const Menu = () => {
     },
   ];
 
-  const reqMenu = async ({ newType }: { newType: string }) => {
+  const reqMenu = async ({
+    newType,
+    newSearch,
+  }: {
+    newType: string;
+    newSearch?: string;
+  }) => {
     await api
-      .get<IMenuReqParam>(`/menu?page=1&take=100&type=${newType}`)
+      .get<IMenuReqParam>(
+        `/menu?page=1&take=100&type=${newType}&search=${newSearch || search}`
+      )
       .then(({ data }) => {
-        console.log(data);
         setMenuList(data.menuItens);
       });
   };
 
   useEffect(() => {
     reqMenu({ newType: type });
-  }, []);
+  }, [queryDefered]);
 
   return (
     <Flex
@@ -103,6 +115,28 @@ export const Menu = () => {
       >
         Speisekarte
       </Text>
+      <Flex
+        justify="center"
+        bgColor={themes.color.primary}
+        py="5px"
+        mx="auto"
+        px="30px"
+        borderRadius="10px"
+      >
+        <Box maxW="300px" w="full">
+          <Input.Root>
+            <Input.Icon icon={MagnifyingGlass} position="before" />
+            <Input.Field
+              placeholder="Suchen"
+              onChange={(evt) => {
+                setSearchState(evt.target.value);
+                setSearch(evt.target.value);
+              }}
+              value={searchState}
+            />
+          </Input.Root>
+        </Box>
+      </Flex>
       <Flex justify="center">
         <Flex
           justify="space-around"
@@ -116,6 +150,7 @@ export const Menu = () => {
 
             return (
               <Flex
+                key={id}
                 direction="column"
                 justify="space-between"
                 align="center"
@@ -133,6 +168,8 @@ export const Menu = () => {
                   transform: "scale(1.05)",
                 }}
                 onClick={() => {
+                  setSearch("");
+                  setSearchState("");
                   setType(id);
                   reqMenu({ newType: id });
                 }}

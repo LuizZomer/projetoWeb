@@ -1,8 +1,10 @@
 import { Flex, IconButton, Text } from "@chakra-ui/react";
-import { IMenu } from "../..";
 import { intlNumberFormatter, listConfig } from "../../../../utils/functions";
 import { ShoppingCartSimple } from "@phosphor-icons/react";
 import { themes } from "../../../../styles/theme";
+import { useOrderListContext } from "../../../../context/OrderList/useOrderListContext";
+import { IMenu } from "../../../../utils/types";
+import { toast } from "react-toastify";
 
 interface ICardMenu {
   menu: IMenu;
@@ -11,7 +13,8 @@ interface ICardMenu {
 }
 
 export const Card = ({ menu, setModalOpen, setSelectedMenu }: ICardMenu) => {
-  const { description, name, size, value } = menu;
+  const { orderList } = useOrderListContext();
+  const { description, name, size, value, id } = menu;
 
   return (
     <Flex
@@ -52,7 +55,12 @@ export const Card = ({ menu, setModalOpen, setSelectedMenu }: ICardMenu) => {
           icon={<ShoppingCartSimple size={32} color={themes.color.primary} />}
           aria-label=""
           onClick={() => {
-            console.log("a");
+            const itemExistInList = orderList.some((item) => item.id === id);
+
+            if (itemExistInList) {
+              toast.error("Artikel wurde bereits zum Warenkorb hinzugefügt");
+              return;
+            }
 
             setModalOpen(true);
             setSelectedMenu(menu);
