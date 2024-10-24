@@ -136,12 +136,6 @@ export const FinanceList = () => {
       )}
       <Title label="Finanziell" />
 
-      {loading && (
-        <LoadingWrapper>
-          <SpinnerLoading />
-        </LoadingWrapper>
-      )}
-
       <FilterContainer>
         <FormInput
           label="Ersttermin"
@@ -195,6 +189,12 @@ export const FinanceList = () => {
           Zu senden
         </ButtonComponent>
       </FilterContainer>
+
+      {loading && (
+        <LoadingWrapper>
+          <SpinnerLoading />
+        </LoadingWrapper>
+      )}
 
       {!loading && !!income && (
         <Flex

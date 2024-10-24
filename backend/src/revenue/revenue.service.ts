@@ -30,8 +30,12 @@ export class RevenueService {
       },
     });
 
+    const overDueDate = new Date()
+
+    overDueDate.setDate(overDueDate.getDate() + 1)    
+
     await this.financeServices.createFinance({
-      dueDate: date.toString(),
+      dueDate: overDueDate.toString(),
       status: false,
       type: FinanceType.RECEIVABLE,
       value,
@@ -77,6 +81,10 @@ export class RevenueService {
     });
 
     return messageGenerator('delete');
+  }
+
+  async deleteAll() {
+    return this.prisma.order.deleteMany()
   }
 
   async exist(id: string) {

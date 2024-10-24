@@ -94,6 +94,24 @@ export class FinanceService {
       },
     });
 
+
+    await Promise.all(
+      finances.map(async (finance) => {                
+        if (!finance.status && finance.dueDate < new Date()) {
+          await this.prisma.finance.update({
+            data: {
+              status: true,
+            },
+            where: {
+              id: finance.id,
+            },
+          });
+        }
+      })
+    );
+  
+
+
     return { finances, financesCount: count };
   }
 
