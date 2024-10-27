@@ -32,7 +32,13 @@ export const SocketConnectProvider = () => {
   };
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:3000/order");
+    const token = localStorage.getItem("authToken");
+
+    socketRef.current = io("http://localhost:3000/order", {
+      extraHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return () => {
       socketRef.current?.disconnect();

@@ -24,6 +24,7 @@ import { PopoverDelete } from "../../../../components/Buttons/PopoverDelete";
 import { toast } from "react-toastify";
 import { FormInput } from "../../../../components/Form/Input";
 import { useSocketConnect } from "../../../../context/SocketConnect/useSocketConnect";
+import { useValidationToken } from "../../../../hooks/useValidateToken";
 
 interface IDrawer {
   isOpen: boolean;
@@ -32,6 +33,7 @@ interface IDrawer {
 }
 
 export const OrderListDrawer = ({ isOpen, onClose, btnRef }: IDrawer) => {
+  const { isValid } = useValidationToken();
   const { newOrder } = useSocketConnect();
   const { orderList, setOrderList, setCustomerName, customerName } =
     useOrderListContext();
@@ -62,7 +64,7 @@ export const OrderListDrawer = ({ isOpen, onClose, btnRef }: IDrawer) => {
   };
 
   const handleSubmit = async () => {
-    if (customerName === "") {
+    if (customerName === "" && !isValid) {
       toast.error("Kundenname erforderlich");
       return;
     }
@@ -166,12 +168,14 @@ export const OrderListDrawer = ({ isOpen, onClose, btnRef }: IDrawer) => {
           <DrawerFooter>
             <Flex direction="column" gap="13px" width="100%">
               <Text fontSize="xl">Gesamtwert: {totalValue()}</Text>
-              <FormInput
-                label="Kundenname"
-                onChange={(evt) => setCustomerName(evt.target.value)}
-                defaultValue={customerName}
-                placeholder="ex: Ciro Donadio"
-              />
+              {!isValid && (
+                <FormInput
+                  label="Kundenname"
+                  onChange={(evt) => setCustomerName(evt.target.value)}
+                  defaultValue={customerName}
+                  placeholder="ex: Ciro Donadio"
+                />
+              )}
 
               <ButtonGroup gap="10px">
                 <ButtonComponent

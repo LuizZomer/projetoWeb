@@ -15,7 +15,7 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const schema = z.object({
-    username: z.string().min(1, "Pflichtfeld"),
+    email: z.string().min(1, "Pflichtfeld"),
     password: z.string().min(6, "Mindestens 6 Zeichen"),
   });
 
@@ -28,19 +28,19 @@ export const Login = () => {
   } = useForm<TFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
   const handleSubmitLogin = async (data: TFormData) => {
     await api
-      .post("/auth/userLogin", {
+      .post("/auth/customerLogin", {
         ...data,
       })
       .then(({ data }) => {
         signIn(data.accessToken);
-        navigate("/user");
+        navigate("/customer-area");
       });
   };
 
@@ -58,16 +58,25 @@ export const Login = () => {
       <Flex flexDirection="column" alignItems="center" paddingX="10">
         <Image src={logo} alt="logo" mb="90px" />
         <Box maxW="23.125rem" width="100%" px="10px">
-          <Box>
-            <Text fontSize={24} fontWeight='light' maxW={300} >Willkommen im Kundenbereich</Text>
-          </Box>
+          <Flex justify="center" w="full">
+            <Text
+              fontSize={24}
+              fontWeight="light"
+              maxW={300}
+              textAlign="center"
+              color="#fff"
+              w="full"
+            >
+              Willkommen im Kundenbereich
+            </Text>
+          </Flex>
           <form onSubmit={handleSubmit(handleSubmitLogin)}>
             <Flex flexDir="column" gap="20px">
-              <Input.Root label="Benutzername" error={errors.username?.message}>
+              <Input.Root label="Email" error={errors.email?.message}>
                 <Input.Icon position="before" icon={User} />
                 <Input.Field
-                  {...register("username")}
-                  placeholder=" z. B. ciroDonadio"
+                  {...register("email")}
+                  placeholder=" z. B. cirodonadio@example.com"
                 />
               </Input.Root>
 

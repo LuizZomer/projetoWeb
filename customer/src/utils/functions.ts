@@ -1,6 +1,23 @@
+import { toast } from "react-toastify";
+
 interface IListConfig {
   field: "type" | "size";
   value: string;
+}
+
+interface IThenHandler {
+  data: {
+    message: string;
+  };
+}
+
+interface ICatchHandler {
+  response?: {
+    data: {
+      message: string | string[];
+    };
+    statusCode: number;
+  };
 }
 
 export const intlNumberFormatter = (number: number) => {
@@ -35,5 +52,28 @@ export const listConfig = ({ field, value }: IListConfig) => {
       case "drink":
         return "Getränk";
     }
+  }
+};
+
+export const catchHandler = (err: ICatchHandler) => {
+  if (err.response?.data) {
+    if (Array.isArray(err.response.data.message))
+      toast.error(err.response.data.message[0]);
+    if (err.response.data.message) toast.error(err.response.data.message);
+    else toast.error(`Erro: ${err.response.statusCode}`);
+
+    if (
+      err.response.statusCode === 403 &&
+      window.location.pathname !== "/login"
+    )
+      window.location.pathname = "/login";
+  } else {
+    toast.error("Erro de comunicação");
+  }
+};
+
+export const thenHandler = (res: IThenHandler) => {
+  if (res.data) {
+    toast.success(res.data.message);
   }
 };

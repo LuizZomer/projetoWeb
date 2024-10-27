@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 // CONTEXTS
 import { AuthContext } from "./AuthContext";
@@ -9,7 +9,7 @@ import { AuthContext } from "./AuthContext";
 
 // TYPES
 import { Spinner } from "@chakra-ui/react";
-import { api } from "../../services/api";
+import { useValidationToken } from "../../hooks/useValidateToken";
 
 const Container = styled.div`
   display: flex;
@@ -19,38 +19,27 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
-export const RequireAuth = ({ children }: { children: React.ReactNode }) => {
+export const RequireAuth = () => {
   const { signIn, signOut } = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { isValid, loading } = useValidationToken();
   const navigate = useNavigate();
 
-  const validateToken = async () => {
-    await api
-      .get("/auth/userCheck")
-      .then(() => {
-        const token = localStorage.getItem("authToken");
-        signIn(token);
-        setLoading(false);
-      })
-      .catch(() => {
-        signOut();
-        navigate("/login");
-      });
-  };
-
   useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      validateToken();
-    } else {
+    if (!loading && !isValid) {
+      signOut();
       navigate("/login");
     }
-  }, []);
+    if (!loading && isValid) {
+      const token = localStorage.getItem("authToken");
+      signIn(token);
+    }
+  }, [loading]);
 
   return loading ? (
     <Container>
       <Spinner label="Verificando credenciais" />
     </Container>
   ) : (
-    children
+    <Outlet />
   );
 };

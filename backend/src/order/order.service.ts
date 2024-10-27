@@ -19,7 +19,7 @@ export class OrderService {
         OrderItems: {
           create: order.OrderItems,
         },
-        customerName: order.customerId || order.customerName,
+        customerName: order.customerName,
       },
       include: {
         OrderItems: {

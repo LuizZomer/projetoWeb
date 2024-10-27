@@ -91,6 +91,7 @@ export class AuthService {
         {
           id: customer.id,
           email: customer.email,
+          name: customer.fullName,
         },
         {
           expiresIn: '3 days',
