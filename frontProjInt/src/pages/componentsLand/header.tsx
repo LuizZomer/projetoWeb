@@ -8,6 +8,10 @@ function Header() {
     navigate('/login');
   }
 
+  function handleMenu() {
+    navigate('/speiskarte');
+  }
+
   return (
     <Box
       position={{ base: 'static', mobile: 'fixed' }}
@@ -27,7 +31,7 @@ function Header() {
       <Button backgroundColor='white' flex={1} fontSize='1rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}} >
         VERBIDEN
       </Button>
-      <Button backgroundColor='white' flex={1} fontSize='1rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}}>
+      <Button onClick={handleMenu} backgroundColor='white' flex={1} fontSize='1rem' _hover={{bg:'lightgray', fontSize:'1.3rem'}}>
         SPEISKARTE
       </Button>
       <Button

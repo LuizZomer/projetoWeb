@@ -6,7 +6,7 @@ import theme from './pages/componentsLand/breakpoints';
 import LgnUser from './pages/loginUser';
 import { AuthProvider } from './context/AuthContext';
 import ClientArea from './pages/clientArea';
-import Cardapio from './pages/cardapio';
+import ContentCardapio from './pages/contentCardapio';
 
 
 
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
   },
   {
     path:'/speiskarte',
-    element:<Cardapio/>
+    element:<ContentCardapio/>
   }
  ]);
 
