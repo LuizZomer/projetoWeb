@@ -1,10 +1,10 @@
 import { Box, Image } from "@chakra-ui/react";
-import Header from "./components/header";
+import Header from "./componentsLand/header";
 import a from './assets/Firstsection.png'
-import Biografy from "./components/biografy";
-import Cardvantagens from "./components/cardvantagens";
-import Menu from "./components/menu";
-import Promo from "./components/promocoes";
+import Biografy from "./componentsLand/biografy";
+import Cardvantagens from "./componentsLand/cardvantagens";
+import Menu from "./componentsLand/menu";
+import Promo from "./componentsLand/promocoes";
 
 
 

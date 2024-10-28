@@ -1,8 +1,8 @@
 import { useAuth } from "../context/AuthContext";
 import { Navigate } from 'react-router-dom';
-import { Text } from "@chakra-ui/react";
+import ContentArea from "./contentArea";
 
 export default function ClientArea() {
   const { token } = useAuth();
-  return token ? <Text>Area do Cliente</Text> : <Navigate to="/login" />;
-};
+  return token ? <ContentArea /> : <Navigate to="/login" />;
+}

@@ -26,31 +26,33 @@ export default function LgnUser() {
     e.preventDefault();
     setEmailError('');
     setPasswordError('');
-
     try {
-      // Validação com Yup
-      await validationSchema.validate({ email, password }, { abortEarly: false });
-
-      const token = await authServiceLogin(email, password);
-      login(token);
-      navigate('/client-area');
+        await validationSchema.validate({ email, password }, { abortEarly: false });
+        const token = await authServiceLogin(email, password);
+        console.log("Token recebido:", token); 
+        if (token) {
+            login(token);
+            console.log("Logged in successfully, navigating..."); // Check if navigating
+            navigate('/client-area');
+        } else {
+            console.error('Token inválido ou erro desconhecido.');
+        }
     } catch (error) {
-      if (error instanceof yup.ValidationError) {
-        // Exibir os erros de validação abaixo de cada campo
-        error.inner.forEach((err) => {
-          if (err.path === 'email') {
-            setEmailError(err.message);
-          }
-          if (err.path === 'password') {
-            setPasswordError(err.message);
-          }
-        });
-      } else {
-        console.error('Erro ao fazer login', error);
-        alert('Erro ao logar');
-      }
+        if (error instanceof yup.ValidationError) {
+            error.inner.forEach((err) => {
+                if (err.path === 'email') {
+                    setEmailError(err.message);
+                }
+                if (err.path === 'password') {
+                    setPasswordError(err.message);
+                }
+            });
+        } else {
+            console.error('Erro ao fazer login', error);
+            alert('Erro ao logar');
+        }
     }
-  };
+};
 
   return (
     <Box display='flex' flexDirection='column' justifyContent='center' bgColor='#D9B092' w='100%' h='100vh'>
