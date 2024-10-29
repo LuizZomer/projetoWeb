@@ -91,6 +91,7 @@ model Order {
   Customer   Customer?   @relation(fields: [customerId], references: [id])
   Revenue    Revenue?
   OrderItems OrderItem[]
+  OrderLog   OrderLog[]
 
   @@map("orders")
 }
@@ -115,11 +116,11 @@ model Revenue {
 
 model OrderLog {
   id         String   @id @default(uuid())
-  name       String
-  value      Float
   createdAt  DateTime @default(now())
   customerId String
+  orderId    String
 
+  Order    Order    @relation(fields: [orderId], references: [id])
   Customer Customer @relation(fields: [customerId], references: [id])
 
   @@map("orders_log")

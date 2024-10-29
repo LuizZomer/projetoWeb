@@ -41,6 +41,15 @@ export class OrderService {
       customerName: order.customerName,
       customerId: order.customerId,
     });
+
+    if(order.customerId) {
+      await this.prisma.orderLog.create({
+        data:{
+          customerId: order.customerId,
+          orderId: newOrder.id
+        }
+      })
+    }
   }
 
   async FindAllOrder({ revenue, sequence }: IOrderList) {

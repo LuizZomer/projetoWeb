@@ -99,16 +99,42 @@ export class CustomerService {
     await this.exist(id);
 
     return this.prisma.customer.findUnique({
-      select: {
-        password: false,
-        Contact: true,
-        createdAt: true,
-        email: true,
-        fullName: true,
-        id: true,
-        idnr: true,
+      select:{
         loyalty_points: true,
-        status: true,
+        idnr: true,
+        fullName: true,
+        email: true,
+        id: true,
+        OrderLog: {
+          select: {
+            Order: {
+              select:{
+                id: true,
+                Revenue:{
+                  select:{
+                   date: true,
+                   value: true,
+                   status: true 
+                  }
+                },
+                OrderItems: {
+                  include:{
+                    Menu: {
+                      select:{
+                        description: true,
+                         id: true,
+                        name: true,
+                       value: true,
+                       type: true,
+                       size: true  
+                      }
+                    },
+                  }
+                }
+              }
+            },
+          },
+        },        
       },
       where: {
         id,
