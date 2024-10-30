@@ -1,4 +1,4 @@
-import { Box, Flex, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 import { MagnifyingGlass, Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
@@ -26,6 +26,7 @@ export interface IMenuItem {
   size: string;
   type: string;
   value: number;
+  status: boolean;
 }
 
 interface IMenuItemsListReq {
@@ -35,6 +36,7 @@ interface IMenuItemsListReq {
 
 export const MenuList = () => {
   // #region filter
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [search, setSearch] = useState("");
@@ -60,7 +62,7 @@ export const MenuList = () => {
   const reqMenuItems = async ({ newPage }: { newPage: string }) => {
     await api
       .get<IMenuItemsListReq>(
-        `/menu?take=10&page=${newPage}&search=${search}&type=${selectedType}&size=${selectedSize}`
+        `/menu?take=10&page=${newPage}&search=${search}&type=${selectedType}&size=${selectedSize}&status=${selectedStatus}`
       )
       .then(({ data }) => {
         setCount(data.itensCount);
@@ -147,6 +149,17 @@ export const MenuList = () => {
                 ))}
               </FormSelect>
 
+              <FormSelect
+                label="Status"
+                onChange={(evt) => {
+                  setSelectedStatus(evt.target.value);
+                }}
+              >
+                <option value="">Keiner</option>
+                <option value="true">Aktiv</option>
+                <option value="false">Nicht Aktiv</option>
+              </FormSelect>
+
               <ButtonComponent
                 isLoading={onQuery}
                 onClick={async () => {
@@ -176,6 +189,7 @@ export const MenuList = () => {
                     { label: "Wert" },
                     { label: "Typ" },
                     { label: "Größe" },
+                    { label: "Status" },
                     {
                       label: "",
                     },
@@ -213,6 +227,21 @@ export const MenuList = () => {
                             width: "40px",
                           },
                         },
+                        {
+                          ceil: item.status ? (
+                            <Tag backgroundColor="green" color="white">
+                              Aktiv
+                            </Tag>
+                          ) : (
+                            <Tag backgroundColor="red" color="white">
+                              Nicht aktiv
+                            </Tag>
+                          ),
+                          cssProps: {
+                            width: "30px",
+                          },
+                        },
+
                         {
                           ceil: (
                             <Flex align="center" gap="20px">

@@ -13,6 +13,7 @@ interface IMenuParam extends IFindAllParam {
   search: string;
   size: string;
   type: string;
+  status: string;
 }
 
 @Injectable()
@@ -27,7 +28,7 @@ export class MenuService {
     return messageGenerator('create');
   }
 
-  async findAll({ page, take, search, size, type }: IMenuParam) {
+  async findAll({ page, take, search, size, type, status }: IMenuParam) {
     if (page < 1)
       throw new BadRequestException('Seite muss größer als Null sein');
 
@@ -42,6 +43,7 @@ export class MenuService {
         type: {
           equals: type || undefined,
         },
+        status: status ? status === 'true' : undefined,
       },
     });
 
@@ -56,6 +58,7 @@ export class MenuService {
         size: true,
         type: true,
         value: true,
+        status: true,
       },
       skip: (page - 1) * take,
       take,
@@ -69,6 +72,7 @@ export class MenuService {
         type: {
           equals: type || undefined,
         },
+        status: status ? status === 'true' : undefined,
       },
     });
 
@@ -106,6 +110,28 @@ export class MenuService {
     });
 
     return messageGenerator('delete');
+  }
+
+  async switchStatus(id: string) {
+    const menuStatus = await this.prisma.menu.findFirst({
+      select: {
+        status: true,
+      },
+      where: {
+        id,
+      },
+    });
+
+    await this.prisma.menu.update({
+      data: {
+        status: !menuStatus.status,
+      },
+      where: {
+        id,
+      },
+    });
+
+    return messageGenerator('update');
   }
 
   async exist(id: string) {

@@ -81,7 +81,9 @@ export const Menu = () => {
   }) => {
     await api
       .get<IMenuReqParam>(
-        `/menu?page=1&take=100&type=${newType}&search=${newSearch || search}`
+        `/menu?page=1&take=100&type=${newType}&search=${
+          newSearch || search
+        }&status=true`
       )
       .then(({ data }) => {
         setMenuList(data.menuItens);

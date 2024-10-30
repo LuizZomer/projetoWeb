@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator';
 import { EnumSizeMenuItem, EnumTypeMenuItem } from '../enums';
 
 export class CreateMenuDto {
@@ -16,4 +16,7 @@ export class CreateMenuDto {
 
   @IsEnum(EnumSizeMenuItem)
   size: string;
+
+  @IsBoolean()
+  status: boolean;
 }

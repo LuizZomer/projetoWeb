@@ -127,12 +127,13 @@ model OrderLog {
 }
 
 model Menu {
-  id          String @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String
   value       Float
   type        String
   size        String
+  status      Boolean
 
   OrderItems OrderItem[]
 }

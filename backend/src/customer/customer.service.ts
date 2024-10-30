@@ -205,6 +205,28 @@ export class CustomerService {
     return messageGenerator('delete');
   }
 
+  async switchStatus(id: string) {
+    const customerStatus = await this.prisma.customer.findFirst({
+      select: {
+        status: true,
+      },
+      where: {
+        id,
+      },
+    });
+
+    await this.prisma.customer.update({
+      data: {
+        status: !customerStatus.status,
+      },
+      where: {
+        id,
+      },
+    });
+
+    return messageGenerator('update');
+  }
+
   async existEmail(email: string) {
     const customer = await this.prisma.customer.count({
       where: {

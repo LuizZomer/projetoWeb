@@ -45,10 +45,12 @@ CREATE TABLE "finances" (
     "description" TEXT NOT NULL,
     "value" REAL NOT NULL,
     "status" BOOLEAN NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" TEXT,
+    "revenueId" TEXT,
     "type" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "finances_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "finances_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "finances_revenueId_fkey" FOREIGN KEY ("revenueId") REFERENCES "revenues" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -78,10 +80,10 @@ CREATE TABLE "revenues" (
 -- CreateTable
 CREATE TABLE "orders_log" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL,
-    "value" REAL NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "customerId" TEXT NOT NULL,
+    "orderId" TEXT NOT NULL,
+    CONSTRAINT "orders_log_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "orders_log_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -92,7 +94,8 @@ CREATE TABLE "Menu" (
     "description" TEXT NOT NULL,
     "value" REAL NOT NULL,
     "type" TEXT NOT NULL,
-    "size" TEXT NOT NULL
+    "size" TEXT NOT NULL,
+    "status" BOOLEAN NOT NULL
 );
 
 -- CreateTable
@@ -104,6 +107,18 @@ CREATE TABLE "order_items" (
     CONSTRAINT "order_items_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "order_items_menuId_fkey" FOREIGN KEY ("menuId") REFERENCES "Menu" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_idnr_key" ON "users"("idnr");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "customers_email_key" ON "customers"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "finances_revenueId_key" ON "finances"("revenueId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "revenues_orderId_key" ON "revenues"("orderId");

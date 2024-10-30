@@ -108,6 +108,18 @@ export class UserService {
     await this.exist(id);
 
     return this.prisma.user.findUnique({
+      select: {
+        fullName: true,
+        createdAt: true,
+        function: true,
+        id: true,
+        idnr: true,
+        lastAccess: true,
+        role: true,
+        status: true,
+        username: true,
+        workload: true,
+      },
       where: {
         id,
       },

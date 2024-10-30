@@ -46,9 +46,10 @@ export class CustomerController {
   }
 
   @UseGuards(AuthCustomerGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customerService.findOne(id);
+  @Get('info')
+  findOne(@Req() req: IReq) {
+    const customerId = req.customer.id;
+    return this.customerService.findOne(customerId);
   }
 
   @UseGuards(AuthGuard)
@@ -68,5 +69,11 @@ export class CustomerController {
   emailAndPassword(@Req() req: IReq, @Body() payload: UpdateCustomerInfoDTO) {
     const customerId = req.customer.id;
     return this.customerService.updateCustomerInfo(customerId, payload);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('status/:id')
+  switchStatus(@Param('id') id: string) {
+    return this.customerService.switchStatus(id);
   }
 }
