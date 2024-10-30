@@ -82,6 +82,15 @@ export class AuthService {
     if (!(await bcrypt.compare(password, user.password)))
       throw new UnauthorizedException('E-Mail und/oder Passwort falsch!');
 
+    await this.prisma.user.update({
+      data: {
+        lastAccess: new Date(),
+      },
+      where: {
+        id: user.id,
+      },
+    });
+
     return this.createUserToken(user);
   }
 

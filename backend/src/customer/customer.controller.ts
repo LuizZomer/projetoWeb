@@ -5,19 +5,24 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
-import { Roles } from 'src/decorators/role.decorator';
-import { Role } from 'src/enums/role.enum';
 import { AuthCustomerGuard } from 'src/guards/authCustomer.guard';
 import { AuthGuard } from 'src/guards/authUser.guard';
-import { RoleGuard } from 'src/guards/role.guard';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { UpdateCustomerInfoDTO } from './dto/update-customer-info.dto';
+import { Customer } from '@prisma/client';
+
+interface IReq {
+  customer: Customer;
+}
 
 @Controller('customer')
 export class CustomerController {
@@ -40,7 +45,7 @@ export class CustomerController {
     return this.customerService.findAll({ page, take, search, status });
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthCustomerGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.customerService.findOne(id);
@@ -56,5 +61,12 @@ export class CustomerController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.customerService.remove(id);
+  }
+
+  @UseGuards(AuthCustomerGuard)
+  @Patch('info')
+  emailAndPassword(@Req() req: IReq, @Body() payload: UpdateCustomerInfoDTO) {
+    const customerId = req.customer.id;
+    return this.customerService.updateCustomerInfo(customerId, payload);
   }
 }

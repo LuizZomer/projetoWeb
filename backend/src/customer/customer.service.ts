@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { IFindAllParam } from 'src/utils/types';
 import { messageGenerator } from 'src/utils/function';
+import { UpdateCustomerInfoDTO } from './dto/update-customer-info.dto';
 
 interface ICustomerParam extends IFindAllParam {
   status: string;
@@ -99,7 +100,7 @@ export class CustomerService {
     await this.exist(id);
 
     return this.prisma.customer.findUnique({
-      select:{
+      select: {
         loyalty_points: true,
         idnr: true,
         fullName: true,
@@ -108,33 +109,33 @@ export class CustomerService {
         OrderLog: {
           select: {
             Order: {
-              select:{
+              select: {
                 id: true,
-                Revenue:{
-                  select:{
-                   date: true,
-                   value: true,
-                   status: true 
-                  }
+                Revenue: {
+                  select: {
+                    date: true,
+                    value: true,
+                    status: true,
+                  },
                 },
                 OrderItems: {
-                  include:{
+                  include: {
                     Menu: {
-                      select:{
+                      select: {
                         description: true,
-                         id: true,
+                        id: true,
                         name: true,
-                       value: true,
-                       type: true,
-                       size: true  
-                      }
+                        value: true,
+                        type: true,
+                        size: true,
+                      },
                     },
-                  }
-                }
-              }
+                  },
+                },
+              },
             },
           },
-        },        
+        },
       },
       where: {
         id,
@@ -170,6 +171,23 @@ export class CustomerService {
     await this.prisma.customer.update({
       data: customer,
       where: { id },
+    });
+
+    return messageGenerator('update');
+  }
+
+  async updateCustomerInfo(id: string, payload: UpdateCustomerInfoDTO) {
+    if (payload.password)
+      payload.password = await bcrypt.hash(
+        payload.password,
+        await bcrypt.genSalt(),
+      );
+
+    await this.prisma.customer.update({
+      data: payload,
+      where: {
+        id,
+      },
     });
 
     return messageGenerator('update');
