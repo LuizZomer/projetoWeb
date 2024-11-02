@@ -13,7 +13,7 @@ export default function HeaderC({ onOpenCart }: HeaderCProps) {
             <Image src={a} w='39px' h='36px' my='17px' mx='20px'/>
             <Text color='#F1ECDC' fontSize='28' fontFamily='Roboto' fontWeight='semibold' my='17px'>Pizzeria Bei Giovanni</Text>
         </Box>
-        <Button onClick={onOpenCart} alignSelf='center' justifySelf='flex-end' mx='5vw' backgroundColor='#75492A'><Image src={b}/></Button>
+        <Button onClick={onOpenCart} alignSelf='center' justifySelf='flex-end' mx='5vw' backgroundColor='#75492A' _hover={{bgColor:'#6b3a25'}}><Image src={b}/></Button>
     </Box>
     )
 }

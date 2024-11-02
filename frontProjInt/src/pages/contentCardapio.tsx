@@ -1,11 +1,11 @@
-import { Box, Text, useDisclosure, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, Button, Input, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, CloseButton } from "@chakra-ui/react";
+import { Box, Text, useDisclosure, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, Button, Input, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogBody, AlertDialogFooter, CloseButton, useToast } from "@chakra-ui/react";
 import { useEffect, useState, ChangeEvent, useRef } from "react";
 import HeaderC from "./componentsArea/headerCardapio";
 import BuscaCompenente from "./componentsArea/inputCardapio";
 import FiltrosArea from "./componentsArea/filtrosArea";
 import axios from 'axios';
 import CardCardapio from "./cardCardapio";
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 interface MenuItem {
   id: string;
@@ -16,16 +16,54 @@ interface MenuItem {
   size: string;
 }
 
+interface FinalizeOrderResponse {
+  success: boolean;
+  message?: string; // Mensagem opcional para feedback
+}
+
 export default function ContentCardapio() {
   const [items, setItems] = useState<MenuItem[]>([]);
   const [filteredItems, setFilteredItems] = useState<MenuItem[]>([]);
   const [cartItems, setCartItems] = useState<MenuItem[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState('');
+  const [isTokenActive, setIsTokenActive] = useState(false);
   const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
   const cancelRef = useRef(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const toast = useToast(); // Hook para o toast
 
-  const socket = io("http://localhost:3000");
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsTokenActive(true);
+      const socketInstance = io("http://localhost:3000", {
+        auth: { token }
+      });
+      setSocket(socketInstance);
+      
+      // Verifica a conexão do socket
+      socketInstance.on("connect", () => {
+        console.log("Socket conectado!");
+      });
+  
+      socketInstance.on("connect_error", (error) => {
+        console.error("Erro na conexão do socket:", error.message);
+      });
+  
+      socketInstance.on("disconnect", (reason) => {
+        console.log("Socket desconectado:", reason);
+      });
+  
+      return () => {
+        socketInstance.off("connect");
+        socketInstance.off("connect_error");
+        socketInstance.off("disconnect");
+      };
+    } else {
+      setIsTokenActive(false);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,24 +111,59 @@ export default function ContentCardapio() {
 
   function handleFinalizePurchase() {
     if (cartItems.length === 0) {
-      alert('O carrinho está vazio!');
+      toast({
+        title: 'Der Warenkorb ist leer!',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-left' // Posição do toast
+      });
       return;
     }
-  
-    if (name !== '') {
-      const orderData = {
-        OrderItems: cartItems.map(item => ({
-          menuId: item.id,
-          quantity: 1,
-        })),
-        customerName: name,
-      };
-      socket.emit("finalizeOrder", orderData);
-      
+
+    const orderData = {
+      OrderItems: cartItems.map(item => ({
+        menuId: item.id,
+        quantity: 1,
+      })),
+      customerName: name,
+    };
+
+    console.log("Enviando a requisição de compra com os dados:", orderData);  // Log dos dados da requisição
+
+    if (socket) {
+      socket.emit("finalizeOrder", orderData, (response: FinalizeOrderResponse) => {
+        // Callback para verificar se a requisição foi bem-sucedida
+        if (response.success) {
+          toast({
+            title: 'Bestellung erfolgreich gesendet!',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-left'
+          });
+        } else {
+          toast({
+            title: 'Fehler beim Senden der Bestellung',
+            description: response.message || "Ein unbekannter Fehler ist aufgetreten.",
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-left'
+          });
+        }
+      });
     } else {
-      alert('Insira um nome');
+      toast({
+        title: 'Socket não está conectado',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-left'
+      });
     }
   }
+
 
   return (
     <Box pb='5%' display='flex' flexDir='column'>
@@ -98,21 +171,23 @@ export default function ContentCardapio() {
       <Text alignSelf='center' mt='36px' fontFamily='Roboto' fontSize='40' color='#482D19' fontWeight='semibold'>SPEISEKARTE</Text>
       <BuscaCompenente onFilter={handleFilter} />
       <FiltrosArea onSelectFilter={handleSelect} />
-      <Box alignSelf='center'>
+      <Box alignSelf='center' display='flex' justifyContent='space-evenly' flexWrap='wrap' gap='5%' mx='10%' mb='10%'>
+
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
-            <CardCardapio 
+            <CardCardapio
               key={item.id}
-              name={item.name} 
-              description={item.description} 
-              value={item.value} 
+              name={item.name}
+              description={item.description}
+              value={item.value}
               size={item.size}
               onAddToCart={() => handleAddToCart(item)}
             />
           ))
         ) : (
-          <Text>Keine Ergebnisse gefunden.</Text>
+          <Text textColor='#482D19'>Keine Ergebnisse gefunden.</Text>
         )}
+
       </Box>
 
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
@@ -120,7 +195,9 @@ export default function ContentCardapio() {
         <DrawerContent>
           <DrawerHeader mb='20px' color='#351D0C' textAlign='center'>
             Bestellungen
-            <Input mt='5%' placeholder='Geben Sie Ihren Namen ein' value={name} onChange={handleInputChange} />
+            {!isTokenActive && (
+              <Input mt='5%' placeholder='Geben Sie Ihren Namen ein' value={name} onChange={handleInputChange} />
+            )}
           </DrawerHeader>
           <DrawerBody>
             {cartItems.length > 0 ? (
@@ -132,7 +209,7 @@ export default function ContentCardapio() {
                 </Box>
               ))
             ) : (
-              <Text>O carrinho está vazio.</Text>
+              <Text>Der Warenkorb ist leer.</Text>
             )}
           </DrawerBody>
 
@@ -141,10 +218,24 @@ export default function ContentCardapio() {
               Gesamtwert: € {totalValue.toFixed(2)}
             </Text>
             <Box justifyContent='space-evenly' w='100%' mx='auto'>
-              <Button borderRadius='2' bgColor="#FF0000" textColor='white' onClick={onAlertOpen}>
+              <Button 
+                borderRadius='2' 
+                bgColor="#FF0000" 
+                textColor='white' 
+                onClick={onAlertOpen}
+                _hover={{ backgroundColor: "#8c0606", color: "#FFF5F5" }}
+              >
                 Stornieren
               </Button>
-              <Button onClick={handleFinalizePurchase} opacity='85%' textColor='white' borderRadius='2' bgColor="#75492A" ml="25%">
+              <Button 
+                onClick={handleFinalizePurchase} 
+                opacity='85%' 
+                textColor='white' 
+                borderRadius='2' 
+                bgColor="#75492A" 
+                ml="25%"
+                _hover={{ backgroundColor: "#5A3A23", color: "#FFF5F5" }}
+              >
                 Bestätigen
               </Button>
             </Box>
@@ -152,28 +243,28 @@ export default function ContentCardapio() {
         </DrawerContent>
       </Drawer>
 
-      {/* Modal de Confirmação para Cancelar a Compra */}
       <AlertDialog
-        isOpen={isAlertOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onAlertClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent h='auto' display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <CloseButton alignSelf='end' w='48px' h='48px' onClick={onAlertClose} /> {/* Ícone "X" para fechar o modal */}
-            <AlertDialogBody fontSize='40' fontFamily='roboto' textAlign='center'>
-              <Text>Sind Sie sicher, dass Sie diese Bestellung aufgeben möchten?</Text>
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <Box mt='0px' w='100%' h='100%' display='flex' flexDirection='row-reverse'>
-                <Button  onClick={handleClearCart}>
-                  Ja  
-                </Button>
-              </Box>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+  isOpen={isAlertOpen}
+  leastDestructiveRef={cancelRef}
+  onClose={onAlertClose}
+>
+  <AlertDialogOverlay>
+    <AlertDialogContent maxW='90%' width='700px' h='400px' display="flex" flexDirection="column" justifyContent="center">
+      <CloseButton alignSelf='end' onClick={onAlertClose} />
+      <AlertDialogBody textColor='#351D0C' fontSize='40px' fontFamily='roboto' textAlign='center' flex='1' display='flex' alignItems='center' justifyContent='center'>
+        <Text>Sind Sie sicher, dass Sie diese Bestellung aufgeben möchten?</Text>
+      </AlertDialogBody>
+      <AlertDialogFooter>
+        <Box display="flex" justifyContent="flex-end" width="100%">
+          <Button w='152px' h='40px' textColor='white' bgColor='#351D0C' onClick={handleClearCart} _hover={{bgColor:'#482D19'}}>
+            Ja
+          </Button>
+        </Box>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialogOverlay>
+</AlertDialog>
+
     </Box>
   );
 }

@@ -58,7 +58,7 @@ const CardCardapio: React.FC<CardProps> = ({ name, description, value, size, onA
                 </Text>
             </Box>
 
-            <Button alignSelf='flex-end' onClick={onAddToCart} >
+            <Button alignSelf='flex-end' onClick={onAddToCart} _hover={{bgColor:'#d1d1d1'}}>
                 <Image src={a} w='30px' h='30px'/>
             </Button>
             

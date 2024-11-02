@@ -22,12 +22,12 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
   };
 
   return (
-    <Box display='flex' justifyContent='space-between' my='57px' mx='318px'>
+    <Box display='flex' justifyContent='space-between' mt='57px' mb='40px' mx='318px'>
       <Button
         bg={selected === "nudelin" ? "#75492A" : "white"}
         color={selected === "nudelin" ? "white" : "#75492A"}
         onClick={() => handleSelect("nudelin")}
-        _hover={{ bg: selected === "nudelin" ? "#7B5B2A" : "#F0F0F0" }}
+        _hover={{ bg: selected === "nudelin" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
         flexDirection='column'
         alignItems='center'
@@ -44,7 +44,7 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         bg={selected === "pizza" ? "#75492A" : "white"}
         color={selected === "pizza" ? "white" : "#75492A"}
         onClick={() => handleSelect("pizza")}
-        _hover={{ bg: selected === "pizza" ? "#7B5B2A" : "#F0F0F0" }}
+        _hover={{ bg: selected === "pizza" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
         flexDirection='column'
         alignItems='center'
@@ -61,7 +61,7 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         bg={selected === "salat" ? "#75492A" : "white"}
         color={selected === "salat" ? "white" : "#75492A"}
         onClick={() => handleSelect("salat")}
-        _hover={{ bg: selected === "salat" ? "#7B5B2A" : "#F0F0F0" }}
+        _hover={{ bg: selected === "salat" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
         flexDirection='column'
         alignItems='center'
@@ -78,7 +78,7 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         bg={selected === "getränke" ? "#75492A" : "white"}
         color={selected === "getränke" ? "white" : "#75492A"}
         onClick={() => handleSelect("getränke")}
-        _hover={{ bg: selected === "getränke" ? "#7B5B2A" : "#F0F0F0" }}
+        _hover={{ bg: selected === "getränke" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
         flexDirection='column'
         alignItems='center'
