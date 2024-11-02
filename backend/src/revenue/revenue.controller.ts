@@ -1,22 +1,20 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch } from '@nestjs/common';
 import { RevenueService } from './revenue.service';
-import { UpdateRevenueAccountDTO } from './dto/update-revenue.dto';
+import { PayRevenueDTO } from './dto/pay-revenue.dto';
 
 @Controller('revenue')
 export class RevenueController {
   constructor(private readonly revenueService: RevenueService) {}
 
-  @Patch(':id')
-  update(@Param('id') id: string) {
-    return this.revenueService.payRevenue(id);
+  @Patch(':revenueId')
+  update(
+    @Param('revenueId') revenueId: string,
+    @Body() orderInfo: PayRevenueDTO,
+  ) {
+    return this.revenueService.payRevenue({
+      revenueId,
+      orderInfo,
+    });
   }
 
   @Delete(':id')

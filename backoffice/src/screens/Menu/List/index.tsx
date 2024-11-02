@@ -1,5 +1,5 @@
 import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
-import { MagnifyingGlass, Pencil } from "phosphor-react";
+import { MagnifyingGlass, Pencil, Power } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
 import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
@@ -72,7 +72,7 @@ export const MenuList = () => {
   };
 
   const deleteUser = (id: string) => {
-    api.delete(`/menu/${id}`).then(() => {
+    api.patch(`/menu/status/${id}`).then(() => {
       reqMenuItems({ newPage: page });
     });
   };
@@ -246,8 +246,10 @@ export const MenuList = () => {
                           ceil: (
                             <Flex align="center" gap="20px">
                               <PopoverDelete
+                                title="Inaktivieren"
+                                icon={Power}
                                 key={item.id}
-                                message="Haben Sie diesen Menüpunkt wirklich gelöscht?"
+                                message="Möchten Sie diesen Menüpunkt wirklich aktivieren?"
                                 onClick={() => {
                                   deleteUser(item.id);
                                 }}

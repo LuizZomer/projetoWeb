@@ -20,6 +20,7 @@ export class OrderService {
           create: order.OrderItems,
         },
         customerName: order.customerName,
+        customerId: order.customerId || undefined,
       },
       include: {
         OrderItems: {
@@ -42,19 +43,19 @@ export class OrderService {
       customerId: order.customerId,
     });
 
-    if(order.customerId) {
+    if (order.customerId) {
       await this.prisma.orderLog.create({
-        data:{
+        data: {
           customerId: order.customerId,
-          orderId: newOrder.id
-        }
-      })
+          orderId: newOrder.id,
+        },
+      });
     }
   }
 
   async FindAllOrder({ revenue, sequence }: IOrderList) {
     return this.prisma.order.findMany({
-      include: {
+      select: {
         Revenue: {
           select: {
             id: true,
@@ -67,6 +68,10 @@ export class OrderService {
             Menu: true,
           },
         },
+        customerId: true,
+        id: true,
+        createdAt: true,
+        customerName: true,
       },
       orderBy: {
         createdAt: sequence || undefined,

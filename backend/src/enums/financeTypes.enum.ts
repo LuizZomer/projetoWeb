@@ -1,4 +1,4 @@
 export enum FinanceType {
-    PAYABLE='payable',
-    RECEIVABLE='receivable'
+  PAYABLE = 'payable',
+  RECEIVABLE = 'receivable',
 }

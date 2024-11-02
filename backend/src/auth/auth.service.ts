@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -79,6 +80,11 @@ export class AuthService {
 
     if (!user) throw new NotFoundException('E-Mail und/oder Passwort falsch!');
 
+    if (!user.status)
+      throw new ForbiddenException(
+        'Keine Berechtigung zum Zugriff auf das System!',
+      );
+
     if (!(await bcrypt.compare(password, user.password)))
       throw new UnauthorizedException('E-Mail und/oder Passwort falsch!');
 
@@ -144,6 +150,11 @@ export class AuthService {
 
     if (!customer)
       throw new NotFoundException('E-Mail und/oder Passwort falsch!');
+
+    if (!customer.status)
+      throw new ForbiddenException(
+        'Keine Berechtigung zum Zugriff auf das System!',
+      );
 
     if (!(await bcrypt.compare(password, customer.password)))
       throw new UnauthorizedException('E-Mail und/oder Passwort falsch!');

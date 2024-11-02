@@ -1,15 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { messageGenerator } from 'src/utils/function';
+import { loyaltyPointsCheck, messageGenerator } from 'src/utils/function';
 import { CreateRevenueAccountDTO } from './dto/create-revenue.dto';
 import { FinanceType } from 'src/enums/financeTypes.enum';
 import { FinanceService } from 'src/finance/finance.service';
+import { CustomerService } from 'src/customer/customer.service';
+import { TTypeCheck } from 'src/utils/types';
+
+export interface IOrderInfo {
+  customerId: string | null;
+  orderInfo: {
+    type: TTypeCheck;
+    quantity: number;
+  }[];
+}
 
 @Injectable()
 export class RevenueService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly financeServices: FinanceService,
+    private readonly customerServices: CustomerService,
   ) {}
 
   async createRevenueAccount({
@@ -30,9 +41,9 @@ export class RevenueService {
       },
     });
 
-    const overDueDate = new Date()
+    const overDueDate = new Date();
 
-    overDueDate.setDate(overDueDate.getDate() + 1)    
+    overDueDate.setDate(overDueDate.getDate() + 1);
 
     await this.financeServices.createFinance({
       dueDate: overDueDate.toString(),
@@ -48,7 +59,13 @@ export class RevenueService {
     return this.prisma.revenue.findMany();
   }
 
-  async payRevenue(revenueId: string) {
+  async payRevenue({
+    revenueId,
+    orderInfo,
+  }: {
+    revenueId: string;
+    orderInfo: IOrderInfo;
+  }) {
     const currentRevenueStatus = await this.prisma.revenue.findUnique({
       where: { id: revenueId },
       select: { status: true },
@@ -68,6 +85,21 @@ export class RevenueService {
       status: !currentRevenueStatus.status,
     });
 
+    if (orderInfo.customerId) {
+      const customer = await this.prisma.customer.findUnique({
+        where: {
+          id: orderInfo.customerId,
+        },
+      });
+
+      if (customer.status) {
+        await this.customerServices.incrementLoyaltyPoints({
+          id: orderInfo.customerId,
+          loyalty_points: loyaltyPointsCheck(orderInfo.orderInfo),
+        });
+      }
+    }
+
     return messageGenerator('update');
   }
 
@@ -84,7 +116,7 @@ export class RevenueService {
   }
 
   async deleteAll() {
-    return this.prisma.order.deleteMany()
+    return this.prisma.order.deleteMany();
   }
 
   async exist(id: string) {

@@ -1,25 +1,24 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
+  Param,
   ParseIntPipe,
-  Query,
+  Post,
   Put,
+  Query,
   Req,
+  UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/guards/authUser.guard';
-import { RoleGuard } from 'src/guards/role.guard';
+import { User } from '@prisma/client';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
-import { User } from '@prisma/client';
+import { AuthGuard } from 'src/guards/authUser.guard';
+import { RoleGuard } from 'src/guards/role.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from './user.service';
 
 interface IReq {
   user: User;

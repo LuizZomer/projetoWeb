@@ -1,16 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { CreateMenuDto } from 'src/menu/dto/create-menu.dto';
-
-class ReceivableMenuDto extends CreateMenuDto {
-  @IsString()
-  id: string;
-}
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class OrderItemDto {
   // @ValidateNested({ each: true })

@@ -43,7 +43,7 @@ export class FinanceService {
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
 
-    let finalDateEndOfDay = finalDate ? new Date(finalDate) : todayEnd;
+    const finalDateEndOfDay = finalDate ? new Date(finalDate) : todayEnd;
 
     if (finalDate) {
       finalDateEndOfDay.setDate(finalDateEndOfDay.getDate() + 1);
@@ -94,9 +94,8 @@ export class FinanceService {
       },
     });
 
-
     await Promise.all(
-      finances.map(async (finance) => {                
+      finances.map(async (finance) => {
         if (!finance.status && finance.dueDate < new Date()) {
           await this.prisma.finance.update({
             data: {
@@ -107,10 +106,8 @@ export class FinanceService {
             },
           });
         }
-      })
+      }),
     );
-  
-
 
     return { finances, financesCount: count };
   }
@@ -192,7 +189,7 @@ export class FinanceService {
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
 
-    let finalDateEndOfDay = finalDate ? new Date(finalDate) : todayEnd;
+    const finalDateEndOfDay = finalDate ? new Date(finalDate) : todayEnd;
 
     if (finalDate) {
       finalDateEndOfDay.setDate(finalDateEndOfDay.getDate() + 1);

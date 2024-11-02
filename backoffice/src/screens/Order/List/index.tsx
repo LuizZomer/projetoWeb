@@ -14,14 +14,32 @@ type TSequence = "asc" | "desc";
 
 type TPaid = "true" | "false";
 
+interface IPayPayload {
+  quantity: number;
+  type: string;
+}
+
 export const OrderList = () => {
   const { orderList, setOrderParam, reqOrderList, orderParam } =
     useSocketConnectContext();
 
-  const payRevenue = async (revenueId: string) => {
-    await api.patch(`/revenue/${revenueId}`).then(() => {
-      reqOrderList();
-    });
+  const payRevenue = async ({
+    customerId,
+    revenueId,
+    orderInfo,
+  }: {
+    revenueId: string;
+    customerId: string | null;
+    orderInfo: IPayPayload[];
+  }) => {
+    await api
+      .patch(`/revenue/${revenueId}`, {
+        orderInfo,
+        customerId,
+      })
+      .then(() => {
+        reqOrderList();
+      });
   };
 
   useEffect(() => {
@@ -69,7 +87,10 @@ export const OrderList = () => {
 
       <Flex direction="column" gap="10px" mb="10px">
         {orderList.map(
-          ({ OrderItems, Revenue, createdAt, customerName, id }, i) => (
+          (
+            { OrderItems, Revenue, createdAt, customerName, id, customerId },
+            i
+          ) => (
             <ExpandableTable
               key={id}
               headProps={[
@@ -90,7 +111,20 @@ export const OrderList = () => {
                     <div
                       onClick={(evt) => {
                         evt.stopPropagation();
-                        payRevenue(Revenue.id);
+                        const orderInfo: IPayPayload[] = [];
+
+                        OrderItems.forEach(({ Menu, quantity }) => {
+                          orderInfo.push({
+                            quantity: quantity,
+                            type: Menu.type,
+                          });
+                        });
+
+                        payRevenue({
+                          revenueId: Revenue.id,
+                          customerId,
+                          orderInfo,
+                        });
                       }}
                     >
                       {Revenue.status ? (

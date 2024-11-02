@@ -1,5 +1,5 @@
 import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
-import { MagnifyingGlass, Pencil } from "phosphor-react";
+import { MagnifyingGlass, Pencil, Power } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
 import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
@@ -69,7 +69,7 @@ export const CustomerList = () => {
   };
 
   const deleteCustomer = (id: string) => {
-    api.delete(`/customer/${id}`).then(() => {
+    api.patch(`/customer/status/${id}`).then(() => {
       reqCustomer({ newPage: page });
     });
   };
@@ -194,12 +194,15 @@ export const CustomerList = () => {
                           ceil: (
                             <Flex align="center" gap="20px">
                               <PopoverDelete
+                                title="Inaktivieren"
+                                icon={Power}
                                 key={customer.id}
-                                message="Möchten Sie diesen Kunden wirklich löschen?"
+                                message="Möchten Sie diesen Kunden wirklich aktivieren?"
                                 onClick={() => {
                                   deleteCustomer(customer.id);
                                 }}
                               />
+
                               <IconButtonComponent
                                 icon={Pencil}
                                 onClick={() => {

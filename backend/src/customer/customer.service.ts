@@ -176,6 +176,21 @@ export class CustomerService {
     return messageGenerator('update');
   }
 
+  async incrementLoyaltyPoints({
+    id,
+    loyalty_points,
+  }: {
+    id: string;
+    loyalty_points: number;
+  }) {
+    return this.prisma.customer.update({
+      data: {
+        loyalty_points: { increment: loyalty_points },
+      },
+      where: { id },
+    });
+  }
+
   async updateCustomerInfo(id: string, payload: UpdateCustomerInfoDTO) {
     if (payload.password)
       payload.password = await bcrypt.hash(
