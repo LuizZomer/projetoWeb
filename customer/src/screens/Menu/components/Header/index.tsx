@@ -7,12 +7,12 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { themes } from "../../../../styles/theme";
 import pizzaIcon from "/pizzaIcon.svg";
 import { ShoppingCartSimple } from "@phosphor-icons/react";
 import { useRef } from "react";
-import { OrderListDrawer } from "../OrderListDrawer";
+import { themes } from "../../../../styles/theme";
 import { useOrderListContext } from "../../../../context/OrderList/useOrderListContext";
+import { OrderListDrawer } from "../OrderListDrawer";
 
 export const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

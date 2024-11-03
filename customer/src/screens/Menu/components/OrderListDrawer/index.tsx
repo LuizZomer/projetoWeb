@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import { FormInput } from "../../../../components/Form/Input";
 import { useSocketConnect } from "../../../../context/SocketConnect/useSocketConnect";
 import { useValidationToken } from "../../../../hooks/useValidateToken";
+import { IOrderSocket } from "../../../../context/SocketConnect/SocketConnectProvider";
 
 interface IDrawer {
   isOpen: boolean;
@@ -69,10 +70,17 @@ export const OrderListDrawer = ({ isOpen, onClose, btnRef }: IDrawer) => {
       return;
     }
     setOnQuery(true);
-    const correctOrderList = orderList.map(({ quantity, id }) => ({
-      quantity,
-      menuId: id,
-    }));
+    const correctOrderList: IOrderSocket["OrderItems"] = orderList.map(
+      ({ quantity, id }) => ({
+        quantity,
+        menuId: id,
+      })
+    );
+
+    if (!correctOrderList.length) {
+      toast.error("Warenkorb ist leer!");
+      return;
+    }
 
     newOrder({ customerName, OrderItems: correctOrderList })
       .then(() => {
@@ -80,11 +88,11 @@ export const OrderListDrawer = ({ isOpen, onClose, btnRef }: IDrawer) => {
         setOrderList([]);
         onClose();
       })
-      .catch(() =>
+      .catch(() => {
         toast.error(
-          "Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal!"
-        )
-      )
+          "Es ist etwas Unerwartetes passiert. Überprüfen Sie Ihren Warenkorb oder versuchen Sie es später noch einmal!"
+        );
+      })
       .finally(() => setOnQuery(false));
   };
 

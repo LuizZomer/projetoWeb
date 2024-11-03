@@ -53,8 +53,8 @@ export class OrderGateway {
       await this.orderService.createOrder(order);
       this.server.emit('newOrderList');
       client.emit('newOrderResponse', { success: true });
-    } catch {
-      client.emit('newOrderResponse', { success: false });
+    } catch (e) {
+      client.emit('newOrderResponse', { success: false, message: e });
     }
   }
 }

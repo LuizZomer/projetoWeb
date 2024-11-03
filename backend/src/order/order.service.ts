@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOrderDTO } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RevenueService } from 'src/revenue/revenue.service';
@@ -13,6 +13,9 @@ export class OrderService {
 
   async createOrder(order: CreateOrderDTO) {
     let value = 0;
+
+    if (!order.OrderItems.length)
+      throw new BadRequestException('Warenkorb ist leer!');
 
     const newOrder = await this.prisma.order.create({
       data: {

@@ -1,5 +1,4 @@
 import { Box, Flex, Image, Text, useDisclosure } from "@chakra-ui/react";
-import { Header } from "./components/Header";
 import { themes } from "../../styles/theme";
 import { menuItemIcon } from "./icons";
 import { useDeferredValue, useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { ModalConfirmMenuItem } from "./utils/ModalConfirmItem";
 import { IMenu } from "../../utils/types";
 import { Input } from "../../components/Inputs";
 import { MagnifyingGlass } from "phosphor-react";
+import { Header } from "./components/Header";
 
 interface IMenuOptions {
   icon: string;
@@ -120,9 +120,9 @@ export const Menu = () => {
       <Flex
         justify="center"
         bgColor={themes.color.primary}
-        py="5px"
+        // py="5px"
         mx="auto"
-        px="30px"
+        // px="30px"
         borderRadius="10px"
       >
         <Box maxW="300px" w="full">

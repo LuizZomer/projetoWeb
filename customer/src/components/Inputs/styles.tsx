@@ -7,6 +7,7 @@ export const InputStyled = styled.input<{ $themeColor: string }>`
   height: 30px;
   background-color: transparent;
   color: ${({ $themeColor }) => $themeColor};
+  padding-right: 10px;
 
   &::placeholder {
     color: ${({ $themeColor }) => $themeColor};
