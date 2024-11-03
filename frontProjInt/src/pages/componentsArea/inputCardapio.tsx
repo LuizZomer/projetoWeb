@@ -21,7 +21,7 @@ const BuscaComponente: React.FC<SearchComponentProps> = ({ onFilter }) => {
 
 
     return(
-        <Box display="flex" w='782px' alignSelf='center' mt='36px' h='45px' padding='10px'>
+        <Box display="flex" w={{base:'50vw' ,mobile:'782px'}} alignSelf='center' mt='36px' h='45px' padding='10px'>
             <InputGroup>
                 <InputLeftElement >
                     <Image src={a} ml='25px' h='30px' w='35px'/>

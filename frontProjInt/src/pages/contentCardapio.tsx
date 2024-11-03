@@ -6,6 +6,7 @@ import FiltrosArea from "./componentsArea/filtrosArea";
 import axios from 'axios';
 import CardCardapio from "./cardCardapio";
 import { io, Socket } from 'socket.io-client';
+import { themes } from "./componentsArea/theme";
 
 interface MenuItem {
   id: string;
@@ -37,8 +38,8 @@ export default function ContentCardapio() {
     const token = localStorage.getItem('token');
     if (token) {
       setIsTokenActive(true);
-      const socketInstance = io("http://localhost:3000", {
-        auth: { token }
+      const socketInstance = io("http://localhost:3000/order", {
+        extraHeaders: { authorization: `bearer ${token}` }
       });
       setSocket(socketInstance);
       
@@ -116,62 +117,72 @@ export default function ContentCardapio() {
         status: 'warning',
         duration: 3000,
         isClosable: true,
-        position: 'bottom-left' // Posição do toast
+        position: 'bottom-left',
       });
       return;
     }
-
+  
+    const token = localStorage.getItem('token');
     const orderData = {
-      OrderItems: cartItems.map(item => ({
+      OrderItems: cartItems.map((item) => ({
         menuId: item.id,
         quantity: 1,
       })),
-      customerName: name,
+      customerName: token ? undefined: name, // Usa o nome do input se não houver token
     };
-
-    console.log("Enviando a requisição de compra com os dados:", orderData);  // Log dos dados da requisição
-
+  
     if (socket) {
-      socket.emit("finalizeOrder", orderData, (response: FinalizeOrderResponse) => {
-        // Callback para verificar se a requisição foi bem-sucedida
-        if (response.success) {
-          toast({
-            title: 'Bestellung erfolgreich gesendet!',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-            position: 'bottom-left'
-          });
-        } else {
-          toast({
-            title: 'Fehler beim Senden der Bestellung',
-            description: response.message || "Ein unbekannter Fehler ist aufgetreten.",
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-            position: 'bottom-left'
-          });
+      socket.emit(
+        'newOrder',
+        { ...orderData}, // Envia o token junto com os dados do pedido
+        (response: FinalizeOrderResponse) => {
+          console.log("Resposta do servidor:", response); // Adicione este log para ver a resposta
+          
+          if (response.success) {
+            // Exibe o toast de sucesso
+            toast({
+              title: 'Bestellung erfolgreich gesendet!',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+              position: 'bottom-left',
+              
+            });
+            
+  
+            // Limpa o carrinho após o pedido ser enviado
+            setCartItems([]);
+            console.log("Carrinho limpo"); // Log para confirmar que o carrinho foi limpo
+          } else {
+            toast({
+              title: 'Fehler beim Senden der Bestellung',
+              description: response.message || "Ein unbekannter Fehler ist aufgetreten.",
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+              position: 'bottom-left',
+            });
+          }
         }
-      });
+      );  
     } else {
       toast({
-        title: 'Socket não está conectado',
+        title: 'Fehler, Warenkorb ist nicht verbunden',
         status: 'error',
         duration: 3000,
         isClosable: true,
-        position: 'bottom-left'
+        position: 'bottom-left',
       });
     }
   }
 
-
   return (
-    <Box pb='5%' display='flex' flexDir='column'>
+    <Box display='flex' flexDir='column' bgColor={themes.color.secondary}>
       <HeaderC onOpenCart={onOpen} />
       <Text alignSelf='center' mt='36px' fontFamily='Roboto' fontSize='40' color='#482D19' fontWeight='semibold'>SPEISEKARTE</Text>
       <BuscaCompenente onFilter={handleFilter} />
       <FiltrosArea onSelectFilter={handleSelect} />
-      <Box alignSelf='center' display='flex' justifyContent='space-evenly' flexWrap='wrap' gap='5%' mx='10%' mb='10%'>
+      <Box alignSelf='center' display='flex' justifyContent='space-evenly' flexWrap='wrap' gap='50px' mb='10%'>
 
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
@@ -181,6 +192,7 @@ export default function ContentCardapio() {
               description={item.description}
               value={item.value}
               size={item.size}
+
               onAddToCart={() => handleAddToCart(item)}
             />
           ))
@@ -244,27 +256,26 @@ export default function ContentCardapio() {
       </Drawer>
 
       <AlertDialog
-  isOpen={isAlertOpen}
-  leastDestructiveRef={cancelRef}
-  onClose={onAlertClose}
->
-  <AlertDialogOverlay>
-    <AlertDialogContent maxW='90%' width='700px' h='400px' display="flex" flexDirection="column" justifyContent="center">
-      <CloseButton alignSelf='end' onClick={onAlertClose} />
-      <AlertDialogBody textColor='#351D0C' fontSize='40px' fontFamily='roboto' textAlign='center' flex='1' display='flex' alignItems='center' justifyContent='center'>
-        <Text>Sind Sie sicher, dass Sie diese Bestellung aufgeben möchten?</Text>
-      </AlertDialogBody>
-      <AlertDialogFooter>
-        <Box display="flex" justifyContent="flex-end" width="100%">
-          <Button w='152px' h='40px' textColor='white' bgColor='#351D0C' onClick={handleClearCart} _hover={{bgColor:'#482D19'}}>
-            Ja
-          </Button>
-        </Box>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialogOverlay>
-</AlertDialog>
-
+        isOpen={isAlertOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onAlertClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogBody>
+              Möchten Sie wirklich Ihren Warenkorb leeren?
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onAlertClose}>
+                Nein
+              </Button>
+              <Button colorScheme="red" onClick={handleClearCart} ml={3}>
+                Ja
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 }

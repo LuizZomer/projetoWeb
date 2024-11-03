@@ -26,8 +26,10 @@ export default function Landpage(){
                 
                 height='auto'/>
 
-            <Biografy/>
-            <Cardvantagens/>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+                <Biografy/>
+                <Cardvantagens/>
+            </Box>
             <Menu/>
             <Promo/>
 

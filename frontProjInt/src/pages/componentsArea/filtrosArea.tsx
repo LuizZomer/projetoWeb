@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Text, Image } from "@chakra-ui/react";
+import { Box, Button, Text, Image, Flex } from "@chakra-ui/react";
 import b from '../assets/VectorBrown.svg'; 
 import c from '../assets/VectorBranco.svg';
 import d from '../assets/PizzaWhite.svg';
@@ -22,21 +22,22 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
   };
 
   return (
-    <Box display='flex' justifyContent='space-between' mt='57px' mb='40px' mx='318px'>
+    <Box display='flex' justifyContent='space-between' mt='57px' mb='40px' mx={{base:'10vw',mobile:'20vw'}} flexWrap='wrap' gap='4px'>
       <Button
-        bg={selected === "nudelin" ? "#75492A" : "white"}
-        color={selected === "nudelin" ? "white" : "#75492A"}
-        onClick={() => handleSelect("nudelin")}
-        _hover={{ bg: selected === "nudelin" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
+        bg={selected === "noodle" ? "#75492A" : "white"}
+        color={selected === "noodle" ? "white" : "#75492A"}
+        onClick={() => handleSelect("noodle")}
+        _hover={{ bg: selected === "noodle" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
         flexDirection='column'
         alignItems='center'
         padding='5%'
+        boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
         borderRadius='md'
         w='120px'
         h='120px'
       >
-        <Image src={ selected === "nudelin" ? c : b} />
+        <Image src={ selected === "noodle" ? c : b} />
         <Text mt={2}>Nudelin</Text>
       </Button>
 
@@ -46,6 +47,7 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         onClick={() => handleSelect("pizza")}
         _hover={{ bg: selected === "pizza" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
+        boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
         flexDirection='column'
         alignItems='center'
         padding='5%'
@@ -58,36 +60,38 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
       </Button>
 
       <Button
-        bg={selected === "salat" ? "#75492A" : "white"}
-        color={selected === "salat" ? "white" : "#75492A"}
-        onClick={() => handleSelect("salat")}
-        _hover={{ bg: selected === "salat" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
+        bg={selected === "salad" ? "#75492A" : "white"}
+        color={selected === "salad" ? "white" : "#75492A"}
+        onClick={() => handleSelect("salad")}
+        _hover={{ bg: selected === "salad" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
         flexDirection='column'
         alignItems='center'
+        boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
         padding='5%'
         borderRadius='md'
         w='120px'
         h='120px'
       >
-        <Image src={ selected === "salat" ? f : g} />
+        <Image src={ selected === "salad" ? f : g} />
         <Text mt={2}>Salat</Text>  
       </Button>
 
       <Button
-        bg={selected === "getränke" ? "#75492A" : "white"}
-        color={selected === "getränke" ? "white" : "#75492A"}
-        onClick={() => handleSelect("getränke")}
-        _hover={{ bg: selected === "getränke" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
+        bg={selected === "drink" ? "#75492A" : "white"}
+        color={selected === "drink" ? "white" : "#75492A"}
+        onClick={() => handleSelect("drink")}
+        _hover={{ bg: selected === "drink" ? "#5A401F" : "#FFEBE8" }} // Marrom mais escuro e vermelho mais claro
         display='flex'
         flexDirection='column'
         alignItems='center'
         padding='5%'
+        boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
         borderRadius='md'
         w='120px'
         h='120px'
       >
-        <Image src={ selected === "getränke" ? h : i} />
+        <Image src={ selected === "drink" ? h : i} />
         <Text mt={2}>Getränke</Text>  
       </Button>
     </Box>

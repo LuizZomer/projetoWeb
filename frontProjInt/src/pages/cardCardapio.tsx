@@ -13,7 +13,20 @@ interface CardProps {
 
 const CardCardapio: React.FC<CardProps> = ({ name, description, value, size, onAddToCart }) => {
     return (
-      <Box display='flex'flexDirection='column' padding='13px' borderRadius={45} mt={10} width='257px' height='397px'>
+      <Box  
+        display='flex'
+        flexDirection='column' 
+        borderRadius='7px' 
+        mt={10} 
+        maxWidth='257px' 
+        maxHeight='397px' 
+        _hover={{transform: "scale(1.05)", bgColor: "#f7f7f7"}} 
+        boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)" 
+        transition="0.5s"
+        p="20px"
+        justifyContent="space-between"
+        alignContent="center"
+        >
 
 
         <Text
