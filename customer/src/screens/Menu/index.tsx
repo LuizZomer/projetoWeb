@@ -1,6 +1,6 @@
 import { Box, Flex, Image, Text, useDisclosure } from "@chakra-ui/react";
 import { themes } from "../../styles/theme";
-import { menuItemIcon } from "./icons";
+import { menuItemIcon } from "../../assets/icons";
 import { useDeferredValue, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { Card } from "./components/Card";

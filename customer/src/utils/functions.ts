@@ -77,3 +77,9 @@ export const thenHandler = (res: IThenHandler) => {
     toast.success(res.data.message);
   }
 };
+
+export const dateFormatter = (date: string | undefined | null) => {
+  if (!date) return;
+
+  return new Date(date).toLocaleDateString(navigator.language);
+};

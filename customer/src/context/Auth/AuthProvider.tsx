@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "./AuthContext";
+import { IUser } from "./types";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<JwtPayload | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
 
   const signOut = () => {
     setUser(null);
@@ -12,7 +13,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signIn = async (token: string | null) => {
     if (!token) return;
-    const decoded = jwtDecode(token);
+    const decoded = jwtDecode(token) as IUser;
     localStorage.setItem("authToken", token);
 
     setUser(decoded);

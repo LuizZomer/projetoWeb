@@ -5,6 +5,7 @@ import pizzaIcon from "/pizzaIcon.svg";
 export const Header = () => {
   return (
     <Flex
+      as="header"
       align="center"
       gap="20px"
       bg={themes.color.secondary}
@@ -12,7 +13,7 @@ export const Header = () => {
       height={70}
     >
       <Image src={pizzaIcon} width={35} height={35} />
-      <Text fontSize={28} fontWeight={500} color={themes.color.primary}>
+      <Text fontSize={[15, 28]} fontWeight={500} color={themes.color.primary}>
         Pizzeria Bei Giovanni
       </Text>
     </Flex>
