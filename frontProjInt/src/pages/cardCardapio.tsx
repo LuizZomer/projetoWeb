@@ -1,6 +1,7 @@
 import {Box, Button, Text, Image } from '@chakra-ui/react'
 import a from './assets/CarrinhoMarrom.svg'
-
+import { useState } from "react";
+import { themes } from './componentsArea/theme';
 
 
 interface CardProps {
@@ -8,17 +9,22 @@ interface CardProps {
     value: number;
     description: string;
     size:string;
-    onAddToCart: () => void;
+    onAddToCart: (quantity: number) => void;
   }
 
 const CardCardapio: React.FC<CardProps> = ({ name, description, value, size, onAddToCart }) => {
+        const [quantity, setQuantity] = useState(1);
+
+        const handleQuantityChange = (amount: number) => {
+          setQuantity(prev => Math.max(prev + amount, 1));
+        };
     return (
       <Box  
         display='flex'
         flexDirection='column' 
         borderRadius='7px' 
         mt={10} 
-        maxWidth='257px' 
+        maxWidth='300px' 
         maxHeight='397px' 
         _hover={{transform: "scale(1.05)", bgColor: "#f7f7f7"}} 
         boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)" 
@@ -26,6 +32,7 @@ const CardCardapio: React.FC<CardProps> = ({ name, description, value, size, onA
         p="20px"
         justifyContent="space-between"
         alignContent="center"
+        bgColor={themes.color.secondary}
         >
 
 
@@ -70,11 +77,16 @@ const CardCardapio: React.FC<CardProps> = ({ name, description, value, size, onA
                     > € {value}
                 </Text>
             </Box>
-
-            <Button alignSelf='flex-end' onClick={onAddToCart} _hover={{bgColor:'#d1d1d1'}}>
-                <Image src={a} w='30px' h='30px'/>
-            </Button>
-            
+            <Box display='flex' flexDirection='column' alignSelf='flex-end'>
+              <Box display='flex' alignSelf='end'>
+                <Button bgColor={themes.color.primary} w='4px' h='15px' onClick={() => handleQuantityChange(-1)}>-</Button>
+                <Text px='10px' fontFamily='Roboto'>{quantity}</Text>
+                <Button bgColor={themes.color.primary} w='4px' h='15px' onClick={() => handleQuantityChange(1)}>+</Button>
+              </Box>
+              <Button alignSelf='flex-end' onClick={() => onAddToCart(quantity)} _hover={{bgColor:'#d1d1d1'}} >
+                  <Image src={a} w='30px' h='30px'/>
+              </Button>
+            </Box>
         </Box>
 
         

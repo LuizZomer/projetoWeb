@@ -31,14 +31,14 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         display='flex'
         flexDirection='column'
         alignItems='center'
-        padding='5%'
+
         boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
         borderRadius='md'
         w='120px'
         h='120px'
       >
-        <Image src={ selected === "noodle" ? c : b} />
-        <Text mt={2}>Nudelin</Text>
+          <Image src={ selected === "noodle" ? c : b} boxSize={{ base: "40px", sm: "50px", md: "60px" }}/>
+          <Text mt={2} fontFamily='Lato'>Nudelin</Text>
       </Button>
 
       <Button
@@ -50,13 +50,13 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
         flexDirection='column'
         alignItems='center'
-        padding='5%'
+
         borderRadius='md'
         w='120px'
         h='120px'
       >
         <Image src={ selected === "pizza" ? d : e} />
-        <Text mt={2}>Pizzas</Text>  
+        <Text fontFamily='Lato' mt={2}>Pizzas</Text>  
       </Button>
 
       <Button
@@ -68,13 +68,12 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         flexDirection='column'
         alignItems='center'
         boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
-        padding='5%'
         borderRadius='md'
         w='120px'
         h='120px'
       >
         <Image src={ selected === "salad" ? f : g} />
-        <Text mt={2}>Salat</Text>  
+        <Text fontFamily='Lato' mt={2}>Salat</Text>  
       </Button>
 
       <Button
@@ -85,14 +84,13 @@ export default function FiltrosArea({ onSelectFilter }: FiltrosAreaProps) {
         display='flex'
         flexDirection='column'
         alignItems='center'
-        padding='5%'
         boxShadow="0px 4px 14px rgba(1, 1, 1, 0.4)"
         borderRadius='md'
         w='120px'
         h='120px'
       >
         <Image src={ selected === "drink" ? h : i} />
-        <Text mt={2}>Getränke</Text>  
+        <Text fontFamily='Lato' mt={2}>Getränke</Text>  
       </Button>
     </Box>
   );
