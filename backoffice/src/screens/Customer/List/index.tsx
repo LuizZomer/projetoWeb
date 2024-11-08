@@ -1,8 +1,7 @@
 import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
-import { MagnifyingGlass, Pencil, Power } from "phosphor-react";
+import { MagnifyingGlass, Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
-import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
 import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
 import { SpinnerLoading } from "../../../components/Loading/LoadingSpinner";
