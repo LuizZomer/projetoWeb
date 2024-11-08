@@ -1,8 +1,7 @@
 import { Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
-import { MagnifyingGlass, Pencil, Power } from "phosphor-react";
+import { MagnifyingGlass, Pencil } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ButtonComponent } from "../../../components/Buttons/Button";
-import { PopoverDelete } from "../../../components/Buttons/PopoverDelete";
 import { FormInput } from "../../../components/Form/Input";
 import { FormSelect } from "../../../components/Form/Select";
 import { SpinnerLoading } from "../../../components/Loading/LoadingSpinner";
@@ -18,6 +17,7 @@ import { sizeMenuItem, typeMenuItem } from "../constants";
 import { ModalCreateMenuItem } from "./utils/ModalCreateMenuItem";
 import { ModalEditMenuItem } from "./utils/ModalEditMenuItem";
 import { IconButtonComponent } from "../../../components/Buttons/IconButton";
+import { SwitchStatus } from "../../../components/Buttons/SwitchStatus";
 
 export interface IMenuItem {
   id: string;
@@ -245,14 +245,11 @@ export const MenuList = () => {
                         {
                           ceil: (
                             <Flex align="center" gap="20px">
-                              <PopoverDelete
-                                title="Inaktivieren"
-                                icon={Power}
-                                key={item.id}
-                                message="Möchten Sie diesen Menüpunkt wirklich aktivieren?"
+                              <SwitchStatus
                                 onClick={() => {
                                   deleteUser(item.id);
                                 }}
+                                status={item.status}
                               />
                               <IconButtonComponent
                                 icon={Pencil}

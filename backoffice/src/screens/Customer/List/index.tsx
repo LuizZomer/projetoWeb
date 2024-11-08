@@ -17,6 +17,7 @@ import { customerStatus } from "../constants";
 import { ModalCreateCustomer } from "./utils/ModalCreateCustomer";
 import { ModalEditCustomer } from "./utils/ModalEditCustomer";
 import { IconButtonComponent } from "../../../components/Buttons/IconButton";
+import { SwitchStatus } from "../../../components/Buttons/SwitchStatus";
 
 export interface ICustomer {
   id: string;
@@ -193,14 +194,11 @@ export const CustomerList = () => {
                         {
                           ceil: (
                             <Flex align="center" gap="20px">
-                              <PopoverDelete
-                                title="Inaktivieren"
-                                icon={Power}
-                                key={customer.id}
-                                message="Möchten Sie diesen Kunden wirklich aktivieren?"
+                              <SwitchStatus
                                 onClick={() => {
                                   deleteCustomer(customer.id);
                                 }}
+                                status={customer.status}
                               />
 
                               <IconButtonComponent
