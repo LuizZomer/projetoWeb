@@ -22,8 +22,7 @@ function Cardvantagens(){
                     alignItems='center' 
                     justifyContent='space-evenly' 
                     mt={10} 
-                    width="100%"
-                    maxWidth="1200px" 
+                    width="100%" 
                     p={4}
                     flexWrap='wrap'
                     gap='15px'
