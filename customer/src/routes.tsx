@@ -4,12 +4,14 @@ import { SocketConnectProvider } from "./context/SocketConnect/SocketConnectProv
 import { Login } from "./screens/Login";
 import { RequireAuth } from "./context/Auth/RequiredAuth";
 import { CustomerArea } from "./screens/CustomerArea";
+import { Home } from "./screens/Home";
 
 export const AppRoutes = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/" element={<Navigate to="/home" />} />
 
+      <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
 
       <Route path="/menu" element={<SocketConnectProvider />}>
