@@ -1,28 +1,16 @@
-import { Box, Button } from "@chakra-ui/react";
-import { useAuth } from "../../context/AuthContext";
+import { Box} from "@chakra-ui/react";
 import HeaderA from "./headerArea";
-import { useNavigate } from "react-router-dom";
+import Nav from "./nav";
 
 export default function ContentArea() {
-    const { logout } = useAuth();
-    const navigate = useNavigate()
-
-    function handleClick(){
-        navigate('/speiskarte')
-    } 
+    
 
     return (
         <Box>
 
             <HeaderA/>
-
-            <Button onClick={logout}>
-                LogOut
-            </Button>
-
-            <Button onClick={handleClick}>
-                Botão provisório p/cardápio
-            </Button>
+            <Nav/>
+            
 
         </Box>
     );
