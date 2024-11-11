@@ -1,6 +1,6 @@
 import { Box, Button } from "@chakra-ui/react";
-import { useAuth } from "../context/AuthContext";
-import HeaderA from "./componentsArea/headerArea";
+import { useAuth } from "../../context/AuthContext";
+import HeaderA from "./headerArea";
 import { useNavigate } from "react-router-dom";
 
 export default function ContentArea() {

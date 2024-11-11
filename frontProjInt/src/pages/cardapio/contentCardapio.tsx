@@ -1,13 +1,13 @@
 import {Box,Text,useDisclosure,Drawer,DrawerBody,DrawerHeader,DrawerOverlay,DrawerContent,Button,Input,AlertDialog,AlertDialogOverlay,AlertDialogContent,AlertDialogBody,AlertDialogFooter,useToast,Image, AlertDialogCloseButton
 } from "@chakra-ui/react";
 import { useEffect, useState, ChangeEvent, useRef } from "react";
-import HeaderC from "../componentsArea/headerCardapio";
+import HeaderC from "../clientArea/headerCardapio";
 import BuscaCompenente from "./inputCardapio";
 import FiltrosArea from "./filtrosArea";
 import axios from 'axios';
 import CardCardapio from "./cardCardapio";
 import { io, Socket } from 'socket.io-client';
-import { themes } from "../componentsArea/theme";
+import { themes } from "../clientArea/theme";
 import a from '../assets/126468.png'
 
 
@@ -286,7 +286,7 @@ export default function ContentCardapio() {
                 </Button>
             
             <Button 
-                  onClick={ name=='' ? tot: handleFinalizePurchase} 
+                  onClick={ name=='' || isTokenActive ? handleFinalizePurchase : tot} 
                   opacity='85%' 
                   textColor='white' 
                   borderRadius='2' 

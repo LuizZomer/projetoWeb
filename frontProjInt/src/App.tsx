@@ -5,7 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from './pages/componentsLand/breakpoints';
 import LgnUser from './pages/loginUser';
 import { AuthProvider } from './context/AuthContext';
-import ClientArea from './pages/clientArea';
+import ClientArea from './pages/clientArea/clientArea';
 import ContentCardapio from './pages/cardapio/contentCardapio';
 
 
