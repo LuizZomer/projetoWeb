@@ -6,7 +6,7 @@ import theme from './pages/componentsLand/breakpoints';
 import LgnUser from './pages/loginUser';
 import { AuthProvider } from './context/AuthContext';
 import ClientArea from './pages/clientArea';
-import ContentCardapio from './pages/contentCardapio';
+import ContentCardapio from './pages/cardapio/contentCardapio';
 
 
 

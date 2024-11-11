@@ -1,7 +1,7 @@
 import {Box, Button, Text, Image } from '@chakra-ui/react'
-import a from './assets/CarrinhoMarrom.svg'
+import a from '../assets/CarrinhoMarrom.svg'
 import { useState } from "react";
-import { themes } from './componentsArea/theme';
+import { themes } from '../componentsArea/theme';
 
 
 interface CardProps {

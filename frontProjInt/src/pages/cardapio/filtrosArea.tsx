@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Text, Image, Flex } from "@chakra-ui/react";
+import { Box, Button, Text, Image } from "@chakra-ui/react";
 import b from '../assets/VectorBrown.svg'; 
 import c from '../assets/VectorBranco.svg';
 import d from '../assets/PizzaWhite.svg';
