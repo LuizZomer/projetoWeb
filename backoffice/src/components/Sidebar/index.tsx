@@ -3,9 +3,11 @@ import logo from "/logo.svg";
 import * as S from "./styles";
 import { User } from "@phosphor-icons/react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Bag, Coin, ForkKnife, SignOut, UsersFour } from "phosphor-react";
+import { Bag, Coin, ForkKnife, List, SignOut, UsersFour } from "phosphor-react";
 import { useAuthContext } from "../../context/Auth/useAuthContext";
 import { useSocketConnectContext } from "../../context/SocketConnect/useSocketConnectContext";
+import { useState } from "react";
+import { disablePageScroll, enablePageScroll } from "scroll-lock";
 
 interface ISidebarOption {
   icon: React.ReactNode;
@@ -18,6 +20,7 @@ export const Sidebar = () => {
   const { signOut } = useAuthContext();
   const { orderList } = useSocketConnectContext();
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
 
   const sidebarOptions: ISidebarOption[] = [
     {
@@ -47,6 +50,16 @@ export const Sidebar = () => {
     },
   ];
 
+  const toggleNavigation = () => {
+    if (show) {
+      setShow(false);
+      enablePageScroll();
+    } else {
+      setShow(true);
+      disablePageScroll();
+    }
+  };
+
   const logout = () => {
     signOut();
     navigate("/login");
@@ -54,6 +67,32 @@ export const Sidebar = () => {
 
   return (
     <S.Container>
+      <S.MobileMenu>
+        <Image src={logo} maxWidth="200px" width="full" />
+        <List color="#482D19" size="40px" onClick={toggleNavigation} />
+      </S.MobileMenu>
+
+      <S.BgSidebarMobile $show={show} onClick={toggleNavigation} />
+
+      <S.SidebarContainerMobile $show={show}>
+        <S.ContentOptionsContainerMobile>
+          {sidebarOptions.map(({ icon, url, title }) => (
+            <div
+              onClick={() => {
+                navigate(url);
+                toggleNavigation();
+              }}
+            >
+              {icon}
+              <Text color="#482D19" fontWeight={500} fontSize={10}>
+                {title}
+              </Text>
+            </div>
+          ))}
+        </S.ContentOptionsContainerMobile>
+        <SignOut size={28} onClick={logout} color="red" />
+      </S.SidebarContainerMobile>
+
       <S.SidebarContainer>
         <S.LogoContainer>
           <Image src={logo} maxWidth="232px" width="full" />

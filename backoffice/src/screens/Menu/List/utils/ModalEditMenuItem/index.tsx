@@ -42,6 +42,7 @@ export const ModalEditMenuItem = ({
     value: z.string().min(1, "Pflichtfeld"),
     type: z.string().min(1, "Pflichtfeld"),
     size: z.string().min(1, "Pflichtfeld"),
+    status: z.string().min(1, "Pflichtfeld"),
   });
 
   type TFormData = z.infer<typeof schema>;
@@ -61,6 +62,7 @@ export const ModalEditMenuItem = ({
       size: menuItem.size,
       type: menuItem.type,
       value: valueMask(String(menuItem.value * 100)),
+      status: String(menuItem.status),
     },
   });
 
@@ -69,6 +71,7 @@ export const ModalEditMenuItem = ({
       .put(`/menu/${data.id}`, {
         ...data,
         value: Number(unmaskValue(data.value)),
+        status: data.status === "true",
       })
       .then(() => {
         handleClose();
@@ -157,6 +160,21 @@ export const ModalEditMenuItem = ({
                         {label}
                       </option>
                     ))}
+                  </FormSelect>
+                )}
+              />
+
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <FormSelect
+                    label="Status"
+                    error={errors.status?.message}
+                    {...field}
+                  >
+                    <option value="true">Aktiv</option>
+                    <option value="false">Nicht aktiv</option>
                   </FormSelect>
                 )}
               />
