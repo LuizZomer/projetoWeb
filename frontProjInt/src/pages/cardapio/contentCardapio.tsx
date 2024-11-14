@@ -70,7 +70,7 @@ export default function ContentCardapio() {
         const response = await axios.get('http://localhost:3000/menu?page=1&take=1000');
         if (response.data && response.data.menuItens) {
           setItems(response.data.menuItens);
-          setFilteredItems(response.data.menuItens); // Inicializa com todos os itens
+          setFilteredItems(response.data.menuItens);
         }
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
