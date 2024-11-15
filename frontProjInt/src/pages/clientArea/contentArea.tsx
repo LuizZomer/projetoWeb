@@ -66,10 +66,9 @@ export default function ContentArea() {
 
 
     function ultimosPedidos(resposta: customerInfo) {
-        return resposta.OrderLog.map(orderLog => {
-            const orderItems = orderLog.Order.OrderItems;
-            // Obtenha os três últimos itens pelo nome do menu
-            return orderItems.slice(3).map(item => item.Menu.name);
+        // Obtém os últimos três pedidos de OrderLog e extrai os itens de cada um deles
+        return resposta.OrderLog.slice(-3).map(orderLog => {
+            return orderLog.Order.OrderItems.map(item => item.Menu.name); // Pega o nome do menu de cada item no pedido
         });
     }
     const x = resposta ? ultimosPedidos(resposta) : [];
