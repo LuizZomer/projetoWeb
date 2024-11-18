@@ -66,14 +66,22 @@ export default function ContentArea() {
 
 
     function ultimosPedidos(resposta: customerInfo) {
-        // Obtém os últimos três pedidos de OrderLog e extrai os itens de cada um deles
-        return resposta.OrderLog.slice(-3).map(orderLog => {
-            return orderLog.Order.OrderItems.map(item => item.Menu.name); // Pega o nome do menu de cada item no pedido
-        });
+        const itens = resposta.OrderLog.slice(-3).map(orderLog =>
+            orderLog.Order.OrderItems.map(item => item.Menu.name) 
+        );
+        const tipos = resposta.OrderLog.slice(-3).map(orderLog =>
+            orderLog.Order.OrderItems[0]?.Menu.type || 'default'
+        );
+        const valores = resposta.OrderLog.slice(-3).map(orderLog =>
+            orderLog.Order.OrderItems[0]?.Menu.value 
+        );
+        return { itens, tipos , valores };
     }
-    const x = resposta ? ultimosPedidos(resposta) : [];
+    const { itens, tipos , valores } = resposta ? ultimosPedidos(resposta) : { itens: [], tipos: [], valores:[] };
 
-
+    function pts() {
+        return valores.slice(-3);
+    }
 
    
     return (
@@ -82,7 +90,7 @@ export default function ContentArea() {
             <HeaderA/>
             <Nav name={resposta ? resposta.fullName : ''}/>
             <Pontos loyalty_points={resposta ? resposta.loyalty_points : 0}/>
-            <RecentOrder ultimosItens={x}/>
+            <RecentOrder ultimosItens={itens} types={tipos} pontos={pts()}/>
             <Resgate/>
         </Box>
     );
