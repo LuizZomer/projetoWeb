@@ -3,7 +3,15 @@ import frontPizzaria from "/frontPizzaria.png";
 
 export const History = () => {
   return (
-    <Flex paddingX={["10px", "88px"]} py="88px" justify="space-between">
+    <Flex
+      direction={["column", "row"]}
+      flexWrap="wrap"
+      gap="20px"
+      paddingX={["10px", "88px"]}
+      py="88px"
+      alignItems="center"
+      justify="space-between"
+    >
       <Text color="#482D19" maxW="566px" fontSize="24px" lineHeight="35px">
         Die Pizzeria Bei Giovanni in Witten erzählt eine Geschichte von Liebe
         und Familientradition. Giovanni, ein leidenschaftlicher Italiener,

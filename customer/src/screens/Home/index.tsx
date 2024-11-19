@@ -3,6 +3,9 @@ import { themes } from "../../styles/theme";
 import { Header } from "./Components/Header";
 import { Apresentation } from "./Components/Apresentation";
 import { History } from "./Components/History";
+import { Join } from "./Components/Join";
+import { Menu } from "./Components/Menu";
+import { Footer } from "./Components/Footer";
 
 export const Home = () => {
   return (
@@ -10,6 +13,9 @@ export const Home = () => {
       <Header />
       <Apresentation />
       <History />
+      <Join />
+      <Menu />
+      <Footer />
     </Flex>
   );
 };
