@@ -29,9 +29,9 @@ const RecentOrder: React.FC<RecentOrderProps> = ({ ultimosItens, types, pontos }
     };
 
     return(
-        <Box mt='60px' display='flex' flexDir='column'>
-            <Text fontSize='40' fontWeight='bold' color='#482D19' alignSelf='center'>Letzte Bestellungen</Text>
-            <Box display='flex' justifyContent='space-around'>
+        <Box mt='60px' display='flex' flexDir='column' bgColor='#F1ECDC'>
+            <Text fontSize={{base:'32',mobile:'40'}} fontWeight='bold' color='#482D19' alignSelf='center' >Letzte Bestellungen</Text>
+            <Box display='flex' justifyContent='space-around' flexWrap='wrap'>
                 <Box mt='60px' display='flex' flexDir='column' textAlign='center' w='340px' h='228px' alignItems='center'>
                     <Box w='100px' h='100px' bgColor='#AC927F' borderRadius='50' display='flex' alignContent='center' justifyContent='center'>
                         <Image w='60%' src={getImageForType(types[0] || 'default')} alt="?" justifySelf='center' alignSelf='center'/>

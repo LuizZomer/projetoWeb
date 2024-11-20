@@ -1,8 +1,15 @@
 import { Box, Text, Image,Button} from "@chakra-ui/react"
 import a from '../assets/Fifthsection.png'
 import b from '../assets/macarrao.png'
+import { useNavigate } from "react-router-dom";
 
 export default function Menu(){
+    const navigate = useNavigate()
+
+    function handleMenu() {
+        navigate('/speiskarte');
+    }
+
     return(
         <Box display='flex' 
             flexDir='column' 
@@ -38,6 +45,7 @@ export default function Menu(){
                 my={{ base: '50px', mobile: '150px' }}
                 cursor='pointer'
                 _hover={{bg:'#4b2e2e'}}
+                onClick={handleMenu}
                 >SPEISEKARTE
             </Button>
 

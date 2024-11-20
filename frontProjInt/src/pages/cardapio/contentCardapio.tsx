@@ -85,7 +85,6 @@ export default function ContentCardapio() {
     const isItemInCart = cartItems.some(cartItem => cartItem.id === item.id);
 
     if (isItemInCart) {
-      // Atualiza a quantidade do item existente no carrinho
       setCartItems(prevItems =>
         prevItems.map(cartItem =>
           cartItem.id === item.id

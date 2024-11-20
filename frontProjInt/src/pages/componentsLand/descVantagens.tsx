@@ -1,6 +1,13 @@
 import {Box, Text, Button} from '@chakra-ui/react'
+import { useNavigate } from "react-router-dom";
 
 export default function DescVantagens(){
+    const navigate = useNavigate();
+
+    function handleClick() {
+        navigate('/login');
+    }
+
     return(
         <Box 
                 display='flex'
@@ -37,6 +44,7 @@ export default function DescVantagens(){
                 fontFamily='Rakkas'
                 fontSize={{base:'22',mobile:'48'}}
                 _hover={{bg:'#4b2e2e'}}
+                onClick={handleClick}
                     >VERBIDEN
                 </Button>
 

@@ -2,7 +2,6 @@ import { Box} from "@chakra-ui/react";
 import HeaderA from "./headerArea";
 import Nav from "./nav";
 import axios from 'axios';
-import Pontos from "./pontos";
 import RecentOrder from "./recentOrder";
 import Resgate from "./resgate";
 import { useEffect, useState } from "react";
@@ -85,11 +84,10 @@ export default function ContentArea() {
 
    
     return (
-        <Box>
+        <Box bgColor='#F1ECDC'>
             
             <HeaderA/>
-            <Nav name={resposta ? resposta.fullName : ''}/>
-            <Pontos loyalty_points={resposta ? resposta.loyalty_points : 0}/>
+            <Nav name={resposta ? resposta.fullName : ''} loyalty_points={resposta ? resposta.loyalty_points : 0}/>
             <RecentOrder ultimosItens={itens} types={tipos} pontos={pts()}/>
             <Resgate/>
         </Box>
