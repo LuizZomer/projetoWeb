@@ -9,8 +9,11 @@ export default function Resgate(){
         <Box>
         <Box fontFamily='roboto' textColor='black' borderTop='1px solid #AC927F' borderBottom='1px solid #AC927F' my='60px'>
             <Text  color='#482D19' fontWeight='bold' fontSize={40} mt='60px' w='100vw' textAlign='center'>Punkte einlösen</Text>
-            <Text justifySelf='center' color='black' fontSize={16} mt='28px' maxW={{base:'',mobile:'35%'}} textAlign='center'>Sie können Punkte gegen verschiedene Produkte einlösen. Schauen Sie sich die Möglichkeiten an!</Text>
+            <Box flex={1}>
+                <Text justifySelf='center' color='black' fontSize={16} mt='28px' maxW={{base:'80%',mobile:'35%'}} mx='auto' textAlign='center'>Sie können Punkte gegen verschiedene Produkte einlösen. Schauen Sie sich die Möglichkeiten an!</Text>
+            </Box>
             <Box mb='60px' display='flex' flexWrap='wrap' justifyContent='center' gap='40px' mt='65px'>
+          
                 <Box w='530px' h='132px' display='flex' border='1.5px solid #A68A71' borderRadius='6'>
                     <Image src={pizza} w='100px' h='100px' alignSelf='center' mx='16px'/>
                     <Box alignSelf='center'>
