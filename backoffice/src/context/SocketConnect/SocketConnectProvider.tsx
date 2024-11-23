@@ -28,7 +28,7 @@ export const SocketConnectProvider = ({
   };
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:3000/order");
+    socketRef.current = io(`${import.meta.env.VITE_API_URL}/order`);
 
     reqOrderList();
 
